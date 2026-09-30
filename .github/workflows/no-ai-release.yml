@@ -1,0 +1,174 @@
+name: Signed Zed No AI release
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing vMAJOR.MINOR.PATCH tag on main or no-ai
+        required: true
+        type: string
+concurrency:
+  group: no-ai-release-${{ inputs.tag || github.ref_name }}
+  cancel-in-progress: false
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.release.outputs.tag }}
+      version: ${{ steps.release.outputs.version }}
+      commit: ${{ steps.release.outputs.commit }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Validate credentials and release tag before building
+        id: release
+        env:
+          RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
+          MACOS_CERTIFICATE_BASE64: ${{ secrets.MACOS_CERTIFICATE_BASE64 }}
+          MACOS_CERTIFICATE_PASSWORD: ${{ secrets.MACOS_CERTIFICATE_PASSWORD }}
+          MACOS_SIGNING_IDENTITY: ${{ secrets.MACOS_SIGNING_IDENTITY }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APPLE_NOTARIZATION_KEY: ${{ secrets.APPLE_NOTARIZATION_KEY }}
+          APPLE_NOTARIZATION_KEY_ID: ${{ secrets.APPLE_NOTARIZATION_KEY_ID }}
+          APPLE_NOTARIZATION_ISSUER_ID: ${{ secrets.APPLE_NOTARIZATION_ISSUER_ID }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'PY'
+          import os,re,subprocess,json
+          names=['MACOS_CERTIFICATE_BASE64','MACOS_CERTIFICATE_PASSWORD','MACOS_SIGNING_IDENTITY','APPLE_TEAM_ID','APPLE_NOTARIZATION_KEY','APPLE_NOTARIZATION_KEY_ID','APPLE_NOTARIZATION_ISSUER_ID']
+          missing=[n for n in names if not os.environ.get(n)]
+          if missing: raise SystemExit('Configure repository secrets: '+', '.join(missing))
+          tag=os.environ['RELEASE_TAG']
+          if not re.fullmatch(r'v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)',tag): raise SystemExit('Expected vMAJOR.MINOR.PATCH')
+          if not re.fullmatch(r'[A-Z0-9]{10}',os.environ['APPLE_TEAM_ID']): raise SystemExit('Invalid Apple team ID')
+          commit=subprocess.check_output(['git','rev-parse','refs/tags/'+tag+'^{commit}'],text=True).strip()
+          if not any(subprocess.run(['git','merge-base','--is-ancestor',commit,'origin/'+b]).returncode==0 for b in ['main','no-ai']): raise SystemExit('Tag must belong to a fork branch')
+          # /latest is public; a 404 means this is the first signed release.
+          result=subprocess.run(['gh','api','repos/ar4ft/zed-no-ai/releases/latest'],capture_output=True,text=True)
+          if result.returncode==0:
+              latest=json.loads(result.stdout)['tag_name']
+              if re.fullmatch(r'v[0-9]+\.[0-9]+\.[0-9]+',latest) and tuple(map(int,tag[1:].split('.'))) <= tuple(map(int,latest[1:].split('.'))): raise SystemExit('Version must be newer than the latest release')
+          elif '404' not in result.stderr: raise SystemExit('Unable to verify latest release: '+result.stderr)
+          with open(os.environ['GITHUB_OUTPUT'],'a') as f:
+              f.write(f'tag={tag}\nversion={tag[1:]}\ncommit={commit}\n')
+          PY
+  mac:
+    needs: validate
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [macos-15, macos-15-intel]
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 360
+    env:
+      CARGO_INCREMENTAL: '0'
+      ZED_RELEASE_CHANNEL: dev
+      NO_AI_SIGNED_RELEASE: '1'
+      ZED_NO_AI_RELEASE_VERSION: ${{ needs.validate.outputs.version }}
+      ZED_NO_AI_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+      MACOS_SIGNING_IDENTITY: ${{ secrets.MACOS_SIGNING_IDENTITY }}
+      APPLE_NOTARIZATION_KEY_ID: ${{ secrets.APPLE_NOTARIZATION_KEY_ID }}
+      APPLE_NOTARIZATION_ISSUER_ID: ${{ secrets.APPLE_NOTARIZATION_ISSUER_ID }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.validate.outputs.commit }}
+      - name: Install the pinned Rust toolchain
+        run: rustup show
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: no-ai-${{ matrix.runner }}
+          cache-on-failure: true
+      - run: brew install cmake pkg-config
+      - name: Validate the editor and updater
+        run: |
+          script/audit-no-ai
+          cargo test --locked -p telemetry
+          cargo test --locked -p client --lib no_telemetry_fork
+          cargo test --locked -p auto_update --lib no_ai_fork
+          cargo test --locked -p notebook_safety
+          cargo test --locked -p project --lib no_ai_fork_settings_cannot_enable_ai
+          cargo test --locked -p repl --lib notebook::notebook_ui::tests::test_open_single_file_notebook
+          cargo test --locked -p repl --lib notebook::notebook_ui::tests::test_save_goes_through_the_project
+          cargo test --locked -p repl --lib no_ai_fork_notebook_backup_failure_keeps_changes_dirty
+          cargo check --locked -p zed --bin zed
+      - name: Import Apple signing credentials into a temporary keychain
+        env:
+          MACOS_CERTIFICATE_BASE64: ${{ secrets.MACOS_CERTIFICATE_BASE64 }}
+          MACOS_CERTIFICATE_PASSWORD: ${{ secrets.MACOS_CERTIFICATE_PASSWORD }}
+          APPLE_NOTARIZATION_KEY: ${{ secrets.APPLE_NOTARIZATION_KEY }}
+        run: |
+          umask 077
+          python3 - <<'PY'
+          import os,base64,pathlib
+          root=pathlib.Path(os.environ['RUNNER_TEMP'])
+          (root/'signing.p12').write_bytes(base64.b64decode(os.environ['MACOS_CERTIFICATE_BASE64'],validate=True))
+          (root/'notarization-key.p8').write_text(os.environ['APPLE_NOTARIZATION_KEY'])
+          PY
+          keychain="$RUNNER_TEMP/no-ai-signing.keychain-db"
+          password="$(openssl rand -hex 32)"
+          echo "::add-mask::$password"
+          security create-keychain -p "$password" "$keychain"
+          security set-keychain-settings -lut 21600 "$keychain"
+          security unlock-keychain -p "$password" "$keychain"
+          security import "$RUNNER_TEMP/signing.p12" -k "$keychain" -P "$MACOS_CERTIFICATE_PASSWORD" -T /usr/bin/codesign
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$password" "$keychain" >/dev/null
+          security list-keychains -d user -s "$keychain" "$HOME/Library/Keychains/login.keychain-db"
+          rm -f "$RUNNER_TEMP/signing.p12"
+          echo "APPLE_NOTARIZATION_KEY_PATH=$RUNNER_TEMP/notarization-key.p8" >> "$GITHUB_ENV"
+      - name: Build, sign, notarize and staple installers
+        run: |
+          script/build-no-ai-mac
+          app='target/release/bundle/osx/Zed No AI.app'
+          requirement="anchor apple generic and certificate leaf[subject.OU] = \"$ZED_NO_AI_TEAM_ID\" and identifier \"io.github.ar4ft.ZedNoAI\""
+          codesign --verify --deep --strict -R "$requirement" "$app"
+          xcrun stapler validate "$app"
+          spctl --assess --type execute "$app"
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$app/Contents/Info.plist")" = "$ZED_NO_AI_RELEASE_VERSION"
+          xcrun stapler validate "target/no-ai-$(uname -m)/Zed-No-AI-$(uname -m).dmg"
+          cd "target/no-ai-$(uname -m)"
+          shasum -a 256 *.zip *.dmg > "SHA256SUMS-$(uname -m).txt"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: signed-${{ matrix.runner }}
+          path: target/no-ai-*/*
+          if-no-files-found: error
+      - name: Delete temporary credentials
+        if: always()
+        run: |
+          security delete-keychain "$RUNNER_TEMP/no-ai-signing.keychain-db" || true
+          rm -f "$RUNNER_TEMP/signing.p12" "$RUNNER_TEMP/notarization-key.p8"
+  publish:
+    needs: [validate, mac]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: signed-*
+          merge-multiple: true
+          path: packages
+      - name: Publish both architectures together
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ needs.validate.outputs.tag }}
+          RELEASE_COMMIT: ${{ needs.validate.outputs.commit }}
+        run: |
+          cd packages
+          test -f Zed-No-AI-arm64.dmg
+          test -f Zed-No-AI-x86_64.dmg
+          cat SHA256SUMS-*.txt > SHA256SUMS.txt
+          sha256sum -c SHA256SUMS.txt
+          printf 'Signed and notarized Apple Silicon and Intel builds of Zed No AI.\n\nSource: `%s`\n\nAI and telemetry are disabled. Automatic updates use this fork and verify Apple signatures before installation.\n' "$RELEASE_COMMIT" > release-notes.txt
+          if gh release view "$RELEASE_TAG" --repo ar4ft/zed-no-ai --json isDraft > existing.json 2>/dev/null; then
+            python3 -c 'import json; assert json.load(open("existing.json"))["isDraft"], "Refusing to overwrite a published release"'
+          else
+            gh release create "$RELEASE_TAG" --repo ar4ft/zed-no-ai --verify-tag --draft --title "Zed No AI $RELEASE_TAG" --notes-file release-notes.txt
+          fi
+          gh release upload "$RELEASE_TAG" --repo ar4ft/zed-no-ai --clobber *.dmg *.zip SHA256SUMS.txt
+          gh release edit "$RELEASE_TAG" --repo ar4ft/zed-no-ai --draft=false --latest --notes-file release-notes.txt

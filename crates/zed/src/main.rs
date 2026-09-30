@@ -181,12 +181,14 @@ fn fail_to_open_window(e: anyhow::Error, _cx: &mut App) {
 static STARTUP_TIME: OnceLock<Instant> = OnceLock::new();
 
 fn main() {
-    // Also disable manual upstream update checks for this fork.
-    unsafe {
-        std::env::set_var(
-            "ZED_UPDATE_EXPLANATION",
-            "Build updates from the Zed No AI fork.",
-        );
+    // Only signed release builds enable the fork updater.
+    if option_env!("ZED_NO_AI_RELEASE_VERSION").is_none() {
+        unsafe {
+            std::env::set_var(
+                "ZED_UPDATE_EXPLANATION",
+                "Install a signed release from github.com/ar4ft/zed-no-ai/releases for automatic updates.",
+            );
+        }
     }
     STARTUP_TIME.get_or_init(|| Instant::now());
 
@@ -288,7 +290,11 @@ fn main() {
     let version = option_env!("ZED_BUILD_ID");
     let app_commit_sha =
         option_env!("ZED_COMMIT_SHA").map(|commit_sha| AppCommitSha::new(commit_sha.to_string()));
-    let app_version = AppVersion::load(env!("CARGO_PKG_VERSION"), version, app_commit_sha.clone());
+    let app_version = AppVersion::load(
+        option_env!("ZED_NO_AI_RELEASE_VERSION").unwrap_or(env!("CARGO_PKG_VERSION")),
+        version,
+        app_commit_sha.clone(),
+    );
 
     if args.system_specs {
         let system_specs = system_specs::SystemSpecs::new_stateless(

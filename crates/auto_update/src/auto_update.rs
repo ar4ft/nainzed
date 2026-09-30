@@ -1,3 +1,5 @@
+mod fork_release;
+
 use anyhow::{Context as _, Result};
 use client::Client;
 use db::kvp::KeyValueStore;
@@ -24,7 +26,6 @@ use std::{
         consts::{ARCH, OS},
     },
     ffi::OsStr,
-    ffi::OsString,
     path::{Path, PathBuf},
     sync::Arc,
     time::{Duration, SystemTime},
@@ -114,9 +115,6 @@ pub struct AssetQuery<'a> {
     asset: &'a str,
     os: &'a str,
     arch: &'a str,
-    metrics_id: Option<&'a str>,
-    system_id: Option<&'a str>,
-    is_staff: Option<bool>,
 }
 
 #[derive(Clone, Debug)]
@@ -275,13 +273,21 @@ pub fn init(client: Arc<Client>, cx: &mut App) {
     })
     .detach();
 
-    let version = release_channel::AppVersion::global(cx);
+    let version = if fork_release::enabled() {
+        fork_release::VERSION
+            .unwrap()
+            .parse()
+            .expect("invalid fork release version")
+    } else {
+        release_channel::AppVersion::global(cx)
+    };
     let auto_updater = cx.new(|cx| {
         let updater = AutoUpdater::new(version, client, cx);
 
-        let poll_for_updates = ReleaseChannel::try_global(cx)
-            .map(|channel| channel.poll_for_updates())
-            .unwrap_or(false);
+        let poll_for_updates = fork_release::enabled()
+            || ReleaseChannel::try_global(cx)
+                .map(|channel| channel.poll_for_updates())
+                .unwrap_or(false);
 
         if option_env!("ZED_UPDATE_EXPLANATION").is_none()
             && env::var("ZED_UPDATE_EXPLANATION").is_err()
@@ -315,7 +321,7 @@ pub fn check(_: &Check, window: &mut Window, cx: &mut App) {
     {
         drop(window.prompt(
             gpui::PromptLevel::Info,
-            "Zed was installed via a package manager.",
+            "Automatic updates are unavailable in this build.",
             Some(&message),
             &["OK"],
             cx,
@@ -323,9 +329,10 @@ pub fn check(_: &Check, window: &mut Window, cx: &mut App) {
         return;
     }
 
-    if !ReleaseChannel::try_global(cx)
-        .map(|channel| channel.poll_for_updates())
-        .unwrap_or(false)
+    if !fork_release::enabled()
+        && !ReleaseChannel::try_global(cx)
+            .map(|channel| channel.poll_for_updates())
+            .unwrap_or(false)
     {
         return;
     }
@@ -343,25 +350,11 @@ pub fn check(_: &Check, window: &mut Window, cx: &mut App) {
     }
 }
 
-pub fn release_notes_url(cx: &mut App) -> Option<String> {
-    let release_channel = ReleaseChannel::try_global(cx)?;
-    let url = match release_channel {
-        ReleaseChannel::Stable | ReleaseChannel::Preview => {
-            let auto_updater = AutoUpdater::get(cx)?;
-            let auto_updater = auto_updater.read(cx);
-            let mut current_version = auto_updater.current_version.clone();
-            current_version.pre = semver::Prerelease::EMPTY;
-            current_version.build = semver::BuildMetadata::EMPTY;
-            let release_channel = release_channel.dev_name();
-            let path = format!("/releases/{release_channel}/{current_version}");
-            auto_updater.client.http_client().build_url(&path)
-        }
-        ReleaseChannel::Nightly => {
-            "https://github.com/zed-industries/zed/commits/nightly/".to_string()
-        }
-        ReleaseChannel::Dev => "https://github.com/zed-industries/zed/commits/main/".to_string(),
-    };
-    Some(url)
+pub fn release_notes_url(_cx: &mut App) -> Option<String> {
+    Some(format!(
+        "https://github.com/{}/releases",
+        fork_release::REPOSITORY
+    ))
 }
 
 pub fn view_release_notes(_: &ViewReleaseNotes, cx: &mut App) -> Option<()> {
@@ -686,56 +679,59 @@ impl AutoUpdater {
     ) -> Result<ReleaseAsset> {
         let client = this.read_with(cx, |this, _| this.client.clone());
 
-        let (system_id, metrics_id, is_staff) = if client.telemetry().metrics_enabled() {
-            (
-                client.telemetry().system_id(),
-                client.telemetry().metrics_id(),
-                client.telemetry().is_staff(),
-            )
-        } else {
-            (None, None, None)
-        };
-
-        let version = if let Some(mut version) = version {
-            version.pre = semver::Prerelease::EMPTY;
-            version.build = semver::BuildMetadata::EMPTY;
-            version.to_string()
-        } else {
-            "latest".to_string()
-        };
-        let http_client = client.http_client();
-
-        let path = format!("/releases/{}/{}/asset", release_channel.dev_name(), version,);
-        let url = http_client.build_zed_cloud_url_with_query(
-            &path,
-            AssetQuery {
-                os,
-                arch,
-                asset,
-                metrics_id: metrics_id.as_deref(),
-                system_id: system_id.as_deref(),
-                is_staff,
-            },
-        )?;
-
-        let mut response = http_client
-            .get(url.as_str(), Default::default(), true)
+        if asset == "zed-remote-server" {
+            let version = version
+                .map(|mut v| {
+                    v.pre = semver::Prerelease::EMPTY;
+                    v.build = semver::BuildMetadata::EMPTY;
+                    v.to_string()
+                })
+                .unwrap_or_else(|| "latest".into());
+            let url = client.http_client().build_zed_cloud_url_with_query(
+                &format!("/releases/{}/{version}/asset", release_channel.dev_name()),
+                AssetQuery { asset, os, arch },
+            )?;
+            let mut response = client
+                .http_client()
+                .get(url.as_str(), Default::default(), true)
+                .await?;
+            anyhow::ensure!(
+                response.status().is_success(),
+                "Failed to fetch remote helper release"
+            );
+            let mut body = Vec::new();
+            response.body_mut().read_to_end(&mut body).await?;
+            return Ok(serde_json::from_slice(&body)?);
+        }
+        anyhow::ensure!(
+            asset == "zed" && os == "macos",
+            "This fork only updates the Mac application from its GitHub repository"
+        );
+        anyhow::ensure!(
+            fork_release::enabled(),
+            "Automatic updates require a signed fork release"
+        );
+        anyhow::ensure!(
+            version.is_none(),
+            "Only the latest fork release is supported"
+        );
+        let _ = release_channel;
+        let url = format!(
+            "https://api.github.com/repos/{}/releases/latest",
+            fork_release::REPOSITORY
+        );
+        let mut response = client
+            .http_client()
+            .get(&url, Default::default(), true)
             .await?;
-        let mut body = Vec::new();
-        response.body_mut().read_to_end(&mut body).await?;
-
         anyhow::ensure!(
             response.status().is_success(),
-            "failed to fetch release: {:?}",
-            String::from_utf8_lossy(&body),
+            "No published fork release is available: {}",
+            response.status()
         );
-
-        serde_json::from_slice(body.as_slice()).with_context(|| {
-            format!(
-                "error deserializing release {:?}",
-                String::from_utf8_lossy(&body),
-            )
-        })
+        let mut body = Vec::new();
+        response.body_mut().read_to_end(&mut body).await?;
+        fork_release::parse(&body, arch)
     }
 
     async fn update(this: Entity<Self>, cx: &mut AsyncApp) -> Result<()> {
@@ -846,6 +842,7 @@ impl AutoUpdater {
                 running_app_path,
                 channel,
                 background_executor,
+                newer_version.clone(),
             ))
             .await
         };
@@ -912,12 +909,6 @@ impl AutoUpdater {
             .into());
         }
 
-        #[cfg(target_os = "macos")]
-        anyhow::ensure!(
-            which::which("rsync").is_ok(),
-            "Could not auto-update because the required rsync utility was not found."
-        );
-
         Ok(())
     }
 
@@ -939,6 +930,7 @@ impl AutoUpdater {
         running_app_path: PathBuf,
         channel: &str,
         background_executor: BackgroundExecutor,
+        expected_version: Version,
     ) -> Result<Option<PathBuf>> {
         match OS {
             "macos" => {
@@ -947,6 +939,7 @@ impl AutoUpdater {
                     &target_path,
                     running_app_path,
                     &background_executor,
+                    &expected_version,
                 )
                 .await
             }
@@ -1195,25 +1188,59 @@ async fn install_release_linux(
     Ok(Some(to.join(expected_suffix)))
 }
 
+async fn verify_fork_macos_update(app: &Path) -> Result<()> {
+    let team = fork_release::TEAM_ID.context("Missing pinned Apple team ID")?;
+    anyhow::ensure!(
+        team.len() == 10
+            && team
+                .bytes()
+                .all(|c| c.is_ascii_uppercase() || c.is_ascii_digit()),
+        "Invalid Apple team ID"
+    );
+    let requirement = format!(
+        "anchor apple generic and certificate leaf[subject.OU] = \"{team}\" and identifier \"{}\"",
+        fork_release::BUNDLE_ID
+    );
+    let output = new_command("/usr/bin/codesign")
+        .args(["--verify", "--deep", "--strict", "-R", &requirement])
+        .arg(app)
+        .output()
+        .await?;
+    anyhow::ensure!(
+        output.status.success(),
+        "Update signature does not match this fork's Apple team and bundle ID"
+    );
+    let output = new_command("/usr/sbin/spctl")
+        .args(["--assess", "--type", "execute"])
+        .arg(app)
+        .output()
+        .await?;
+    anyhow::ensure!(
+        output.status.success(),
+        "Update failed Apple's notarization assessment"
+    );
+    Ok(())
+}
+
 async fn install_release_macos(
     temp_dir: &InstallerDir,
     downloaded_dmg: &Path,
     running_app_path: PathBuf,
     background_executor: &BackgroundExecutor,
+    expected_version: &Version,
 ) -> Result<Option<PathBuf>> {
     let running_app_filename = running_app_path
         .file_name()
         .with_context(|| format!("invalid running app path {running_app_path:?}"))?;
 
-    let mount_path = temp_dir.path().join("Zed");
-    let mut mounted_app_path: OsString = mount_path.join(running_app_filename).into();
-
-    mounted_app_path.push("/");
-    let mut cmd = new_command("hdiutil");
+    let mount_path = temp_dir.path().join("mounted-update");
+    let mounted_app_path = mount_path.join("Zed No AI.app");
+    let mut cmd = new_command("/usr/bin/hdiutil");
     cmd.args(["attach", "-nobrowse"])
         .arg(&downloaded_dmg)
-        .arg("-mountroot")
-        .arg(temp_dir.path());
+        .arg("-mountpoint")
+        .arg(&mount_path)
+        .arg("-readonly");
     let output = cmd
         .output()
         .await
@@ -1230,23 +1257,57 @@ async fn install_release_macos(
         background_executor,
     };
 
-    let mut cmd = new_command("rsync");
-    cmd.args(["-av", "--delete", "--exclude", "Icon?"])
-        .arg(&mounted_app_path)
-        .arg(&running_app_path);
-    let rsync_output = cmd.output().await;
-
-    // Await the unmount (even if rsync failed) so that the installer temp dir
-    // can be deleted once this function returns.
+    let result = async {
+        verify_fork_macos_update(&mounted_app_path).await?;
+        let version = new_command("/usr/libexec/PlistBuddy")
+            .args(["-c", "Print :CFBundleShortVersionString"])
+            .arg(mounted_app_path.join("Contents/Info.plist"))
+            .output()
+            .await?;
+        anyhow::ensure!(version.status.success(), "Missing update version");
+        let actual_version = String::from_utf8(version.stdout)?
+            .trim()
+            .parse::<Version>()?;
+        let mut expected_version = expected_version.clone();
+        expected_version.build = semver::BuildMetadata::EMPTY;
+        anyhow::ensure!(
+            actual_version == expected_version,
+            "Installer version does not match the release"
+        );
+        let parent = running_app_path
+            .parent()
+            .context("App has no parent directory")?;
+        let staging = tempfile::Builder::new()
+            .prefix(".ZedNoAI-update-")
+            .tempdir_in(parent)?;
+        let staged_app = staging.path().join(running_app_filename);
+        let backup = staging.path().join("previous.app");
+        let copy = new_command("/usr/bin/ditto")
+            .arg(&mounted_app_path)
+            .arg(&staged_app)
+            .output()
+            .await?;
+        anyhow::ensure!(
+            copy.status.success(),
+            "Failed to stage update; application was not replaced"
+        );
+        verify_fork_macos_update(&staged_app).await?;
+        if let Err(error) = fork_release::replace_app(&staged_app, &running_app_path, &backup) {
+            if backup.exists() {
+                // Keep the backup available when both replacement and restoration failed.
+                let recovery = staging.keep();
+                return Err(error.context(format!(
+                    "Recovery copy retained at {}",
+                    recovery.join("previous.app").display()
+                )));
+            }
+            return Err(error);
+        }
+        anyhow::Ok(())
+    }
+    .await;
     unmounter.unmount().await;
-
-    let output = rsync_output.with_context(|| "failed to rsync: {cmd}")?;
-
-    anyhow::ensure!(
-        output.status.success(),
-        "failed to copy app: {:?}",
-        String::from_utf8_lossy(&output.stderr)
-    );
+    result?;
 
     Ok(None)
 }

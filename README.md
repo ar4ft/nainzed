@@ -16,7 +16,7 @@ A macOS-focused fork of [Zed](https://github.com/zed-industries/zed) for text ed
 - Enables the upstream experimental `.ipynb` editor without an account or remote feature flag. Python `# %%` script cells also remain available.
 - Opens a plain editor on first launch and rejects AI agent/skill deep links.
 - Uses separate app data (`ZedNoAI`) and configuration (`~/.config/zednoai`) so the fork can coexist with upstream Zed.
-- Disables upstream updates, including manual update checks, so an update cannot replace this fork with upstream Zed.
+- Signed releases automatically update from this fork's GitHub releases, verify the Apple team, bundle identity, notarization assessment, and version before replacing the app, and allow automatic updates to be disabled. Ad-hoc builds keep updates disabled.
 
 Folder browsing, tabs, file outline, search, language-server completion, syntax highlighting, terminal, Git, debugging, and Vim mode are inherited from Zed. Language-server completion is ordinary code completion and does not use an AI model.
 
@@ -30,6 +30,8 @@ Install full Xcode, select it with `sudo xcode-select --switch /Applications/Xco
 brew install cmake pkg-config
 ./script/build-no-ai-mac
 ```
+
+For signed, notarized releases and automatic updates, follow [RELEASES.md](RELEASES.md). Apple Developer enrollment and repository signing/notarization secrets are required; the release pipeline is implemented but a signed release has not yet been produced.
 
 The script creates `target/release/bundle/osx/Zed No AI.app`, plus ZIP and DMG packages in `target/no-ai-arm64/` or `target/no-ai-x86_64/`. It builds for the current Mac architecture. It uses ad-hoc signing; downloaded builds are not Apple-notarized. Use Finder's Open action or macOS Privacy & Security to approve a build you trust.
 

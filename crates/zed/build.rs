@@ -2,6 +2,7 @@
 use std::process::Command;
 
 fn main() {
+    println!("cargo:rerun-if-env-changed=ZED_NO_AI_RELEASE_VERSION");
     #[cfg(target_os = "linux")]
     {
         // Add rpaths for libraries that webrtc-sys dlopens at runtime.

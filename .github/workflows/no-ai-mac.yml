@@ -28,13 +28,15 @@ jobs:
       - uses: Swatinem/rust-cache@v2
         with:
           key: no-ai-${{ matrix.runner }}
-          save-always: true
+          cache-on-failure: true
       - name: Build dependencies
         run: brew install cmake pkg-config
       - name: Audit production dependencies for AI and telemetry
         run: script/audit-no-ai
       - name: Verify telemetry cannot collect or send data
         run: cargo test --locked -p telemetry && cargo test --locked -p client --lib no_telemetry_fork
+      - name: Check fork update selection
+        run: cargo test --locked -p auto_update --lib no_ai_fork
       - name: Check notebook data preservation
         run: cargo test --locked -p notebook_safety
       - name: Check the production application

@@ -7,7 +7,13 @@ if [[ "$(uname -s)" != Darwin ]]; then
 fi
 export ZED_RELEASE_CHANNEL=dev
 export ZED_BUNDLE=true
-export ZED_UPDATE_EXPLANATION='Build updates from the Zed No AI fork.'
+if [[ "${NO_AI_SIGNED_RELEASE:-0}" == 1 ]]; then
+    : "${ZED_NO_AI_RELEASE_VERSION:?Release version is required}"
+    : "${ZED_NO_AI_TEAM_ID:?Apple team ID is required}"
+    unset ZED_UPDATE_EXPLANATION
+else
+    export ZED_UPDATE_EXPLANATION='Install signed releases from github.com/ar4ft/zed-no-ai/releases for automatic updates.'
+fi
 export CARGO_BUNDLE_SKIP_BUILD=true
 # Generate redistribution notices before embedding assets in the release binary.
 script/generate-licenses
@@ -20,8 +26,14 @@ app='target/release/bundle/osx/Zed No AI.app'
 test -d "$app"
 cp target/release/cli "$app/Contents/MacOS/cli"
 cp crates/zed/resources/Document.icns "$app/Contents/Resources/Document.icns"
-# This community build uses ad-hoc signing; it does not use Zed's Apple identity.
-codesign --force --deep --sign - "$app"
+# Signed releases use the fork owner's identity; local builds use ad-hoc signing.
+if [[ "${NO_AI_SIGNED_RELEASE:-0}" == 1 ]]; then
+    /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $ZED_NO_AI_RELEASE_VERSION" "$app/Contents/Info.plist"
+    /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $ZED_NO_AI_RELEASE_VERSION" "$app/Contents/Info.plist"
+    script/sign-no-ai-mac
+else
+    codesign --force --deep --sign - "$app"
+fi
 architecture="$(uname -m)"
 package_dir="target/no-ai-${architecture}"
 mkdir -p "$package_dir"
@@ -32,5 +44,19 @@ trap 'rm -rf "$staging"' EXIT
 ditto "$app" "$staging/Zed No AI.app"
 ln -s /Applications "$staging/Applications"
 hdiutil create -volname 'Zed No AI' -srcfolder "$staging" -ov -format UDZO "$package_dir/Zed-No-AI-${architecture}.dmg"
+if [[ "${NO_AI_SIGNED_RELEASE:-0}" == 1 ]]; then
+    dmg="$package_dir/Zed-No-AI-${architecture}.dmg"
+    codesign --force --timestamp --sign "$MACOS_SIGNING_IDENTITY" "$dmg"
+    xcrun notarytool submit "$dmg" --key "$APPLE_NOTARIZATION_KEY_PATH" --key-id "$APPLE_NOTARIZATION_KEY_ID" --issuer "$APPLE_NOTARIZATION_ISSUER_ID" --wait --output-format json > "$staging/dmg-notary.json"
+    python3 - "$staging/dmg-notary.json" <<'VERIFY'
+import json,sys
+result=json.load(open(sys.argv[1]))
+if result.get('status') != 'Accepted':
+    raise SystemExit('Apple rejected DMG notarization: '+str(result.get('id'))+' '+str(result.get('status')))
+VERIFY
+    xcrun stapler staple "$dmg"
+    xcrun stapler validate "$dmg"
+    spctl --assess --type open --context context:primary-signature "$dmg"
+fi
 echo "Built $app"
 echo "Installable packages: $package_dir"
