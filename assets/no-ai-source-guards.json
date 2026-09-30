@@ -1,0 +1,10 @@
+{
+  "crates/telemetry/src/telemetry.rs": "8c697a05d05c769531e88e8d7fbe326c9d15f8aa1fd3dc632b2440af9f6e46cb",
+  "crates/client/src/telemetry.rs": "1bee7e04433a10ad77f40513e5e73e4c2a2101c1858afd4f1778dd8fdee28308",
+  "crates/language_model/src/registry.rs": "8c7da1f2c9b1b8d75cfe20421223b328ee6d103e64437a6aa3c8d81b8dacf082",
+  "crates/project/src/project.rs": "0940c55540399742ee8a9ebb6280c41cc69f2acb84af666a41010b510445290c",
+  "crates/zed/src/main.rs": "c892779decc39d8339e07980bf14f805eab5b67dd9531fc4b0c826365b6db4ed",
+  "crates/zed/src/zed.rs": "be455b8ea6b5719ce60dc860d5b2116c1a9de90703c91c7a31b05d0e89ea1341",
+  "crates/zed/src/zed/app_menus.rs": "333adc428502b351d8d32611b9494c176f2b560c054119a35af26342be639a4b",
+  "crates/settings_ui/src/page_data.rs": "7c2c81ec70eb028488986a1a28564aa097613ad1e3527516971980a54130123e"
+}

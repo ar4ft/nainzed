@@ -1,15 +1,32 @@
 name: Build Zed No AI for Mac
 on:
   workflow_dispatch:
+  pull_request:
+    branches: [main, no-ai]
+  workflow_call:
+    inputs:
+      checkout_ref:
+        description: Exact upstream-update commit to validate
+        required: true
+        type: string
   push:
     branches: [main, no-ai]
 concurrency:
-  group: no-ai-mac-${{ github.sha }}
+  group: no-ai-mac-${{ inputs.checkout_ref || github.sha }}
   cancel-in-progress: true
 permissions:
   contents: read
 jobs:
+  source-guards:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.checkout_ref || github.sha }}
+      - name: Reject unreviewed changes to AI and telemetry safeguards
+        run: script/audit-no-ai-source
   mac:
+    needs: source-guards
     strategy:
       fail-fast: false
       matrix:
@@ -24,6 +41,8 @@ jobs:
       ZED_UPDATE_EXPLANATION: Build updates from the Zed No AI fork.
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.checkout_ref || github.sha }}
       - name: Install the pinned Rust toolchain
         run: rustup show
       - uses: Swatinem/rust-cache@v2
@@ -46,6 +65,8 @@ jobs:
         run: cargo test --locked -p project --lib no_ai_fork_settings_cannot_enable_ai
       - name: Check notebook open and save regressions
         run: cargo test --locked -p repl --lib notebook::notebook_ui::tests::test_open_single_file_notebook && cargo test --locked -p repl --lib notebook::notebook_ui::tests::test_save_goes_through_the_project && cargo test --locked -p repl --lib no_ai_fork_notebook_backup_failure_keeps_changes_dirty
+      - name: Check Python kernel discovery
+        run: cargo test --locked -p repl --lib kernels::native_kernel::test::test_get_kernelspecs
       - name: Create application and installers
         run: script/build-no-ai-mac
       - uses: actions/upload-artifact@v4

@@ -1,0 +1,58 @@
+name: Review upstream Zed stable updates
+on:
+  schedule:
+    - cron: '17 9 * * 1'
+  workflow_dispatch:
+concurrency:
+  group: no-ai-upstream-maintenance
+  cancel-in-progress: false
+permissions:
+  contents: read
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    outputs:
+      check_ref: ${{ steps.update.outputs.check_ref }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Prepare a stable update PR without merging or publishing
+        id: update
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 -m unittest discover -s script/tests -p test_upstream_maintenance.py
+          python3 script/upstream-maintenance.py --apply
+  validate-mac:
+    needs: prepare
+    if: needs.prepare.outputs.check_ref != ''
+    permissions:
+      contents: read
+    uses: ./.github/workflows/no-ai-mac.yml
+    with:
+      checkout_ref: ${{ needs.prepare.outputs.check_ref }}
+  report-validation:
+    needs: [prepare, validate-mac]
+    if: always() && needs.prepare.outputs.check_ref != ''
+    runs-on: ubuntu-latest
+    permissions:
+      statuses: write
+    steps:
+      - name: Report both Mac checks on the update commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+          UPDATE_COMMIT: ${{ needs.prepare.outputs.check_ref }}
+          VALIDATION_RESULT: ${{ needs.validate-mac.result }}
+          VALIDATION_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          state=failure
+          if [[ "$VALIDATION_RESULT" == success ]]; then state=success; fi
+          gh api --method POST "repos/ar4ft/zed-no-ai/statuses/$UPDATE_COMMIT" \
+            -f state="$state" -f context='upstream/mac-validation' \
+            -f description="AI, telemetry and both Mac checks: $VALIDATION_RESULT" \
+            -f target_url="$VALIDATION_URL" >/dev/null

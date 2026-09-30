@@ -1,0 +1,38 @@
+#!/usr/bin/env python3
+"""Reject unreviewed changes to the fork's AI and telemetry safeguards."""
+import hashlib
+import json
+from pathlib import Path
+
+PROTECTED = (
+    'crates/telemetry/src/telemetry.rs',
+    'crates/client/src/telemetry.rs',
+    'crates/language_model/src/registry.rs',
+    'crates/project/src/project.rs',
+    'crates/zed/src/main.rs',
+    'crates/zed/src/zed.rs',
+    'crates/zed/src/zed/app_menus.rs',
+    'crates/settings_ui/src/page_data.rs',
+)
+
+
+def audit(root):
+    manifest = json.loads((root / 'assets/no-ai-source-guards.json').read_text())
+    if set(manifest) != set(PROTECTED):
+        raise ValueError('The protected-source manifest must list every required safeguard.')
+    changed = []
+    for name in PROTECTED:
+        path = root / name
+        if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != manifest[name]:
+            changed.append(name)
+    if changed:
+        raise ValueError('Unreviewed AI/telemetry safeguard changes:\n' + '\n'.join(changed)
+                         + '\nReview the implementation and regression tests before updating the guard hashes.')
+
+
+if __name__ == '__main__':
+    try:
+        audit(Path(__file__).resolve().parent.parent)
+    except (OSError, ValueError) as error:
+        raise SystemExit(str(error))
+    print('Protected AI and telemetry source audit passed.')

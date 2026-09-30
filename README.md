@@ -57,6 +57,10 @@ Each save that overwrites an existing notebook first updates `<filename>.ipynb.b
 
 For a script-based notebook, open `examples/python_cells.py` and use the REPL actions on `# %%` cells.
 
+## Upstream maintenance
+
+A weekly stable-update workflow opens draft PRs, reports conflicts and sensitive changes, and runs the AI/telemetry safeguards and Mac checks without automatically merging or signing. See [UPSTREAM_MAINTENANCE.md](UPSTREAM_MAINTENANCE.md) for the schedule, source-guard review and conflict recovery.
+
 ## Repository
 
 The fork is published at [ar4ft/zed-no-ai](https://github.com/ar4ft/zed-no-ai). The AI-disabled source is on the `no-ai` branch. The source is based on the upstream commit recorded in `UPSTREAM_REVISION`.
