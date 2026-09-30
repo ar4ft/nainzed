@@ -1,10 +1,10 @@
 # Signed releases and automatic updates
 
-The `Signed Zed No AI release` workflow builds Apple Silicon and Intel apps, signs them with your Developer ID Application certificate and the hardened runtime, submits the app and DMG to Apple, staples notarization tickets, and publishes both architectures together in a GitHub Release. It runs AI, telemetry, notebook, and update-selection checks before packaging. A failed architecture or rejected notarization prevents publication. Signed releases cannot fall back to ad-hoc signing.
+The manually dispatched `Signed Zed No AI release` workflow builds Apple Silicon and Intel apps, signs them with your Developer ID Application certificate and the hardened runtime, submits the app and DMG to Apple, staples notarization tickets, and publishes both architectures together in a GitHub Release. It runs AI, telemetry, notebook, and update-selection checks before packaging. A failed architecture or rejected notarization prevents publication. Signed releases cannot fall back to ad-hoc signing.
 
 Automatic updates are enabled only in signed release builds. The app checks `https://api.github.com/repos/ar4ft/zed-no-ai/releases/latest` at startup and hourly, downloads its matching DMG from this repository, verifies the Apple signature against the team ID embedded at build time and `io.github.ar4ft.ZedNoAI`, checks Apple's notarization assessment and the installer version, and stages the app beside the installed copy before replacing it. A replacement failure restores the old app; if restoration also fails, the error reports the retained recovery copy. Restart the editor to use an installed update. Users can disable automatic downloads with `"auto_update": false` and still check manually. Requests contain no telemetry IDs; update checks and downloads require network access to GitHub and Apple assessment may contact Apple.
 
-Regular branch builds and local ad-hoc builds keep automatic updates disabled. Existing unsigned builds must be replaced manually with the first signed release. Installation in `/Applications` (or another writable, permanent app folder) is recommended; updating an app running from a mounted DMG will fail. Remote helper downloads retain the existing upstream protocol and are separate from the Mac application release feed.
+Branch pushes and local builds produce development packages with ad-hoc signatures, without Apple credentials or notarization, and keep automatic updates disabled. Tag pushes do not sign or publish anything. The development workflow can also be run manually without signing. Existing unsigned builds must be replaced manually with the first signed release. Installation in `/Applications` (or another writable, permanent app folder) is recommended; updating an app running from a mounted DMG will fail. Remote helper downloads retain the existing upstream protocol and are separate from the Mac application release feed.
 
 ## 1. Enroll with Apple
 
@@ -40,7 +40,7 @@ On your Mac, `base64 < certificate.p12 | tr -d '\n' | pbcopy` copies the certifi
 
 ## 5. Publish the first release
 
-After the secrets are configured, tag a commit containing this pipeline on `main` or `no-ai`:
+After the secrets are configured, tag a commit containing this pipeline on `main` or `no-ai`. Pushing the tag does not start signing:
 
 ```sh
 git checkout main
@@ -50,7 +50,7 @@ git tag -a v1.0.0 -m 'Zed No AI 1.0.0'
 git push origin v1.0.0
 ```
 
-Watch [Signed Zed No AI release](https://github.com/ar4ft/zed-no-ai/actions/workflows/no-ai-release.yml). Both Mac jobs must pass before the draft becomes public and the release becomes the latest update. A partial failure can leave a draft, which is invisible to the update feed. Re-run failed jobs, or manually dispatch the workflow with that existing tag. Published releases are not overwritten by retries. Fixes after a published release require a new, increasing version such as `v1.0.1`; never move an existing release tag.
+Open [Signed Zed No AI release](https://github.com/ar4ft/zed-no-ai/actions/workflows/no-ai-release.yml). Click **Run workflow**, choose the `main` or `no-ai` branch, enter the existing tag (for example `v1.0.0`), and run it. This explicit manual action starts signing and notarization. Both Mac jobs must pass before the draft becomes public and the release becomes the latest update. A partial failure can leave a draft, which is invisible to the update feed. Re-run failed jobs, or manually dispatch the workflow with that existing tag. Published releases are not overwritten by retries. Fixes after a published release require a new, increasing version such as `v1.0.1`; never move an existing release tag.
 
 Download the architecture's signed DMG or ZIP from [Releases](https://github.com/ar4ft/zed-no-ai/releases) and replace the existing unsigned app. Subsequent signed versions use automatic updates. Release assets include `SHA256SUMS.txt` for manual verification. Keep the Developer ID certificate valid and renew it before expiry; the signing identity and Apple team must match the updater's embedded team.
 

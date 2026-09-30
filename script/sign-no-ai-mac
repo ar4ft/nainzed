@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 cd "$(dirname "$0")/.."
+if [[ "${GITHUB_ACTIONS:-false}" == true && "${GITHUB_EVENT_NAME:-}" != workflow_dispatch ]]; then
+    echo 'Apple signing is allowed only for a manually dispatched GitHub action.' >&2
+    exit 1
+fi
 : "${MACOS_SIGNING_IDENTITY:?Developer ID Application identity is required}"
 : "${ZED_NO_AI_TEAM_ID:?Apple team ID is required}"
 : "${APPLE_NOTARIZATION_KEY_ID:?App Store Connect key ID is required}"

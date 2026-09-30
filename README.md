@@ -31,7 +31,7 @@ brew install cmake pkg-config
 ./script/build-no-ai-mac
 ```
 
-For signed, notarized releases and automatic updates, follow [RELEASES.md](RELEASES.md). Apple Developer enrollment and repository signing/notarization secrets are required; the release pipeline is implemented but a signed release has not yet been produced.
+For signed, notarized releases and automatic updates, follow [RELEASES.md](RELEASES.md). Signing runs only when **Signed Zed No AI release** is manually dispatched; branch builds produce development packages without Apple credentials, and tag pushes do not start signing. Apple Developer enrollment and repository signing/notarization secrets are required; the release pipeline is implemented but a signed release has not yet been produced.
 
 The script creates `target/release/bundle/osx/Zed No AI.app`, plus ZIP and DMG packages in `target/no-ai-arm64/` or `target/no-ai-x86_64/`. It builds for the current Mac architecture. It uses ad-hoc signing; downloaded builds are not Apple-notarized. Use Finder's Open action or macOS Privacy & Security to approve a build you trust.
 
