@@ -93,6 +93,20 @@ class MaintenanceTests(unittest.TestCase):
         self.assertEqual(git(fork, 'rev-parse', 'HEAD'), head)
         self.assertEqual((fork/'UPSTREAM_REVISION').read_text().strip(), previous)
 
+    def test_import_without_upstream_history_preserves_fork_changes(self):
+        fork, upstream, previous = self.fixture()
+        # Recreate an import with only files and no upstream commit ancestry.
+        git(fork, 'checkout', '--orphan', 'import')
+        git(fork, 'commit', '-m', 'Imported fork tree')
+        imported_tree = git(fork, 'rev-parse', 'HEAD^{tree}')
+        result = maintenance.prepare(fork, 'v1.0.1', str(upstream), True)
+        self.assertEqual(result['conflicts'], [])
+        ancestry = git(fork, 'rev-parse', 'HEAD^1')
+        self.assertEqual(git(fork, 'rev-parse', ancestry+'^{tree}'), imported_tree)
+        self.assertIn(previous, git(fork, 'show', '-s', '--format=%P', ancestry).split())
+        self.assertEqual((fork/'fork.txt').read_text(), 'AI and telemetry disabled\n')
+        self.assertTrue((fork/'fix.txt').exists())
+
 
 class GuardTests(unittest.TestCase):
     def test_changed_missing_and_unprotected_implementations_fail(self):

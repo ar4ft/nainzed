@@ -69,6 +69,9 @@ def prepare(root, tag, upstream_url, apply=False):
         raise ValueError('UPSTREAM_REVISION must contain a full commit SHA')
     git(root, 'fetch', '--no-tags', upstream_url, f'refs/tags/{tag}')
     target = git(root, 'rev-parse', 'FETCH_HEAD^{commit}').stdout.strip()
+    # Resolve the recorded baseline even in imported or shallow development clones.
+    unshallow = ['--unshallow'] if git(root, 'rev-parse', '--is-shallow-repository').stdout.strip() == 'true' else []
+    git(root, 'fetch', '--no-tags', '--filter=blob:none', *unshallow, upstream_url, previous)
     if git(root, 'merge-base', '--is-ancestor', target, 'HEAD', check=False).returncode == 0:
         print(f'{tag} is already incorporated; no update PR is needed.')
         return None
@@ -79,6 +82,14 @@ def prepare(root, tag, upstream_url, apply=False):
     branch = 'upstream-update/'+tag
     # Refuse to overwrite an existing branch, including a maintainer's conflict fixes.
     git(root, 'checkout', '-b', branch)
+    # The initial GitHub import may contain Zed's files without its parent history.
+    # Connect the recorded baseline using an ours merge; its tree stays identical.
+    if git(root, 'merge-base', 'HEAD', previous, check=False).returncode:
+        before = git(root, 'rev-parse', 'HEAD^{tree}').stdout.strip()
+        git(root, 'merge', '--allow-unrelated-histories', '--strategy=ours', '--no-ff',
+            previous, '-m', 'Record upstream baseline ancestry without changing fork files')
+        if git(root, 'rev-parse', 'HEAD^{tree}').stdout.strip() != before:
+            raise RuntimeError('Recording baseline ancestry unexpectedly changed the fork tree')
     merge = git(root, 'merge', '--no-commit', '--no-ff', target, check=False)
     conflicts = git(root, 'diff', '--name-only', '--diff-filter=U').stdout.splitlines()
     if merge.returncode:
