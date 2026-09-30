@@ -92,6 +92,8 @@ pub struct NotebookEditor {
     kernel_specification: Option<KernelSpecification>,
     execution_requests: HashMap<String, CellId>,
     kernel_picker_handle: PopoverMenuHandle<Picker<KernelPickerDelegate>>,
+    saving: bool,
+    saved_metadata: serde_json::Value,
 }
 
 enum SaveDestination {
@@ -194,7 +196,11 @@ impl NotebookEditor {
         let this = cx.entity();
         let cell_list = ListState::new(cell_count, gpui::ListAlignment::Top, px(1000.));
 
+        let saved_metadata =
+            serde_json::to_value(&notebook_item.read(cx).notebook.metadata).unwrap_or_default();
         let mut editor = Self {
+            saving: false,
+            saved_metadata,
             project,
             languages: languages.clone(),
             worktree_id,
@@ -263,6 +269,9 @@ impl NotebookEditor {
 
     fn has_content_changes(&self, cx: &App) -> bool {
         self.cell_map.values().any(|cell| cell.is_dirty(cx))
+            || serde_json::to_value(&self.notebook_item.read(cx).notebook.metadata)
+                .unwrap_or_default()
+                != self.saved_metadata
     }
 
     pub fn to_notebook(&self, cx: &App) -> nbformat::v4::Notebook {
@@ -288,11 +297,14 @@ impl NotebookEditor {
 
     pub fn mark_as_saved(&mut self, cx: &mut Context<Self>) {
         self.original_cell_order = self.cell_order.clone();
+        self.saved_metadata = serde_json::to_value(&self.notebook_item.read(cx).notebook.metadata)
+            .unwrap_or_default();
 
         for cell in self.cell_map.values() {
             match cell {
                 Cell::Code(code_cell) => {
                     code_cell.update(cx, |code_cell, cx| {
+                        code_cell.outputs_changed = false;
                         let editor = code_cell.editor();
                         editor.update(cx, |editor, cx| {
                             editor.buffer().update(cx, |buffer, cx| {
@@ -327,53 +339,200 @@ impl NotebookEditor {
         cx.notify();
     }
 
+    fn serialized_notebook(&self, cx: &App) -> Result<String> {
+        let preserve_outputs = self
+            .cell_map
+            .iter()
+            .filter_map(|(id, cell)| match cell {
+                Cell::Code(cell) if !cell.read(cx).outputs_changed => Some(id.to_string()),
+                _ => None,
+            })
+            .collect();
+        let mut edited = serde_json::to_value(self.to_notebook(cx))?;
+        if let Some(cells) = edited["cells"].as_array_mut() {
+            for cell in cells {
+                if let Some((_, Cell::Code(code))) = self
+                    .cell_map
+                    .iter()
+                    .find(|(id, _)| cell["id"].as_str() == Some(id.as_str()))
+                {
+                    cell["outputs"] = serde_json::Value::Array(code.read(cx).raw_outputs.clone());
+                }
+            }
+        }
+        let json = notebook_safety::prepare_save(
+            &self.notebook_item.read(cx).original_json,
+            edited,
+            &preserve_outputs,
+        )?;
+        nbformat::parse_notebook(&json)
+            .context("Notebook could not be read back after serialization")?;
+        Ok(json)
+    }
+
     fn save_impl(
         &mut self,
         destination: SaveDestination,
         project: Entity<Project>,
         cx: &mut Context<Self>,
     ) -> Task<Result<()>> {
-        let notebook = self.to_notebook(cx);
-        let project_path = self.notebook_item.read(cx).project_path.clone();
-
-        self.mark_as_saved(cx);
+        if self.saving {
+            return Task::ready(Err(anyhow::anyhow!(
+                "A notebook save is already in progress"
+            )));
+        }
+        let json = match self.serialized_notebook(cx) {
+            Ok(json) => json,
+            Err(error) => return Task::ready(Err(error)),
+        };
+        let item = self.notebook_item.read(cx);
+        let project_path = item.project_path.clone();
+        let original_text = item.original_text.clone();
+        let cell_order = self.cell_order.clone();
+        let saved_metadata = serde_json::to_value(&item.notebook.metadata).unwrap_or_default();
+        self.saving = true;
 
         cx.spawn(async move |this, cx| {
-            let json =
-                serde_json::to_string_pretty(&notebook).context("Failed to serialize notebook")?;
-            let buffer = project
-                .update(cx, |project, cx| project.open_buffer(project_path, cx))
-                .await?;
-            buffer.update(cx, |buffer, cx| buffer.set_text(json, cx));
-
-            match destination {
-                SaveDestination::CurrentPath => {
-                    project
-                        .update(cx, |project, cx| project.save_buffer(buffer, cx))
+            let result = async {
+                let buffer = project
+                    .update(cx, |project, cx| {
+                        project.open_buffer(project_path.clone(), cx)
+                    })
+                    .await?;
+                anyhow::ensure!(
+                    buffer.read_with(cx, |buffer, _| buffer.text()) == original_text,
+                    "Notebook changed in another editor. Reload it before saving."
+                );
+                let target = match &destination {
+                    SaveDestination::CurrentPath => project_path.clone(),
+                    SaveDestination::NewPath(path) => path.clone(),
+                };
+                // Back up the file that will be overwritten, before editing its buffer.
+                let (is_local, fs, absolute_path, entry_exists) =
+                    project.read_with(cx, |project, cx| {
+                        (
+                            project.is_local(),
+                            project.fs().clone(),
+                            project.absolute_path(&target, cx),
+                            project.entry_for_path(&target, cx).is_some(),
+                        )
+                    });
+                if is_local {
+                    if let Some(path) = absolute_path
+                        && fs.metadata(&path).await?.is_some()
+                    {
+                        if target == project_path {
+                            anyhow::ensure!(
+                                fs.load(&path).await?.replace("\r\n", "\n") == original_text,
+                                "Notebook changed on disk. Reload it before saving."
+                            );
+                        }
+                        let mut backup = path.as_os_str().to_os_string();
+                        backup.push(".bak");
+                        fs.copy_file(
+                            &path,
+                            &PathBuf::from(backup),
+                            fs::CopyOptions {
+                                overwrite: true,
+                                ..Default::default()
+                            },
+                        )
                         .await
-                }
-                SaveDestination::NewPath(new_path) => {
+                        .context(
+                            "Could not create the notebook backup; original was not overwritten",
+                        )?;
+                    }
+                } else if entry_exists {
+                    anyhow::ensure!(
+                        !target.path.is_empty(),
+                        "Open the remote notebook's parent folder to create its backup"
+                    );
+                    let old_target = project
+                        .update(cx, |project, cx| project.open_buffer(target.clone(), cx))
+                        .await?;
+                    let text = old_target.read_with(cx, |buffer, _| buffer.text());
+                    let backup = project
+                        .update(cx, |project, cx| project.create_buffer(None, false, cx))
+                        .await?;
+                    backup.update(cx, |buffer, cx| buffer.set_text(text, cx));
+                    let backup_path = ProjectPath {
+                        worktree_id: target.worktree_id,
+                        path: util::rel_path::RelPath::from_unix_str(&format!(
+                            "{}.bak",
+                            target.path.as_unix_str()
+                        ))?
+                        .into(),
+                    };
                     project
                         .update(cx, |project, cx| {
-                            project.save_buffer_as(buffer, new_path.clone(), cx)
+                            project.save_buffer_as(backup, backup_path, cx)
                         })
-                        .await?;
-
-                    // The buffer now lives at the new path, so the notebook has
-                    // to follow it or the next save writes to the old file.
-                    let entry_id = project.read_with(cx, |project, cx| {
-                        project.entry_for_path(&new_path, cx).map(|entry| entry.id)
-                    });
-                    this.update(cx, |this, cx| {
-                        this.notebook_item.update(cx, |notebook_item, _| {
-                            notebook_item.project_path = new_path;
-                            if let Some(entry_id) = entry_id {
-                                notebook_item.id = entry_id;
-                            }
-                        })
-                    })
+                        .await
+                        .context(
+                            "Could not create the notebook backup; original was not overwritten",
+                        )?;
                 }
+                anyhow::ensure!(
+                    buffer.read_with(cx, |buffer, _| buffer.text()) == original_text,
+                    "Notebook changed while its backup was being created. Reload it before saving."
+                );
+                buffer.update(cx, |buffer, cx| buffer.set_text(json.clone(), cx));
+                let save_result = match destination {
+                    SaveDestination::CurrentPath => {
+                        project
+                            .update(cx, |project, cx| project.save_buffer(buffer.clone(), cx))
+                            .await
+                    }
+                    SaveDestination::NewPath(ref path) => {
+                        project
+                            .update(cx, |project, cx| {
+                                project.save_buffer_as(buffer.clone(), path.clone(), cx)
+                            })
+                            .await
+                    }
+                };
+                if let Err(error) = save_result {
+                    // Restore our staged buffer if no other view has edited it in the meantime.
+                    buffer.update(cx, |buffer, cx| {
+                        if buffer.text() == json {
+                            buffer.set_text(original_text, cx);
+                        }
+                    });
+                    return Err(error);
+                }
+                let entry_id = project.read_with(cx, |project, cx| {
+                    project.entry_for_path(&target, cx).map(|entry| entry.id)
+                });
+                this.update(cx, |this, cx| {
+                    let unchanged = this
+                        .serialized_notebook(cx)
+                        .is_ok_and(|current| current == json);
+                    this.notebook_item.update(cx, |item, _| {
+                        item.project_path = target;
+                        if let Some(id) = entry_id {
+                            item.id = id;
+                        }
+                        item.original_json =
+                            serde_json::from_str(&json).expect("validated notebook JSON");
+                        item.original_text = json;
+                    });
+                    this.original_cell_order = cell_order;
+                    this.saved_metadata = saved_metadata;
+                    // Edits made while the write was running must remain dirty.
+                    if unchanged {
+                        this.mark_as_saved(cx);
+                    }
+                    cx.notify();
+                });
+                Ok(())
             }
+            .await;
+            this.update(cx, |this, cx| {
+                this.saving = false;
+                cx.notify();
+            })
+            .ok();
+            result
         })
     }
 
@@ -1616,12 +1775,31 @@ impl Focusable for NotebookEditor {
     }
 }
 
+fn document_with_ids(text: &str, notebook: &nbformat::v4::Notebook) -> Result<serde_json::Value> {
+    let mut original = if text.trim().is_empty() {
+        serde_json::to_value(notebook)?
+    } else {
+        serde_json::from_str::<serde_json::Value>(text)?
+    };
+    if original["nbformat"] != 4 {
+        original = serde_json::to_value(notebook)?;
+    }
+    if let Some(cells) = original["cells"].as_array_mut() {
+        for (cell, typed_cell) in cells.iter_mut().zip(&notebook.cells) {
+            cell["id"] = serde_json::Value::String(typed_cell.id().to_string());
+        }
+    }
+    Ok(original)
+}
+
 // Intended to be a NotebookBuffer
 pub struct NotebookItem {
     project_path: ProjectPath,
     languages: Arc<LanguageRegistry>,
     // Raw notebook data
     notebook: nbformat::v4::Notebook,
+    original_json: serde_json::Value,
+    original_text: String,
     // Store our version of the notebook in memory (cell_order, cell_map)
     id: ProjectEntryId,
 }
@@ -1702,7 +1880,10 @@ impl project::ProjectItem for NotebookItem {
                     })
                     .context("Entry not found")?;
 
+                let original_json = document_with_ids(&file_content, &notebook)?;
                 Ok(cx.new(|_| NotebookItem {
+                    original_json,
+                    original_text: file_content,
                     project_path: path,
                     languages,
                     notebook,
@@ -1953,7 +2134,14 @@ impl Item for NotebookEditor {
                 }
             };
 
+            let original_json = document_with_ids(&file_content, &notebook)?;
             this.update_in(cx, |this, window, cx| {
+                this.saved_metadata = serde_json::to_value(&notebook.metadata).unwrap_or_default();
+                this.notebook_item.update(cx, |item, cx| {
+                    item.original_json = original_json;
+                    item.original_text = buffer.read(cx).text();
+                    item.notebook = notebook.clone();
+                });
                 let mut cell_order = vec![];
                 let mut cell_map = HashMap::default();
 
@@ -2340,6 +2528,19 @@ mod tests {
             "the edited cell should be written to the notebook, got: {saved}"
         );
 
+        assert_eq!(
+            fs.read_file_sync(path!("/notebooks/test.ipynb.bak"))
+                .unwrap(),
+            NOTEBOOK_WITH_ONE_CODE_CELL.as_bytes(),
+            "backup must contain the original bytes"
+        );
+        notebook_editor.read_with(cx, |editor, cx| {
+            assert!(
+                !editor.is_dirty(cx),
+                "only a successful write may clear the dirty state"
+            );
+        });
+
         buffer.read_with(cx, |buffer, _| {
             assert_eq!(
                 buffer.text(),
@@ -2347,6 +2548,91 @@ mod tests {
                 "the project's buffer should hold the saved notebook"
             );
             assert!(!buffer.is_dirty(), "saving should leave the buffer clean");
+        });
+    }
+    #[gpui::test]
+    async fn no_ai_fork_notebook_backup_failure_keeps_changes_dirty(cx: &mut TestAppContext) {
+        cx.update(|cx| {
+            let settings_store = SettingsStore::test(cx);
+            cx.set_global(settings_store);
+            theme_settings::init(theme::LoadThemes::JustBase, cx);
+            editor::init(cx);
+        });
+
+        let fs = FakeFs::new(cx.executor());
+        fs.insert_tree(
+            path!("/notebooks"),
+            json!({ "test.ipynb": NOTEBOOK_WITH_ONE_CODE_CELL, "test.ipynb.bak": {} }),
+        )
+        .await;
+
+        let project = Project::test(fs.clone(), [path!("/notebooks").as_ref()], cx).await;
+        cx.update(|cx| ReplStore::init(fs.clone(), cx));
+
+        let project_path = project.read_with(cx, |project, cx| ProjectPath {
+            worktree_id: project.worktrees(cx).next().unwrap().read(cx).id(),
+            path: rel_path("test.ipynb").into(),
+        });
+
+        let notebook_item = cx
+            .update(|cx| {
+                NotebookItem::try_open(&project, &project_path, cx)
+                    .expect("ipynb files should be openable as notebooks")
+            })
+            .await
+            .expect("notebook should parse");
+
+        // Held across the save: a save that bypasses the project writes the file
+        // behind this buffer's back, leaving it stale.
+        let buffer = project
+            .update(cx, |project, cx| {
+                project.open_buffer(project_path.clone(), cx)
+            })
+            .await
+            .expect("notebook buffer should open");
+
+        // Rendering the notebook animates the kernel status icon, which makes
+        // `run_until_parked` spin forever; only the editor entity is needed here.
+        let cx = cx.add_empty_window();
+        let notebook_editor = cx.update(|window, cx| {
+            cx.new(|cx| NotebookEditor::new(project.clone(), notebook_item, window, cx))
+        });
+
+        let cell_editor = notebook_editor.read_with(cx, |notebook_editor, cx| {
+            let cell_id = notebook_editor
+                .cell_order
+                .first()
+                .expect("notebook has one cell");
+            let Some(Cell::Code(cell)) = notebook_editor.cell_map.get(cell_id) else {
+                panic!("expected a code cell");
+            };
+            cell.read(cx).editor().clone()
+        });
+        cell_editor.update_in(cx, |cell_editor, window, cx| {
+            cell_editor.set_text("print('goodbye')", window, cx);
+        });
+
+        notebook_editor
+            .update_in(cx, |notebook_editor, window, cx| {
+                notebook_editor.save(SaveOptions::default(), project.clone(), window, cx)
+            })
+            .await
+            .expect_err("saving must fail if its backup cannot be created");
+
+        assert_eq!(
+            fs.read_file_sync(path!("/notebooks/test.ipynb")).unwrap(),
+            NOTEBOOK_WITH_ONE_CODE_CELL.as_bytes(),
+            "backup failure must leave the original untouched"
+        );
+        notebook_editor.read_with(cx, |editor, cx| {
+            assert!(editor.is_dirty(cx));
+            assert!(!editor.saving);
+        });
+        cell_editor.read_with(cx, |editor, cx| {
+            assert_eq!(
+                editor.buffer().read(cx).snapshot(cx).text(),
+                "print('goodbye')"
+            );
         });
     }
 }

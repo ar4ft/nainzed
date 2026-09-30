@@ -147,6 +147,7 @@ members = [
     "crates/multi_buffer",
     "crates/net",
     "crates/node_runtime",
+    "crates/notebook_safety",
     "crates/notifications",
     "crates/oauth_callback_server",
     "crates/ollama",
@@ -274,6 +275,7 @@ publish = false
 edition = "2024"
 
 [workspace.dependencies]
+notebook_safety = { path = "crates/notebook_safety" }
 
 #
 # Workspace member crates

@@ -3,6 +3,7 @@ mod jupyter_settings;
 pub mod kernels;
 pub mod notebook;
 mod outputs;
+mod python_setup;
 mod repl_editor;
 mod repl_sessions_ui;
 mod repl_settings;
@@ -18,6 +19,7 @@ pub use runtimelib::ExecutionState;
 
 pub use crate::jupyter_settings::JupyterSettings;
 pub use crate::kernels::{Kernel, KernelSpecification, KernelStatus, PythonEnvKernelSpecification};
+pub use crate::python_setup::SetUpPython;
 pub use crate::repl_editor::*;
 pub use crate::repl_sessions_ui::{
     ClearCurrentOutput, ClearOutputs, Interrupt, ReplSessionsPage, Restart, Run, Sessions, Shutdown,
@@ -32,6 +34,7 @@ pub fn init(fs: Arc<dyn Fs>, cx: &mut App) {
     set_dispatcher(zed_dispatcher(cx));
     repl_sessions_ui::init(cx);
     ReplStore::init(fs, cx);
+    python_setup::init(cx);
 }
 
 fn zed_dispatcher(cx: &mut App) -> impl Dispatcher {

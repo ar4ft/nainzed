@@ -1429,7 +1429,6 @@ dependencies = [
 name = "auto_update_ui"
 version = "0.1.0"
 dependencies = [
- "agent_skills",
  "anyhow",
  "auto_update",
  "client",
@@ -1437,7 +1436,6 @@ dependencies = [
  "editor",
  "gpui",
  "markdown_preview",
- "prompt_store",
  "release_channel",
  "semver",
  "serde",
@@ -7231,7 +7229,6 @@ dependencies = [
  "picker",
  "pretty_assertions",
  "project",
- "prompt_store",
  "rand 0.9.4",
  "release_channel",
  "remote_connection",
@@ -9860,7 +9857,6 @@ dependencies = [
  "client",
  "collections",
  "command_palette_hooks",
- "edit_prediction",
  "editor",
  "futures 0.3.34",
  "gpui",
@@ -11501,6 +11497,14 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bf23ab2b905654b4cb177e30b629937b3868311d4e1cba859f899c041046e69b"
 dependencies = [
  "windows-sys 0.61.2",
+]
+
+[[package]]
+name = "notebook_safety"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "serde_json",
 ]
 
 [[package]]
@@ -15354,6 +15358,7 @@ dependencies = [
  "editor",
  "feature_flags",
  "file_icons",
+ "fs",
  "futures 0.3.34",
  "gpui",
  "html_to_markdown",
@@ -15369,6 +15374,7 @@ dependencies = [
  "menu",
  "multi_buffer",
  "nbformat",
+ "notebook_safety",
  "picker",
  "project",
  "remote",
@@ -16745,22 +16751,13 @@ dependencies = [
 name = "settings_ui"
 version = "0.1.0"
 dependencies = [
- "agent",
- "agent_settings",
- "agent_skills",
  "anyhow",
  "audio",
  "client",
  "cloud_api_types",
- "codestral",
  "collections",
  "component",
- "context_server",
- "copilot",
- "copilot_ui",
  "cpal",
- "edit_prediction",
- "edit_prediction_ui",
  "editor",
  "extension",
  "extension_host",
@@ -16774,8 +16771,6 @@ dependencies = [
  "http_proxy",
  "itertools 0.14.0",
  "language",
- "language_model",
- "language_models",
  "log",
  "menu",
  "paths",
@@ -16803,7 +16798,6 @@ dependencies = [
  "util",
  "workspace",
  "zed_actions",
- "zed_credentials_provider",
 ]
 
 [[package]]

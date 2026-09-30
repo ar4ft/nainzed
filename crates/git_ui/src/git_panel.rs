@@ -71,7 +71,6 @@ use project::{
     },
     project_settings::{GitPathStyle, ProjectSettings},
 };
-use prompt_store::RULES_FILE_NAMES;
 
 use serde::{Deserialize, Serialize};
 use settings::{
@@ -95,7 +94,7 @@ use ui::{
     prelude::*,
 };
 use util::paths::PathStyle;
-use util::{ResultExt, TryFutureExt, markdown::MarkdownInlineCode, maybe, rel_path::RelPath};
+use util::{ResultExt, TryFutureExt, markdown::MarkdownInlineCode, maybe};
 use workspace::SERIALIZATION_THROTTLE_TIME;
 use workspace::{
     Item, ModalView, Workspace,
@@ -4022,52 +4021,6 @@ impl GitPanel {
         compressed
     }
 
-    async fn load_project_rules(
-        project: &Entity<Project>,
-        repo_work_dir: &Arc<Path>,
-        cx: &mut AsyncApp,
-    ) -> Option<String> {
-        let rules_path = cx.update(|cx| {
-            for worktree in project.read(cx).worktrees(cx) {
-                let worktree_abs_path = worktree.read(cx).abs_path();
-                if !worktree_abs_path.starts_with(&repo_work_dir) {
-                    continue;
-                }
-
-                let worktree_snapshot = worktree.read(cx).snapshot();
-                for rules_name in RULES_FILE_NAMES {
-                    if let Ok(rel_path) = RelPath::from_unix_str(rules_name) {
-                        if let Some(entry) = worktree_snapshot.entry_for_path(rel_path) {
-                            if entry.is_file() {
-                                return Some(ProjectPath {
-                                    worktree_id: worktree.read(cx).id(),
-                                    path: entry.path.clone(),
-                                });
-                            }
-                        }
-                    }
-                }
-            }
-            None
-        })?;
-
-        let buffer = project
-            .update(cx, |project, cx| project.open_buffer(rules_path, cx))
-            .await
-            .ok()?;
-
-        let content = buffer
-            .read_with(cx, |buffer, _| buffer.text())
-            .trim()
-            .to_string();
-
-        if content.is_empty() {
-            None
-        } else {
-            Some(content)
-        }
-    }
-
     fn build_commit_message_prompt(
         prompt: &str,
         user_agents_md: Option<&str>,
@@ -4156,10 +4109,7 @@ impl GitPanel {
         let instructions = AgentSettings::get_global(cx)
             .commit_message_instructions
             .clone();
-        let project = self.project.clone();
-        let repo_work_dir = repo.read(cx).work_directory_abs_path.clone();
-
-        self.generate_commit_message_task = Some(cx.spawn(async move |this, mut cx| {
+        self.generate_commit_message_task = Some(cx.spawn(async move |this, cx| {
             async move {
                 let _defer = cx.on_drop(&this, |this, _cx| {
                     this.generate_commit_message_task.take();
@@ -4189,7 +4139,7 @@ impl GitPanel {
                 diff_text = Self::compress_commit_diff(&diff_text, MAX_DIFF_BYTES);
 
                 let rules_content = if include_project_rules {
-                    Self::load_project_rules(&project, &repo_work_dir, &mut cx).await
+                    None::<String>
                 } else {
                     None
                 };
@@ -9836,6 +9786,7 @@ mod tests {
     use std::any::TypeId;
     use theme::LoadThemes;
     use util::path;
+    use util::rel_path::RelPath;
     use util::rel_path::rel_path;
 
     use workspace::{

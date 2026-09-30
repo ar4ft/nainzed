@@ -213,6 +213,10 @@ impl Cell {
                 outputs,
             } => {
                 let text = source.concat();
+                let raw_outputs = outputs
+                    .iter()
+                    .map(|output| serde_json::to_value(output).expect("valid notebook output"))
+                    .collect();
                 let outputs = convert_outputs(outputs, window, cx);
 
                 Cell::Code(cx.new(|cx| {
@@ -220,6 +224,7 @@ impl Cell {
                         CellSource::Existing {
                             execution_count: *execution_count,
                             outputs,
+                            raw_outputs,
                         },
                         id.clone(),
                         metadata.clone(),
@@ -487,7 +492,7 @@ impl MarkdownCell {
 
     pub fn to_nbformat_cell(&self, cx: &App) -> nbformat::v4::Cell {
         let source = self.current_source(cx);
-        let source_lines: Vec<String> = source.lines().map(|l| format!("{}\n", l)).collect();
+        let source_lines: Vec<String> = source.split_inclusive('\n').map(str::to_owned).collect();
 
         nbformat::v4::Cell::Markdown {
             id: self.id.clone(),
@@ -652,6 +657,8 @@ pub struct CodeCell {
     source: String,
     editor: Entity<editor::Editor>,
     outputs: Vec<Output>,
+    pub(super) outputs_changed: bool,
+    pub(super) raw_outputs: Vec<serde_json::Value>,
     selected: bool,
     cell_position: Option<CellPosition>,
     _language_task: Task<()>,
@@ -669,16 +676,18 @@ pub(super) enum CellSource {
     Existing {
         execution_count: Option<i32>,
         outputs: Vec<Output>,
+        raw_outputs: Vec<serde_json::Value>,
     },
 }
 
 impl CellSource {
-    fn into_outputs(self) -> (Option<i32>, Vec<Output>) {
+    fn into_outputs(self) -> (Option<i32>, Vec<Output>, Vec<serde_json::Value>) {
         match self {
             CellSource::Existing {
                 execution_count,
                 outputs,
-            } => (execution_count, outputs),
+                raw_outputs,
+            } => (execution_count, outputs, raw_outputs),
             CellSource::None => Default::default(),
         }
     }
@@ -725,7 +734,7 @@ impl CodeCell {
             });
         });
 
-        let (execution_count, outputs) = cell_source.into_outputs();
+        let (execution_count, outputs, raw_outputs) = cell_source.into_outputs();
 
         Self {
             id,
@@ -734,6 +743,8 @@ impl CodeCell {
             source,
             editor,
             outputs,
+            outputs_changed: false,
+            raw_outputs,
             selected: false,
             cell_position: None,
             execution_start_time: None,
@@ -769,12 +780,12 @@ impl CodeCell {
     }
 
     pub fn is_dirty(&self, cx: &App) -> bool {
-        self.editor.read(cx).buffer().read(cx).is_dirty(cx)
+        self.outputs_changed || self.editor.read(cx).buffer().read(cx).is_dirty(cx)
     }
 
     pub fn to_nbformat_cell(&self, cx: &App) -> nbformat::v4::Cell {
         let source = self.current_source(cx);
-        let source_lines: Vec<String> = source.lines().map(|l| format!("{}\n", l)).collect();
+        let source_lines: Vec<String> = source.split_inclusive('\n').map(str::to_owned).collect();
 
         let outputs = self.outputs_to_nbformat(cx);
 
@@ -799,7 +810,9 @@ impl CodeCell {
     }
 
     pub fn clear_outputs(&mut self) {
+        self.outputs_changed = true;
         self.outputs.clear();
+        self.raw_outputs.clear();
         self.execution_duration = None;
     }
 
@@ -829,6 +842,11 @@ impl CodeCell {
         window: &mut Window,
         cx: &mut Context<Self>,
     ) {
+        self.outputs_changed = true;
+        self.raw_outputs.push(serde_json::json!({
+            "output_type":"error", "ename":"Kernel Error", "evalue":"cell could not be executed",
+            "traceback":[error_message]
+        }));
         self.outputs.push(Output::ErrorOutput(ErrorView {
             ename: "Kernel Error".to_string(),
             evalue: "cell could not be executed".to_string(),
@@ -862,6 +880,35 @@ impl CodeCell {
         window: &mut Window,
         cx: &mut Context<Self>,
     ) {
+        if matches!(
+            &message.content,
+            JupyterMessageContent::StreamContent(_)
+                | JupyterMessageContent::DisplayData(_)
+                | JupyterMessageContent::ExecuteResult(_)
+                | JupyterMessageContent::ExecuteInput(_)
+                | JupyterMessageContent::ErrorOutput(_)
+        ) {
+            self.outputs_changed = true;
+        }
+        let raw = match &message.content {
+            JupyterMessageContent::StreamContent(output) => {
+                Some(("stream", serde_json::to_value(output)))
+            }
+            JupyterMessageContent::DisplayData(output) => {
+                Some(("display_data", serde_json::to_value(output)))
+            }
+            JupyterMessageContent::ExecuteResult(output) => {
+                Some(("execute_result", serde_json::to_value(output)))
+            }
+            JupyterMessageContent::ErrorOutput(output) => {
+                Some(("error", serde_json::to_value(output)))
+            }
+            _ => None,
+        };
+        if let Some((kind, Ok(mut output))) = raw {
+            output["output_type"] = serde_json::Value::String(kind.into());
+            self.raw_outputs.push(output);
+        }
         match &message.content {
             JupyterMessageContent::StreamContent(stream) => {
                 self.outputs.push(Output::Stream {
@@ -1243,7 +1290,11 @@ pub struct RawCell {
 
 impl RawCell {
     pub fn to_nbformat_cell(&self) -> nbformat::v4::Cell {
-        let source_lines: Vec<String> = self.source.lines().map(|l| format!("{}\n", l)).collect();
+        let source_lines: Vec<String> = self
+            .source
+            .split_inclusive('\n')
+            .map(str::to_owned)
+            .collect();
 
         nbformat::v4::Cell::Raw {
             id: self.id.clone(),

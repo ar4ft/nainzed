@@ -144,7 +144,8 @@ pub struct KernelPickerDelegate {
     filtered_entries: Vec<KernelPickerEntry>,
     selected_kernelspec: Option<KernelSpecification>,
     selected_index: usize,
-    on_select: OnSelect,
+    on_select: std::rc::Rc<dyn Fn(KernelSpecification, &mut Window, &mut App)>,
+    installing: bool,
 }
 
 impl<T, TT> KernelSelector<T, TT>
@@ -298,12 +299,81 @@ impl PickerDelegate for KernelPickerDelegate {
     }
 
     fn confirm(&mut self, _secondary: bool, window: &mut Window, cx: &mut Context<Picker<Self>>) {
-        if let Some(KernelPickerEntry::Kernel { spec, .. }) =
-            self.filtered_entries.get(self.selected_index)
-        {
-            (self.on_select)(spec.clone(), window, cx);
-            cx.emit(DismissEvent);
+        if self.installing {
+            return;
         }
+        let Some(KernelPickerEntry::Kernel { spec, .. }) =
+            self.filtered_entries.get(self.selected_index)
+        else {
+            return;
+        };
+        let spec = spec.clone();
+        if let KernelSpecification::PythonEnv(ref env) = spec
+            && !env.has_ipykernel
+        {
+            let mut env = env.clone();
+            let details = format!(
+                "Install ipykernel in {} to run notebook cells with this interpreter.",
+                env.path.display()
+            );
+            let approval = window.prompt(
+                gpui::PromptLevel::Info,
+                "Prepare this Python environment",
+                Some(&details),
+                &["Install ipykernel", "Cancel"],
+                cx,
+            );
+            let on_select = self.on_select.clone();
+            self.installing = true;
+            cx.notify();
+            cx.spawn_in(window, async move |picker, cx| {
+                if approval.await.ok() != Some(0) {
+                    picker
+                        .update(cx, |picker, cx| {
+                            picker.delegate.installing = false;
+                            cx.notify();
+                        })
+                        .ok();
+                    return;
+                }
+                let python = env.path.clone();
+                let use_uv = env.is_uv();
+                let result = cx
+                    .background_spawn(async move {
+                        crate::python_setup::install_ipykernel(&python, use_uv).await
+                    })
+                    .await;
+                picker
+                    .update_in(cx, |picker, window, cx| {
+                        picker.delegate.installing = false;
+                        match result {
+                            Ok(()) => {
+                                env.has_ipykernel = true;
+                                ReplStore::global(cx).update(cx, |store, cx| {
+                                    store.mark_ipykernel_installed(cx, &env)
+                                });
+                                on_select(KernelSpecification::PythonEnv(env), window, cx);
+                                cx.emit(DismissEvent);
+                            }
+                            Err(error) => {
+                                crate::python_setup::show_message(
+                                    window,
+                                    cx,
+                                    gpui::PromptLevel::Warning,
+                                    "Kernel setup failed",
+                                    Some(&error.to_string()),
+                                );
+                            }
+                        }
+                        cx.notify();
+                    })
+                    .ok();
+            })
+            .detach();
+            return;
+        }
+        (self.on_select)(spec, window, cx);
+        cx.emit(DismissEvent);
     }
 
     fn dismissed(&mut self, _window: &mut Window, _cx: &mut Context<Picker<Self>>) {}
@@ -433,6 +503,17 @@ impl PickerDelegate for KernelPickerDelegate {
                 .border_color(cx.theme().colors().border_variant)
                 .p_1()
                 .gap_4()
+                .when(self.installing, |this| {
+                    this.child(Label::new("Installing ipykernel…"))
+                })
+                .child(
+                    Button::new("setup-python", "Set Up Python").on_click(cx.listener(
+                        |_, _, window, cx| {
+                            cx.emit(DismissEvent);
+                            window.dispatch_action(Box::new(crate::SetUpPython), cx);
+                        },
+                    )),
+                )
                 .child(
                     Button::new("kernel-docs", "Kernel Docs")
                         .end_icon(
@@ -471,7 +552,8 @@ where
             .unwrap_or_else(|| KernelPickerDelegate::first_selectable_index(&all_entries));
 
         let delegate = KernelPickerDelegate {
-            on_select: self.on_select,
+            on_select: std::rc::Rc::from(self.on_select),
+            installing: false,
             all_entries: all_entries.clone(),
             filtered_entries: all_entries,
             selected_kernelspec,

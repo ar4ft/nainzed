@@ -138,6 +138,23 @@ impl ReplStore {
         cx.notify();
     }
 
+    pub fn register_python_kernel(
+        &mut self,
+        worktree_id: WorktreeId,
+        spec: PythonEnvKernelSpecification,
+        cx: &mut Context<Self>,
+    ) {
+        let kernels = self
+            .kernel_specifications_for_worktree
+            .entry(worktree_id)
+            .or_default();
+        kernels.retain(|kernel| !matches!(kernel, KernelSpecification::PythonEnv(old) if old.path == spec.path));
+        let kernel = KernelSpecification::PythonEnv(spec);
+        kernels.push(kernel.clone());
+        self.set_active_kernelspec(worktree_id, kernel, cx);
+        cx.notify();
+    }
+
     pub fn mark_ipykernel_installed(
         &mut self,
         cx: &mut Context<Self>,
