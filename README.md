@@ -44,17 +44,17 @@ Open `examples/python.ipynb`, select **Python (Zed No AI)** in the kernel picker
 
 For a script-based notebook, open `examples/python_cells.py` and use the REPL actions on `# %%` cells.
 
-## Publish this checkout to your GitHub fork
+## Repository
 
-The source is based on the upstream commit recorded in `UPSTREAM_REVISION`. The connected GitHub app refused repository and fork creation with HTTP 403. Create a GitHub fork named `zed-no-ai`, then push this checkout's branch:
+The fork is published at [ar4ft/zed-no-ai](https://github.com/ar4ft/zed-no-ai). The AI-disabled source is on the `no-ai` branch. The source is based on the upstream commit recorded in `UPSTREAM_REVISION`.
 
 ```sh
-git remote rename origin upstream
-git remote add origin https://github.com/ar4ft/zed-no-ai.git
-git push -u origin no-ai
+git clone --branch no-ai https://github.com/ar4ft/zed-no-ai.git
+cd zed-no-ai
+./script/build-no-ai-mac
 ```
 
-Set `no-ai` as the fork's default branch to make this README and the AI-disabled application the defaults. Run the Mac workflow from that branch. The existing upstream history and license notices are preserved.
+GitHub Actions must be enabled for this fork before the Mac workflow can run. The existing upstream history and license notices are preserved.
 
 ## License and attribution
 
