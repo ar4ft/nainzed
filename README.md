@@ -32,7 +32,9 @@ brew install cmake pkg-config
 
 The script creates `target/release/bundle/osx/Zed No AI.app`, plus ZIP and DMG packages in `target/no-ai-arm64/` or `target/no-ai-x86_64/`. It builds for the current Mac architecture. It uses ad-hoc signing; downloaded builds are not Apple-notarized. Use Finder's Open action or macOS Privacy & Security to approve a build you trust.
 
-The **Build Zed No AI for Mac** GitHub Actions workflow builds Apple Silicon and Intel packages and runs the dependency audit, enforced AI-settings test, notebook preservation tests, and notebook open/save/backup-failure tests. Download successful build artifacts from the repository's Actions tab. The previous Mac workflow passed its settings and original notebook regression tests on both architectures; application packaging was still running at the time of this update. The new integration still needs a successful Mac workflow run. Five standalone notebook preservation tests pass locally, and the complete application passes `cargo check --locked -p zed --bin zed` on Linux. The notebook and settings test targets also compile; their GUI-backed tests still require the Mac workflow. No startup or memory benchmark has been run.
+The **Build Zed No AI for Mac** GitHub Actions workflow builds Apple Silicon and Intel packages and runs the dependency audit, production application check, enforced AI-settings test, notebook preservation tests, and notebook open/save/backup-failure tests. Download successful build artifacts from the repository's Actions tab.
+
+The [validated Apple Silicon build](https://github.com/ar4ft/zed-no-ai/actions/runs/36673142318) passed all checks and produced ZIP and DMG packages. Intel passed all checks and notebook tests in the same run, but its release build exceeded the original three-hour job limit. The workflow now allows six hours and saves Rust caches even when a step fails. A completed Intel package remains pending. The complete application and notebook/settings test targets also compile on Linux, and five standalone notebook preservation tests pass locally. No startup or memory benchmark has been run.
 
 ## Python and Jupyter
 
