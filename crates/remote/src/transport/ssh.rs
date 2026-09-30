@@ -798,8 +798,7 @@ impl SshRemoteConnection {
         let ssh_platform = socket.platform(ssh_shell_kind, is_windows).await?;
         log::info!("Remote platform discovered: {:?}", ssh_platform);
 
-        let ssh_os_version = socket.os_version(ssh_platform.os, ssh_shell_kind).await;
-        log::info!("Remote OS version discovered: {:?}", ssh_os_version);
+        let ssh_os_version = None;
 
         let (ssh_path_style, ssh_default_system_shell) = match ssh_platform.os {
             RemoteOs::Windows => (PathStyle::Windows, ssh_shell.clone()),
@@ -1470,20 +1469,6 @@ impl SshSocket {
             .await
             .context("Failed to run 'uname -sm' to determine platform")?;
         parse_platform(&output)
-    }
-
-    /// Best-effort detection of the remote OS version. Failures are logged and
-    /// result in `None` rather than failing the connection, since this is only
-    /// used for telemetry.
-    async fn os_version(&self, os: RemoteOs, shell: ShellKind) -> Option<String> {
-        let (program, args) = super::os_version_command(os);
-        match self.run_command(shell, program, args, false).await {
-            Ok(output) => super::parse_os_version(os, &output),
-            Err(error) => {
-                log::warn!("Failed to determine remote OS version: {error:#}");
-                None
-            }
-        }
     }
 
     async fn platform_windows(&self, shell: ShellKind) -> Result<RemotePlatform> {

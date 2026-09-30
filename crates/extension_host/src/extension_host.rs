@@ -1320,18 +1320,6 @@ impl ExtensionStore {
                 .iter()
                 .any(|id| new_remote_sync_extensions.contains(id.as_ref()));
 
-        let extension_ids = extensions_to_load
-            .iter()
-            .filter_map(|id| {
-                Some((
-                    id.clone(),
-                    new_index.extensions.get(id)?.manifest.version.clone(),
-                ))
-            })
-            .collect::<Vec<_>>();
-
-        telemetry::event!("Extensions Loaded", id_and_versions = extension_ids);
-
         let themes_to_remove = old_index
             .themes
             .iter()

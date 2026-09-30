@@ -1,46 +1,11 @@
-//! See [Telemetry in Zed](https://zed.dev/docs/telemetry) for additional information.
-use futures::channel::mpsc;
+//! Telemetry is removed from this fork. Upstream call sites compile to nothing.
 pub use serde_json;
-use std::sync::OnceLock;
 pub use telemetry_events::FlexibleEvent as Event;
 
-/// Macro to create telemetry events and send them to the telemetry queue.
-///
-/// By convention, the name should be "Noun Verbed", e.g. "Keymap Changed"
-/// or "Project Diagnostics Opened".
-///
-/// The properties can be any value that implements serde::Serialize.
-///
-/// ```
-/// # let url = "https://example.com";
-/// telemetry::event!("Keymap Changed", version = "1.0.0");
-/// telemetry::event!("Documentation Viewed", url, source = "Extension Upsell");
-/// ```
-///
-/// If you want to debug logging in development, export `RUST_LOG=telemetry=trace`
+/// Ignore both the event and its property expressions without evaluating them.
 #[macro_export]
 macro_rules! event {
-    ($name:expr) => {{
-        let event = $crate::Event {
-            event_type: $name.to_string(),
-            event_properties: std::collections::HashMap::new(),
-        };
-        $crate::send_event(event);
-    }};
-    ($name:expr, $($key:ident $(= $value:expr)?),+ $(,)?) => {{
-        let event = $crate::Event {
-            event_type: $name.to_string(),
-            event_properties: std::collections::HashMap::from([
-                $(
-                    (stringify!($key).to_string(),
-                        $crate::serde_json::value::to_value(&$crate::serialize_property!($key $(= $value)?))
-                            .unwrap_or_else(|_| $crate::serde_json::to_value(&()).unwrap())
-                    ),
-                )+
-            ]),
-        };
-        $crate::send_event(event);
-    }};
+    ($($ignored:tt)*) => {{}};
 }
 
 #[macro_export]
@@ -52,15 +17,32 @@ macro_rules! serialize_property {
         $value
     };
 }
+pub fn send_event(_: Event) {}
+pub fn init(_: futures::channel::mpsc::UnboundedSender<Event>) {}
 
-pub fn send_event(event: Event) {
-    if let Some(queue) = TELEMETRY_QUEUE.get() {
-        queue.unbounded_send(event).ok();
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn no_telemetry_fork_does_not_evaluate_event_properties() {
+        let called = std::cell::Cell::new(false);
+        crate::event!(
+            "Ignored",
+            private_data = {
+                called.set(true);
+                "secret"
+            }
+        );
+        assert!(!called.get());
+    }
+    #[test]
+    fn no_telemetry_fork_never_enqueues_events() {
+        let (tx, mut rx) = futures::channel::mpsc::unbounded();
+        crate::init(tx.clone());
+        crate::send_event(crate::Event {
+            event_type: "Ignored".into(),
+            event_properties: Default::default(),
+        });
+        assert!(rx.try_recv().is_err());
+        drop(tx);
     }
 }
-
-pub fn init(tx: mpsc::UnboundedSender<Event>) {
-    TELEMETRY_QUEUE.set(tx).ok();
-}
-
-static TELEMETRY_QUEUE: OnceLock<mpsc::UnboundedSender<Event>> = OnceLock::new();

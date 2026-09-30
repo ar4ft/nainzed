@@ -98,9 +98,6 @@ impl DockerExecConnection {
         this.remote_platform = Some(remote_platform);
         log::info!("Remote platform discovered: {:?}", this.remote_platform);
 
-        this.os_version = this.discover_os_version(remote_platform.os).await;
-        log::info!("Remote OS version discovered: {:?}", this.os_version);
-
         this.shell = this.discover_shell().await;
         log::info!("Remote shell discovered: {}", this.shell);
 
@@ -185,21 +182,6 @@ impl DockerExecConnection {
     async fn check_remote_platform(&self) -> Result<RemotePlatform> {
         let uname = self.run_docker_exec_delimited("uname -sm").await?;
         parse_platform(&uname)
-    }
-
-    /// Best-effort detection of the container's OS version for telemetry.
-    async fn discover_os_version(&self, os: RemoteOs) -> Option<String> {
-        let (program, args) = super::os_version_command(os);
-        match self
-            .run_docker_exec(program, None, &Default::default(), args)
-            .await
-        {
-            Ok(output) => super::parse_os_version(os, &output),
-            Err(error) => {
-                log::warn!("Failed to determine remote OS version: {error:#}");
-                None
-            }
-        }
     }
 
     async fn ensure_server_binary(

@@ -98,7 +98,6 @@ collections.workspace = true
 command_palette.workspace = true
 command_palette_hooks.workspace = true
 component_preview.workspace = true
-crashes.workspace = true
 dap_adapters.workspace = true
 db.workspace = true
 debug_adapter_extension.workspace = true
@@ -130,7 +129,6 @@ gpui_platform = { workspace = true, features = [
     "x11",
 ] }
 gpui_tokio.workspace = true
-hang_telemetry.workspace = true
 image = { workspace = true, optional = true }
 itertools.workspace = true
 rayon.workspace = true

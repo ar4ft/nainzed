@@ -2,9 +2,9 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 tree=$(cargo tree --locked -p zed -e normal,build --prefix none "$@")
-forbidden=$(printf '%s\n' "$tree" | awk '$1 ~ /^(agent|agent_ui|agent_servers|agent_client_protocol|agent_skills|copilot|copilot_ui|edit_prediction|edit_prediction_ui|language_models|anthropic|open_ai|google_ai|bedrock|ollama|codestral|open_router|deepseek|minimax|mistral|x_ai|x_ai_subscribed|zed_ai)$/ {print $1}' | sort -u)
+forbidden=$(printf '%s\n' "$tree" | awk '$1 ~ /^(agent|agent_ui|agent_servers|agent_client_protocol|agent_skills|copilot|copilot_ui|edit_prediction|edit_prediction_ui|language_models|anthropic|open_ai|google_ai|bedrock|ollama|codestral|open_router|deepseek|minimax|mistral|x_ai|x_ai_subscribed|zed_ai|hang_telemetry|crashes)$/ {print $1}' | sort -u)
 if [[ -n "$forbidden" ]]; then
-  printf 'AI implementation dependencies found:\n%s\n' "$forbidden" >&2
+  printf 'Forbidden AI or telemetry implementation dependencies found:\n%s\n' "$forbidden" >&2
   exit 1
 fi
-printf 'Production AI dependency audit passed.\n'
+printf 'Production AI and telemetry dependency audit passed.\n'

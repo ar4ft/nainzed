@@ -294,13 +294,11 @@ async fn test_remote_buffer_path_swap(cx: &mut TestAppContext, server_cx: &mut T
 }
 
 #[gpui::test]
-async fn test_remote_telemetry_event_forwarding(
+async fn no_telemetry_fork_discards_forwarded_remote_events(
     cx: &mut TestAppContext,
     server_cx: &mut TestAppContext,
 ) {
-    // This mirrors `init_test`, but retains the server-side session so the test
-    // can drive a forwarded telemetry event over the proto channel (as
-    // `init_telemetry_forwarding` does on a real remote server).
+    // An upstream remote host may still send telemetry. The fork must discard it.
     let server_fs = FakeFs::new(server_cx.executor());
     server_fs
         .insert_tree(
@@ -362,36 +360,7 @@ async fn test_remote_telemetry_event_forwarding(
     let events = project.read_with(cx, |project, _| {
         project.client().telemetry().queued_events()
     });
-    assert_eq!(
-        events.len(),
-        1,
-        "the forwarded event should be reported once"
-    );
-    let event = &events[0];
-    assert_eq!(event.event_type, "fs_watcher_poll");
-    // The event's original properties survive the round-trip.
-    assert_eq!(
-        event.event_properties.get("path"),
-        Some(&serde_json::Value::String("/code/project1".to_string()))
-    );
-    // The client stamps the remote host metadata it learned at connection time.
-    // The mock connection reports a Linux/x86_64 host over a "mock" connection.
-    assert_eq!(
-        event.event_properties.get("remote"),
-        Some(&serde_json::Value::Bool(true))
-    );
-    assert_eq!(
-        event.event_properties.get("remote_connection_type"),
-        Some(&serde_json::Value::String("mock".to_string()))
-    );
-    assert_eq!(
-        event.event_properties.get("remote_os_name"),
-        Some(&serde_json::Value::String("Linux".to_string()))
-    );
-    assert_eq!(
-        event.event_properties.get("remote_architecture"),
-        Some(&serde_json::Value::String("x86_64".to_string()))
-    );
+    assert!(events.is_empty(), "remote telemetry must never be queued");
 }
 
 async fn do_search_and_assert(

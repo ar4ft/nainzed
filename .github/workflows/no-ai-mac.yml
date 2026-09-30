@@ -31,12 +31,14 @@ jobs:
           save-always: true
       - name: Build dependencies
         run: brew install cmake pkg-config
-      - name: Audit production dependencies for AI providers
+      - name: Audit production dependencies for AI and telemetry
         run: script/audit-no-ai
+      - name: Verify telemetry cannot collect or send data
+        run: cargo test --locked -p telemetry && cargo test --locked -p client --lib no_telemetry_fork
       - name: Check notebook data preservation
         run: cargo test --locked -p notebook_safety
       - name: Check the production application
-        run: cargo check --locked -p zed --bin zed
+        run: cargo check --locked -p zed --bin zed && cargo check --locked -p remote_server --lib --bin remote_server
       - name: Verify AI cannot be re-enabled through settings
         run: cargo test --locked -p project --lib no_ai_fork_settings_cannot_enable_ai
       - name: Check notebook open and save regressions

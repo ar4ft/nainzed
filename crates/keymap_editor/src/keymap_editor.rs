@@ -3679,8 +3679,6 @@ async fn save_keybinding_update(
         }
     };
 
-    let (new_keybinding, removed_keybinding, source) = operation.generate_telemetry();
-
     let updated_keymap_contents = settings::KeymapFile::update_keybinding(
         operation,
         keymap_contents,
@@ -3696,12 +3694,6 @@ async fn save_keybinding_update(
     .await
     .context("Failed to write keymap file")?;
 
-    telemetry::event!(
-        "Keybinding Updated",
-        new_keybinding = new_keybinding,
-        removed_keybinding = removed_keybinding,
-        source = source
-    );
     Ok(())
 }
 
@@ -3733,7 +3725,6 @@ async fn remove_keybinding(
         target_keybind_source: existing.keybind_source().unwrap_or(KeybindSource::User),
     };
 
-    let (new_keybinding, removed_keybinding, source) = operation.generate_telemetry();
     let updated_keymap_contents = settings::KeymapFile::update_keybinding(
         operation,
         keymap_contents,
@@ -3749,12 +3740,6 @@ async fn remove_keybinding(
     .await
     .context("Failed to write keymap file")?;
 
-    telemetry::event!(
-        "Keybinding Removed",
-        new_keybinding = new_keybinding,
-        removed_keybinding = removed_keybinding,
-        source = source
-    );
     Ok(())
 }
 
