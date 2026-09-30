@@ -81,9 +81,9 @@ pub struct ProjectSettingsContent {
     /// The list of custom Git hosting providers.
     pub git_hosting_providers: Option<ExtendingVec<GitHostingProviderConfig>>,
 
-    /// Whether to disable all AI features in Zed.
+    /// AI is permanently disabled in this fork. This value is accepted for compatibility.
     ///
-    /// Default: false
+    /// Default: true
     pub disable_ai: Option<SaturatingBool>,
 }
 

@@ -1145,27 +1145,22 @@ pub enum PulledDiagnostics {
     },
 }
 
-/// Whether to disable all AI features in Zed.
-///
-/// Default: false
+/// AI is permanently disabled in this fork, independent of user or project settings.
 #[derive(Copy, Clone, Debug, RegisterSetting)]
 pub struct DisableAiSettings {
     pub disable_ai: bool,
 }
 
 impl settings::Settings for DisableAiSettings {
-    fn from_settings(content: &settings::SettingsContent) -> Self {
-        Self {
-            disable_ai: content.project.disable_ai.unwrap().0,
-        }
+    fn from_settings(_content: &settings::SettingsContent) -> Self {
+        Self { disable_ai: true }
     }
 }
 
 impl DisableAiSettings {
     /// Returns whether AI is disabled for the given file.
     ///
-    /// This checks the project-level settings for the file's worktree,
-    /// allowing `disable_ai` to be configured per-project in `.zed/settings.json`.
+    /// AI is disabled for every worktree in this fork.
     pub fn is_ai_disabled_for_buffer(buffer: Option<&Entity<Buffer>>, cx: &App) -> bool {
         Self::is_ai_disabled_for_file(buffer.and_then(|buffer| buffer.read(cx).file()), cx)
     }
@@ -7081,4 +7076,23 @@ fn provide_inline_values(
     }
 
     variables
+}
+
+#[cfg(test)]
+mod no_ai_fork_tests {
+    use super::DisableAiSettings;
+    use settings::{Settings, SettingsContent};
+
+    #[test]
+    fn no_ai_fork_settings_cannot_enable_ai() {
+        // Missing values, user opt-ins, and project opt-ins must all remain off.
+        for json in [
+            r#"{}"#,
+            r#"{"disable_ai": false}"#,
+            r#"{"disable_ai": true}"#,
+        ] {
+            let content: SettingsContent = serde_json::from_str(json).unwrap();
+            assert!(DisableAiSettings::from_settings(&content).disable_ai);
+        }
+    }
 }

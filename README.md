@@ -1,48 +1,61 @@
-# Zed
+# Zed No AI
 
-[![Zed](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/zed-industries/zed/main/assets/badge/v0.json)](https://zed.dev)
-[![CI](https://github.com/zed-industries/zed/actions/workflows/run_tests.yml/badge.svg)](https://github.com/zed-industries/zed/actions/workflows/run_tests.yml)
+A macOS-focused fork of [Zed](https://github.com/zed-industries/zed) for text editing, folder/file browsing, Python, and Jupyter notebooks. No AI services are started by the application. AI cannot be re-enabled with a user or project setting.
 
-Welcome to Zed, a high-performance, multiplayer code editor from the creators of [Atom](https://github.com/atom/atom) and [Tree-sitter](https://github.com/tree-sitter/tree-sitter).
+## What changed
 
----
+- Enforces `disable_ai: true` in the settings loader, even if settings request `false`.
+- Removes startup for Copilot, chat/model providers, edit predictions, agents, agent registry downloads, AI web search, prompt loading, and the global agent-rules watcher.
+- Removes the agent panel and threads sidebar, AI prediction status control, AI toolbars, AI onboarding, AI settings pages, and AI skill-install handlers.
+- Drops AI keyboard bindings and hides AI commands, including editor prediction commands and Git commit-message generation.
+- Keeps the shared model registry empty and rejects provider registration, including extension providers.
+- Enables the upstream experimental `.ipynb` editor without an account or remote feature flag. Python `# %%` script cells also remain available.
+- Uses separate app data (`ZedNoAI`) and configuration (`~/.config/zednoai`) so the fork can coexist with upstream Zed.
+- Disables upstream updates, including manual update checks, so an update cannot replace this fork with upstream Zed.
 
-### Installation
+Folder browsing, tabs, file outline, search, language-server completion, syntax highlighting, terminal, Git, debugging, and Vim mode are inherited from Zed. Language-server completion is ordinary code completion and does not use an AI model.
 
-On macOS, Linux, and Windows you can [download Zed directly](https://zed.dev/download) or install Zed via your local package manager ([macOS](https://zed.dev/docs/installation#macos)/[Linux](https://zed.dev/docs/linux#installing-via-a-package-manager)/[Windows](https://zed.dev/docs/windows#package-managers)).
+**Scope:** this is a fork with AI functionality disabled and its application integration removed. Some AI crates and types remain as transitive dependencies of shared upstream editor, Git, settings, and title-bar components. It is not yet a source tree or binary proven to contain zero AI-related code. No startup/performance benchmark has been run. The notebook UI is experimental upstream functionality.
 
-Other platforms are not yet available:
+## Build on a Mac
 
-- Web ([tracking discussion](https://github.com/zed-industries/zed/discussions/26195))
+Install full Xcode, select it with `sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer`, accept its license, and install [Rust via rustup](https://rustup.rs/). The Rust version is pinned in `rust-toolchain.toml`.
 
-### Developing Zed
+```sh
+brew install cmake pkg-config
+./script/build-no-ai-mac
+```
 
-- [Building Zed for macOS](./docs/src/development/macos.md)
-- [Building Zed for Linux](./docs/src/development/linux.md)
-- [Building Zed for Windows](./docs/src/development/windows.md)
+The script creates `target/release/bundle/osx/Zed No AI.app`, plus ZIP and DMG packages in `target/no-ai-arm64/` or `target/no-ai-x86_64/`. It builds for the current Mac architecture. It uses ad-hoc signing; downloaded builds are not Apple-notarized. Use Finder's Open action or macOS Privacy & Security to approve a build you trust.
 
-### Contributing
+The **Build Zed No AI for Mac** GitHub Actions workflow builds Apple Silicon and Intel packages and runs the settings and notebook regression checks. When a build succeeds, download its artifacts from the repository's Actions tab. Mac builds have not been run in the Linux preparation workspace. The Linux `cargo check --locked -p zed --bin zed` attempt stopped in the upstream `x11` dependency because this workspace lacks the X11 development library; compilation of the fork's application code and runtime notebook checks remain unverified. Rust formatting, Cargo dependency resolution, shell syntax, patch whitespace checks, and both Python example calculations passed.
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md) for ways you can contribute to Zed.
+## Python and Jupyter
 
-Also... we're hiring! Check out our [jobs](https://zed.dev/jobs) page for open roles.
+Create a Python kernel on your Mac:
 
-### Licensing
+```sh
+python3 -m venv ~/.venvs/zednoai
+~/.venvs/zednoai/bin/python -m pip install ipykernel
+~/.venvs/zednoai/bin/python -m ipykernel install --user --name zednoai --display-name 'Python (Zed No AI)'
+```
 
-Zed source code is licensed primarily under GPL-3.0-or-later, with Apache-2.0 components where marked.
+Open `examples/python.ipynb`, select **Python (Zed No AI)** in the kernel picker, and run a cell with **Shift+Enter**. **Cmd+Enter** runs a cell; **Cmd+Shift+Enter** runs all cells. The notebook editor supports code and Markdown cells, outputs, kernel interrupt/restart, and saving. These capabilities are inherited from upstream and require Mac runtime validation; preserve a copy of valuable notebooks while evaluating the experimental editor.
 
-License information for third party dependencies must be correctly provided for CI to pass.
+For a script-based notebook, open `examples/python_cells.py` and use the REPL actions on `# %%` cells.
 
-We use [`cargo-about`](https://github.com/EmbarkStudios/cargo-about) to automatically comply with open source licenses. If CI is failing, check the following:
+## Publish this checkout to your GitHub fork
 
-- Is it showing a `no license specified` error for a crate you've created? If so, add `publish = false` under `[package]` in your crate's Cargo.toml.
-- Is the error `failed to satisfy license requirements` for a dependency? If so, first determine what license the project has and whether this system is sufficient to comply with this license's requirements. If you're unsure, ask a lawyer. Once you've verified that this system is acceptable add the license's SPDX identifier to the `accepted` array in `script/licenses/zed-licenses.toml`.
-- Is `cargo-about` unable to find the license for a dependency? If so, add a clarification field at the end of `script/licenses/zed-licenses.toml`, as specified in the [cargo-about book](https://embarkstudios.github.io/cargo-about/cli/generate/config.html#crate-configuration).
+The source is based on the upstream commit recorded in `UPSTREAM_REVISION`. The connected GitHub app refused repository and fork creation with HTTP 403. Create a GitHub fork named `zed-no-ai`, then push this checkout's branch:
 
-## Sponsorship
+```sh
+git remote rename origin upstream
+git remote add origin https://github.com/ar4ft/zed-no-ai.git
+git push -u origin no-ai
+```
 
-Zed is developed by **Zed Industries, Inc.**, a for-profit company.
+Set `no-ai` as the fork's default branch to make this README and the AI-disabled application the defaults. Run the Mac workflow from that branch. The existing upstream history and license notices are preserved.
 
-If you’d like to financially support the project, you can do so via GitHub Sponsors.
-Sponsorships go directly to Zed Industries and are used as general company revenue.
-There are no perks or entitlements associated with sponsorship.
+## License and attribution
+
+The application retains Zed's GPL-3.0-or-later license; applicable components retain their Apache-2.0 or other upstream licenses. See `LICENSE-GPL`, `LICENSE-APACHE`, and the notices generated by `script/generate-licenses`. Distribute matching source with binaries as required by their licenses. This independent fork is not an official Zed release. The original upstream README is in `README.upstream.md`.

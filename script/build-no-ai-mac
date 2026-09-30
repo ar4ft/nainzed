@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd "$(dirname "$0")/.."
+if [[ "$(uname -s)" != Darwin ]]; then
+    echo "This build requires macOS with Xcode and Rust installed." >&2
+    exit 1
+fi
+export ZED_RELEASE_CHANNEL=dev
+export ZED_BUNDLE=true
+export ZED_UPDATE_EXPLANATION='Build updates from the Zed No AI fork.'
+export CARGO_BUNDLE_SKIP_BUILD=true
+# Generate redistribution notices before embedding assets in the release binary.
+script/generate-licenses
+cargo build --locked --release --package zed --bin zed --package cli --bin cli
+if ! cargo bundle --version 2>/dev/null | grep -q '0.6.1-zed'; then
+    cargo install cargo-bundle --git https://github.com/zed-industries/cargo-bundle.git --branch zed-deploy --locked
+fi
+(cd crates/zed && cargo bundle --release --select-workspace-root)
+app='target/release/bundle/osx/Zed No AI.app'
+test -d "$app"
+cp target/release/cli "$app/Contents/MacOS/cli"
+cp crates/zed/resources/Document.icns "$app/Contents/Resources/Document.icns"
+# This community build uses ad-hoc signing; it does not use Zed's Apple identity.
+codesign --force --deep --sign - "$app"
+architecture="$(uname -m)"
+package_dir="target/no-ai-${architecture}"
+mkdir -p "$package_dir"
+# Preserve app permissions and symlinks in a downloadable archive.
+ditto -c -k --sequesterRsrc --keepParent "$app" "$package_dir/Zed-No-AI-${architecture}.zip"
+staging="$(mktemp -d)"
+trap 'rm -rf "$staging"' EXIT
+ditto "$app" "$staging/Zed No AI.app"
+ln -s /Applications "$staging/Applications"
+hdiutil create -volname 'Zed No AI' -srcfolder "$staging" -ov -format UDZO "$package_dir/Zed-No-AI-${architecture}.dmg"
+echo "Built $app"
+echo "Installable packages: $package_dir"

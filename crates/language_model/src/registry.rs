@@ -152,20 +152,9 @@ impl LanguageModelRegistry {
         provider: Arc<T>,
         cx: &mut Context<Self>,
     ) {
-        let id = provider.id();
-
-        let subscription = provider.subscribe(cx, {
-            let id = id.clone();
-            move |_, cx| {
-                cx.emit(Event::ProviderStateChanged(id.clone()));
-            }
-        });
-        if let Some(subscription) = subscription {
-            subscription.detach();
-        }
-
-        self.providers.insert(id.clone(), provider);
-        cx.emit(Event::AddedProvider(id));
+        // Model providers are unavailable in this editor fork, including those
+        // supplied by extensions. Keep an empty registry for shared UI callers.
+        let _ = (provider, cx);
     }
 
     pub fn unregister_provider(&mut self, id: LanguageModelProviderId, cx: &mut Context<Self>) {

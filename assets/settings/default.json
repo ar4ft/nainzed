@@ -539,7 +539,7 @@
   "allow_rewrap": "in_comments",
   // Controls whether edit predictions are shown immediately (true)
   // or manually by triggering `editor::ShowEditPrediction` (false).
-  "show_edit_predictions": true,
+  "show_edit_predictions": false,
   // Disable edit predictions in these language scopes, such as "comment" and
   // "string".
   //
@@ -592,7 +592,7 @@
     // Whether to show the Selections menu in the editor toolbar.
     "selections_menu": true,
     // Whether to show agent review buttons in the editor toolbar.
-    "agent_review": true,
+    "agent_review": false,
     // Whether to show code action buttons in the editor toolbar.
     "code_actions": false,
   },
@@ -1693,13 +1693,11 @@
     // Zero Data Retention
     "anthropic_retention": false,
   },
-  // Whether to disable all AI features in Zed.
-  //
-  // Default: false
-  "disable_ai": false,
+  // AI is permanently disabled in Zed No AI. This cannot be overridden.
+  "disable_ai": true,
   // Automatically update Zed. This setting may be ignored on Linux if
   // installed through a package manager.
-  "auto_update": true,
+  "auto_update": false,
   // How to render LSP `textDocument/documentColor` colors in the editor.
   //
   // Possible values:
@@ -1894,7 +1892,7 @@
   "load_direnv": "direct",
   "edit_predictions": {
     // Which edit prediction provider to use.
-    "provider": "zed",
+    "provider": "none",
     // Disable edit predictions for files matching these glob patterns.
     //
     // Use `"..."` to add patterns without repeating Zed's defaults. In project

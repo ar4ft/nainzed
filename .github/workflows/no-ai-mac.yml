@@ -1,0 +1,39 @@
+name: Build Zed No AI for Mac
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, no-ai]
+permissions:
+  contents: read
+jobs:
+  mac:
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [macos-15, macos-15-intel]
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 180
+    env:
+      CARGO_INCREMENTAL: '0'
+      ZED_RELEASE_CHANNEL: dev
+      ZED_UPDATE_EXPLANATION: Build updates from the Zed No AI fork.
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install the pinned Rust toolchain
+        run: rustup show
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: no-ai-${{ matrix.runner }}
+      - name: Build dependencies
+        run: brew install cmake pkg-config
+      - name: Verify AI cannot be re-enabled through settings
+        run: cargo test --locked -p project --lib no_ai_fork_settings_cannot_enable_ai
+      - name: Check notebook open and save regressions
+        run: cargo test --locked -p repl --lib notebook::notebook_ui::tests::test_open_single_file_notebook && cargo test --locked -p repl --lib notebook::notebook_ui::tests::test_save_goes_through_the_project
+      - name: Create application and installers
+        run: script/build-no-ai-mac
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Zed-No-AI-${{ matrix.runner }}
+          path: target/no-ai-*/*
+          if-no-files-found: error
