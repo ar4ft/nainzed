@@ -13,6 +13,7 @@ A macOS-focused fork of [Zed](https://github.com/zed-industries/zed) for text ed
 - Creates a `.bak` copy before overwriting a notebook, refuses conflicting edits, and preserves rich outputs, Markdown attachments, and unknown notebook fields.
 - Adds **repl: Set Up Python** and an **Install ipykernel** prompt in the kernel menu.
 - Enables the upstream experimental `.ipynb` editor without an account or remote feature flag. Python `# %%` script cells also remain available.
+- Opens a plain editor on first launch and rejects AI agent/skill deep links.
 - Uses separate app data (`ZedNoAI`) and configuration (`~/.config/zednoai`) so the fork can coexist with upstream Zed.
 - Disables upstream updates, including manual update checks, so an update cannot replace this fork with upstream Zed.
 
@@ -31,7 +32,7 @@ brew install cmake pkg-config
 
 The script creates `target/release/bundle/osx/Zed No AI.app`, plus ZIP and DMG packages in `target/no-ai-arm64/` or `target/no-ai-x86_64/`. It builds for the current Mac architecture. It uses ad-hoc signing; downloaded builds are not Apple-notarized. Use Finder's Open action or macOS Privacy & Security to approve a build you trust.
 
-The **Build Zed No AI for Mac** GitHub Actions workflow builds Apple Silicon and Intel packages and runs the dependency audit, enforced AI-settings test, notebook preservation tests, and notebook open/save/backup-failure tests. Download successful build artifacts from the repository's Actions tab. The previous Mac workflow passed its settings and original notebook regression tests on both architectures; application packaging was still running at the time of this update. The new integration still needs a successful Mac workflow run. Five standalone notebook preservation tests pass locally, and the changed Python, notebook, settings, update, and Git components pass a Linux Cargo check. No startup or memory benchmark has been run.
+The **Build Zed No AI for Mac** GitHub Actions workflow builds Apple Silicon and Intel packages and runs the dependency audit, enforced AI-settings test, notebook preservation tests, and notebook open/save/backup-failure tests. Download successful build artifacts from the repository's Actions tab. The previous Mac workflow passed its settings and original notebook regression tests on both architectures; application packaging was still running at the time of this update. The new integration still needs a successful Mac workflow run. Five standalone notebook preservation tests pass locally, and the complete application passes `cargo check --locked -p zed --bin zed` on Linux. The notebook and settings test targets also compile; their GUI-backed tests still require the Mac workflow. No startup or memory benchmark has been run.
 
 ## Python and Jupyter
 

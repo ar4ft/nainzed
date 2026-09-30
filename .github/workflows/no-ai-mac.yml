@@ -3,6 +3,9 @@ on:
   workflow_dispatch:
   push:
     branches: [main, no-ai]
+concurrency:
+  group: no-ai-mac-${{ github.sha }}
+  cancel-in-progress: true
 permissions:
   contents: read
 jobs:
@@ -30,6 +33,8 @@ jobs:
         run: script/audit-no-ai
       - name: Check notebook data preservation
         run: cargo test --locked -p notebook_safety
+      - name: Check the production application
+        run: cargo check --locked -p zed --bin zed
       - name: Verify AI cannot be re-enabled through settings
         run: cargo test --locked -p project --lib no_ai_fork_settings_cannot_enable_ai
       - name: Check notebook open and save regressions
