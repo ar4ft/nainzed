@@ -657,6 +657,7 @@ pub struct CodeCell {
     source: String,
     editor: Entity<editor::Editor>,
     outputs: Vec<Output>,
+    pub(super) outputs_collapsed: bool,
     pub(super) outputs_changed: bool,
     pub(super) raw_outputs: Vec<serde_json::Value>,
     selected: bool,
@@ -744,6 +745,7 @@ impl CodeCell {
             editor,
             outputs,
             outputs_changed: false,
+            outputs_collapsed: false,
             raw_outputs,
             selected: false,
             cell_position: None,
@@ -807,6 +809,11 @@ impl CodeCell {
 
     pub fn has_outputs(&self) -> bool {
         !self.outputs.is_empty()
+    }
+
+    pub fn toggle_outputs(&mut self, cx: &mut Context<Self>) {
+        self.outputs_collapsed = !self.outputs_collapsed;
+        cx.notify();
     }
 
     pub fn clear_outputs(&mut self) {
@@ -1202,6 +1209,35 @@ impl Render for CodeCell {
                                         .px_5()
                                         .rounded_lg()
                                         .border_1()
+                                        .when(self.has_outputs(), |this| {
+                                            this.child(
+                                                Button::new(
+                                                    "toggle-cell-outputs",
+                                                    format!(
+                                                        "{} outputs ({})",
+                                                        if self.outputs_collapsed {
+                                                            "Show"
+                                                        } else {
+                                                            "Hide"
+                                                        },
+                                                        self.outputs.len()
+                                                    ),
+                                                )
+                                                .style(ButtonStyle::Subtle)
+                                                .label_size(LabelSize::Small)
+                                                .start_icon(
+                                                    Icon::new(if self.outputs_collapsed {
+                                                        IconName::ChevronRight
+                                                    } else {
+                                                        IconName::ChevronDown
+                                                    })
+                                                    .size(IconSize::Small),
+                                                )
+                                                .on_click(cx.listener(|this, _, _, cx| {
+                                                    this.toggle_outputs(cx)
+                                                })),
+                                            )
+                                        })
                                         // execution status/time at the TOP
                                         .when(
                                             is_executing || execution_time_label.is_some(),
@@ -1253,23 +1289,32 @@ impl Render for CodeCell {
                                             },
                                         )
                                         // output at bottom
-                                        .child(
-                                            div()
-                                                .id((
-                                                    ElementId::from(self.id.to_string()),
-                                                    "output-scroll",
-                                                ))
-                                                .w_full()
-                                                .when_some(output_max_width, |div, max_width| {
-                                                    div.max_w(max_width).overflow_x_scroll()
-                                                })
-                                                .when_some(output_max_height, |div, max_height| {
-                                                    div.max_h(max_height).overflow_y_scroll()
-                                                })
-                                                .children(self.outputs.iter().map(|output| {
-                                                    div().children(output.content(window, cx))
-                                                })),
-                                        ),
+                                        .when(!self.outputs_collapsed, |this| {
+                                            this.child(
+                                                div()
+                                                    .id((
+                                                        ElementId::from(self.id.to_string()),
+                                                        "output-scroll",
+                                                    ))
+                                                    .w_full()
+                                                    .when_some(
+                                                        output_max_width,
+                                                        |div, max_width| {
+                                                            div.max_w(max_width).overflow_x_scroll()
+                                                        },
+                                                    )
+                                                    .when_some(
+                                                        output_max_height,
+                                                        |div, max_height| {
+                                                            div.max_h(max_height)
+                                                                .overflow_y_scroll()
+                                                        },
+                                                    )
+                                                    .children(self.outputs.iter().map(|output| {
+                                                        div().children(output.content(window, cx))
+                                                    })),
+                                            )
+                                        }),
                                 ),
                             ),
                     )

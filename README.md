@@ -13,6 +13,7 @@ A macOS-focused fork of [Zed](https://github.com/zed-industries/zed) for text ed
 - Removes AI provider and agent crates from the production dependency tree, including the AI settings page implementations.
 - Creates a `.bak` copy before overwriting a notebook, refuses conflicting edits, and preserves rich outputs, Markdown attachments, and unknown notebook fields.
 - Adds **repl: Set Up Python** and an **Install ipykernel** prompt in the kernel menu.
+- Adds notebook search across code and Markdown cells, per-cell output collapsing, and saved/unsaved status with tab updates.
 - Enables the upstream experimental `.ipynb` editor without an account or remote feature flag. Python `# %%` script cells also remain available.
 - Opens a plain editor on first launch and rejects AI agent/skill deep links.
 - Uses separate app data (`ZedNoAI`) and configuration (`~/.config/zednoai`) so the fork can coexist with upstream Zed.
@@ -35,9 +36,9 @@ For signed, notarized releases and automatic updates, follow [RELEASES.md](RELEA
 
 The script creates `target/release/bundle/osx/Zed No AI.app`, plus ZIP and DMG packages in `target/no-ai-arm64/` or `target/no-ai-x86_64/`. It builds for the current Mac architecture. It uses ad-hoc signing; downloaded builds are not Apple-notarized. Use Finder's Open action or macOS Privacy & Security to approve a build you trust.
 
-The **Build Zed No AI for Mac** GitHub Actions workflow builds Apple Silicon and Intel packages and runs the dependency audit, telemetry regression tests, production application check, enforced AI-settings test, notebook preservation tests, and notebook open/save/backup-failure tests. Download successful build artifacts from the repository's Actions tab.
+The **Build Zed No AI for Mac** GitHub Actions workflow builds Apple Silicon and Intel packages and runs the dependency audit, telemetry regression tests, production application check, enforced AI-settings test, notebook preservation tests, and notebook open/save/backup/search/collapse/status tests. Download successful build artifacts from the repository's Actions tab.
 
-The earlier [validated Apple Silicon build](https://github.com/ar4ft/zed-no-ai/actions/runs/36673142318) passed the AI/notebook checks and produced ZIP and DMG packages, but predates telemetry removal. Use a successful run containing the telemetry-removal commit for the updated app. Intel passed all checks and notebook tests in the same run, but its release build exceeded the original three-hour job limit. The workflow now allows six hours and saves Rust caches even when a step fails. A completed Intel package remains pending. The complete application and notebook/settings test targets also compile on Linux, and five standalone notebook preservation tests pass locally. No startup or memory benchmark has been run.
+The [validated Mac build](https://github.com/ar4ft/zed-no-ai/actions/runs/36767803640) passed the AI/telemetry checks and notebook tests and produced packages for both Apple Silicon and Intel. It predates the notebook search, output collapsing, and status improvements; use a successful later run for those changes. The complete application and notebook/settings test targets also compile on Linux, and five standalone notebook preservation tests pass locally. No startup or memory benchmark has been run.
 
 ## Python and Jupyter
 
@@ -52,6 +53,8 @@ python3 -m venv ~/.venvs/zednoai
 ```
 
 Open `examples/python.ipynb`, select **Python (.venv)** (or your manually installed kernel) in the kernel picker, and run a cell with **Shift+Enter**. **Cmd+Enter** runs a cell; **Cmd+Shift+Enter** runs all cells. The notebook editor supports code and Markdown cells, outputs, kernel interrupt/restart, and saving. These capabilities are inherited from upstream and require Mac runtime validation; preserve a copy of valuable notebooks while evaluating the experimental editor.
+
+Use **Cmd+F** to search code and Markdown source across the notebook, with case-sensitive, whole-word, and regular-expression options. Search navigation scrolls to the matching cell and opens Markdown source when needed. **Hide outputs / Show outputs** collapses a code cell’s output for this session without changing the notebook file or discarding results. The footer shows **Saved**, **Unsaved changes**, or **Saving…**, and edits update the tab’s dirty indicator.
 
 Each save that overwrites an existing notebook first updates `<filename>.ipynb.bak` with its previous contents. A backup failure aborts the save and leaves edits dirty. Restore by copying that backup over the notebook while it is closed. This is a single previous version, not a version history.
 

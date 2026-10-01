@@ -64,7 +64,7 @@ jobs:
       - name: Verify AI cannot be re-enabled through settings
         run: cargo test --locked -p project --lib no_ai_fork_settings_cannot_enable_ai
       - name: Check notebook open and save regressions
-        run: cargo test --locked -p repl --lib notebook::notebook_ui::tests::test_open_single_file_notebook && cargo test --locked -p repl --lib notebook::notebook_ui::tests::test_save_goes_through_the_project && cargo test --locked -p repl --lib no_ai_fork_notebook_backup_failure_keeps_changes_dirty
+        run: cargo test --locked -p repl --lib notebook::notebook_ui::tests::test_open_single_file_notebook && cargo test --locked -p repl --lib notebook::notebook_ui::tests::test_save_goes_through_the_project && cargo test --locked -p repl --lib no_ai_fork_notebook
       - name: Check Python kernel discovery
         run: cargo test --locked -p repl --lib kernels::native_kernel::test::test_get_kernelspecs
       - name: Create application and installers

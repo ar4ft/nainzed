@@ -5,7 +5,7 @@ use std::{path::PathBuf, sync::Arc};
 use anyhow::{Context as _, Result};
 use client::proto::ViewId;
 use collections::HashMap;
-use editor::DisplayPoint;
+use editor::{Anchor, DisplayPoint};
 use futures::FutureExt;
 use futures::future::Shared;
 use gpui::{
@@ -15,11 +15,15 @@ use gpui::{
 use jupyter_protocol::JupyterKernelspec;
 use language::{Language, LanguageRegistry};
 use log;
+use project::search::SearchQuery;
 use project::{Project, ProjectEntryId, ProjectPath};
 use settings::Settings as _;
+use std::ops::Range;
 use ui::{CommonAnimationExt, KeyBinding, Tooltip, prelude::*};
 use workspace::item::{ItemEvent, SaveOptions, TabContentParams};
-use workspace::searchable::SearchableItemHandle;
+use workspace::searchable::{
+    Direction, SearchEvent, SearchOptions, SearchToken, SearchableItem, SearchableItemHandle,
+};
 use workspace::{Item, ItemHandle, Pane, ProjectItem, ToolbarItemLocation};
 
 use super::{Cell, CellEvent, CellPosition, MarkdownCellEvent, RenderableCell};
@@ -74,6 +78,12 @@ pub fn init(cx: &mut App) {
     workspace::register_project_item::<NotebookEditor>(cx);
 }
 
+#[derive(Clone)]
+pub struct NotebookMatch {
+    cell_id: CellId,
+    range: Range<Anchor>,
+}
+
 pub struct NotebookEditor {
     languages: Arc<LanguageRegistry>,
     project: Entity<Project>,
@@ -93,6 +103,7 @@ pub struct NotebookEditor {
     execution_requests: HashMap<String, CellId>,
     kernel_picker_handle: PopoverMenuHandle<Picker<KernelPickerDelegate>>,
     saving: bool,
+    search_matches: Vec<NotebookMatch>,
     saved_metadata: serde_json::Value,
 }
 
@@ -200,6 +211,7 @@ impl NotebookEditor {
             serde_json::to_value(&notebook_item.read(cx).notebook.metadata).unwrap_or_default();
         let mut editor = Self {
             saving: false,
+            search_matches: Vec::new(),
             saved_metadata,
             project,
             languages: languages.clone(),
@@ -219,16 +231,64 @@ impl NotebookEditor {
             execution_requests: HashMap::default(),
             kernel_picker_handle: PopoverMenuHandle::default(),
         };
+        for cell in editor.cell_map.values() {
+            editor.observe_cell_edits(cell, cx);
+        }
         editor.launch_kernel(window, cx);
         editor.refresh_language(cx);
         editor.refresh_kernelspecs(cx);
 
         cx.subscribe(&notebook_item, |this, _item, _event, cx| {
             this.refresh_language(cx);
+            this.notebook_changed(cx);
         })
         .detach();
 
         editor
+    }
+
+    fn notebook_changed(&mut self, cx: &mut Context<Self>) {
+        cx.emit(ItemEvent::Edit);
+        cx.emit(ItemEvent::UpdateTab);
+        cx.emit(SearchEvent::MatchesInvalidated);
+        cx.notify();
+    }
+
+    fn observe_cell_edits(&self, cell: &Cell, cx: &mut Context<Self>) {
+        if let Some(editor) = cell.editor(cx).cloned() {
+            let cell_id = cell.id(cx);
+            cx.subscribe(&editor, move |this, _, event, cx| {
+                if matches!(event, editor::EditorEvent::Focused) {
+                    this.select_cell_by_id(&cell_id, cx);
+                    cx.emit(SearchEvent::ActiveMatchChanged);
+                }
+                if matches!(
+                    event,
+                    editor::EditorEvent::Edited { .. }
+                        | editor::EditorEvent::BufferEdited
+                        | editor::EditorEvent::DirtyChanged
+                ) {
+                    this.notebook_changed(cx);
+                }
+            })
+            .detach();
+            cx.subscribe(&editor, |_, _, event: &SearchEvent, cx| {
+                if matches!(event, SearchEvent::ActiveMatchChanged) {
+                    cx.emit(SearchEvent::ActiveMatchChanged);
+                }
+            })
+            .detach();
+        }
+    }
+
+    fn save_status(&self, cx: &App) -> &'static str {
+        if self.saving {
+            "Saving…"
+        } else if self.is_dirty(cx) {
+            "Unsaved changes"
+        } else {
+            "Saved"
+        }
     }
 
     fn refresh_kernelspecs(&mut self, cx: &mut Context<Self>) {
@@ -336,6 +396,7 @@ impl NotebookEditor {
                 Cell::Raw(_) => {}
             }
         }
+        cx.emit(ItemEvent::UpdateTab);
         cx.notify();
     }
 
@@ -391,6 +452,7 @@ impl NotebookEditor {
         let cell_order = self.cell_order.clone();
         let saved_metadata = serde_json::to_value(&item.notebook.metadata).unwrap_or_default();
         self.saving = true;
+        cx.notify();
 
         cx.spawn(async move |this, cx| {
             let result = async {
@@ -758,6 +820,7 @@ impl NotebookEditor {
                 }
                 cx.notify();
             });
+            self.notebook_changed(cx);
         }
 
         if let Err(error) = send_result {
@@ -792,7 +855,7 @@ impl NotebookEditor {
                 });
             }
         }
-        cx.notify();
+        self.notebook_changed(cx);
     }
 
     fn run_cells(&mut self, window: &mut Window, cx: &mut Context<Self>) {
@@ -947,7 +1010,7 @@ impl NotebookEditor {
             self.cell_order
                 .swap(self.selected_cell_index, self.selected_cell_index - 1);
             self.selected_cell_index -= 1;
-            cx.notify();
+            self.notebook_changed(cx);
         }
     }
 
@@ -957,7 +1020,7 @@ impl NotebookEditor {
             self.cell_order
                 .swap(self.selected_cell_index, self.selected_cell_index + 1);
             self.selected_cell_index += 1;
-            cx.notify();
+            self.notebook_changed(cx);
         }
     }
 
@@ -979,7 +1042,7 @@ impl NotebookEditor {
         }
         self.notebook_mode = NotebookMode::Command;
         window.focus(&self.focus_handle, cx);
-        cx.notify();
+        self.notebook_changed(cx);
     }
 
     fn insert_cell_at_current_position(&mut self, cell_id: CellId, cell: Cell) {
@@ -1033,6 +1096,7 @@ impl NotebookEditor {
         })
         .detach();
 
+        self.observe_cell_edits(&Cell::Markdown(markdown_cell.clone()), cx);
         self.insert_cell_at_current_position(new_cell_id, Cell::Markdown(markdown_cell.clone()));
         markdown_cell.update(cx, |cell, cx| {
             cell.set_editing(true);
@@ -1041,7 +1105,7 @@ impl NotebookEditor {
         let editor = markdown_cell.read(cx).editor().clone();
         window.focus(&editor.focus_handle(cx), cx);
         self.notebook_mode = NotebookMode::Edit;
-        cx.notify();
+        self.notebook_changed(cx);
     }
 
     fn add_code_block(&mut self, window: &mut Window, cx: &mut Context<Self>) {
@@ -1082,11 +1146,12 @@ impl NotebookEditor {
         })
         .detach();
 
+        self.observe_cell_edits(&Cell::Code(code_cell.clone()), cx);
         self.insert_cell_at_current_position(new_cell_id, Cell::Code(code_cell.clone()));
         let editor = code_cell.read(cx).editor().clone();
         window.focus(&editor.focus_handle(cx), cx);
         self.notebook_mode = NotebookMode::Edit;
-        cx.notify();
+        self.notebook_changed(cx);
     }
 
     fn cell_count(&self) -> usize {
@@ -1475,6 +1540,15 @@ impl NotebookEditor {
                     )),
                 )
                 .with_handle(kernel_picker_handle),
+            )
+            .child(
+                Label::new(self.save_status(cx))
+                    .size(LabelSize::Small)
+                    .color(if self.is_dirty(cx) {
+                        Color::Warning
+                    } else {
+                        Color::Muted
+                    }),
             )
             .child(
                 h_flex()
@@ -1940,7 +2014,8 @@ impl NotebookItem {
 
 impl EventEmitter<()> for NotebookItem {}
 
-impl EventEmitter<()> for NotebookEditor {}
+impl EventEmitter<ItemEvent> for NotebookEditor {}
+impl EventEmitter<SearchEvent> for NotebookEditor {}
 
 // pub struct NotebookControls {
 //     pane_focused: bool,
@@ -1987,8 +2062,218 @@ impl EventEmitter<()> for NotebookEditor {}
 //     }
 // }
 
+impl SearchableItem for NotebookEditor {
+    type Match = NotebookMatch;
+
+    fn supported_options(&self) -> SearchOptions {
+        SearchOptions {
+            case: true,
+            word: true,
+            regex: true,
+            ..Default::default()
+        }
+    }
+
+    fn get_matches(&self, _: &mut Window, _: &mut App) -> (Vec<NotebookMatch>, SearchToken) {
+        (self.search_matches.clone(), SearchToken::default())
+    }
+
+    fn clear_matches(&mut self, window: &mut Window, cx: &mut Context<Self>) {
+        self.search_matches.clear();
+        for cell in self.cell_map.values() {
+            if let Some(editor) = cell.editor(cx).cloned() {
+                editor.update(cx, |editor, cx| editor.clear_matches(window, cx));
+            }
+        }
+        cx.notify();
+    }
+
+    fn update_matches(
+        &mut self,
+        matches: &[NotebookMatch],
+        active: Option<usize>,
+        token: SearchToken,
+        window: &mut Window,
+        cx: &mut Context<Self>,
+    ) {
+        self.search_matches = matches.to_vec();
+        for (id, cell) in &self.cell_map {
+            if let Some(editor) = cell.editor(cx).cloned() {
+                let local: Vec<_> = matches
+                    .iter()
+                    .enumerate()
+                    .filter(|(_, m)| &m.cell_id == id)
+                    .collect();
+                let active = local.iter().position(|(i, _)| Some(*i) == active);
+                let ranges: Vec<_> = local.iter().map(|(_, m)| m.range.clone()).collect();
+                editor.update(cx, |editor, cx| {
+                    editor.update_matches(&ranges, active, token, window, cx)
+                });
+            }
+        }
+        cx.notify();
+    }
+
+    fn query_suggestion(
+        &mut self,
+        seed: Option<settings::SeedQuerySetting>,
+        window: &mut Window,
+        cx: &mut Context<Self>,
+    ) -> String {
+        let editor = self
+            .cell_order
+            .get(self.selected_cell_index)
+            .and_then(|id| self.cell_map.get(id))
+            .and_then(|cell| cell.editor(cx))
+            .cloned();
+        editor
+            .map(|editor| editor.update(cx, |editor, cx| editor.query_suggestion(seed, window, cx)))
+            .unwrap_or_default()
+    }
+
+    fn activate_match(
+        &mut self,
+        index: usize,
+        matches: &[NotebookMatch],
+        token: SearchToken,
+        window: &mut Window,
+        cx: &mut Context<Self>,
+    ) {
+        let Some(hit) = matches.get(index) else {
+            return;
+        };
+        let Some(cell_index) = self.cell_order.iter().position(|id| id == &hit.cell_id) else {
+            return;
+        };
+        self.selected_cell_index = cell_index;
+        self.cell_list.scroll_to_reveal_item(cell_index);
+        if let Some(Cell::Markdown(cell)) = self.cell_map.get(&hit.cell_id) {
+            cell.update(cx, |cell, cx| {
+                cell.set_editing(true);
+                cx.notify();
+            });
+        }
+        if let Some(editor) = self
+            .cell_map
+            .get(&hit.cell_id)
+            .and_then(|cell| cell.editor(cx))
+            .cloned()
+        {
+            editor.update(cx, |editor, cx| {
+                editor.activate_match(0, &[hit.range.clone()], token, window, cx)
+            });
+        }
+        cx.notify();
+    }
+
+    fn select_matches(
+        &mut self,
+        _: &[NotebookMatch],
+        _: SearchToken,
+        _: &mut Window,
+        _: &mut Context<Self>,
+    ) {
+    }
+    fn replace(
+        &mut self,
+        _: &NotebookMatch,
+        _: &SearchQuery,
+        _: SearchToken,
+        _: &mut Window,
+        _: &mut Context<Self>,
+    ) {
+    }
+
+    fn find_matches(
+        &mut self,
+        query: Arc<SearchQuery>,
+        window: &mut Window,
+        cx: &mut Context<Self>,
+    ) -> Task<Vec<NotebookMatch>> {
+        let tasks: Vec<_> = self
+            .cell_order
+            .iter()
+            .filter_map(|id| {
+                let editor = self.cell_map.get(id)?.editor(cx)?.clone();
+                Some((
+                    id.clone(),
+                    editor.update(cx, |editor, cx| {
+                        editor.find_matches(query.clone(), window, cx)
+                    }),
+                ))
+            })
+            .collect();
+        cx.spawn(async move |_, _| {
+            let cells =
+                futures::future::join_all(tasks.into_iter().map(|(cell_id, task)| async move {
+                    task.await
+                        .into_iter()
+                        .map(|range| NotebookMatch {
+                            cell_id: cell_id.clone(),
+                            range,
+                        })
+                        .collect::<Vec<_>>()
+                }))
+                .await;
+            cells.into_iter().flatten().collect()
+        })
+    }
+
+    fn active_match_index(
+        &mut self,
+        direction: Direction,
+        matches: &[NotebookMatch],
+        token: SearchToken,
+        window: &mut Window,
+        cx: &mut Context<Self>,
+    ) -> Option<usize> {
+        if matches.is_empty() {
+            return None;
+        }
+        if let Some(id) = self.cell_order.get(self.selected_cell_index) {
+            let local: Vec<_> = matches
+                .iter()
+                .enumerate()
+                .filter(|(_, m)| &m.cell_id == id)
+                .collect();
+            if let Some(editor) = self
+                .cell_map
+                .get(id)
+                .and_then(|cell| cell.editor(cx))
+                .cloned()
+            {
+                let ranges: Vec<_> = local.iter().map(|(_, m)| m.range.clone()).collect();
+                if let Some(index) = editor.update(cx, |editor, cx| {
+                    editor.active_match_index(direction, &ranges, token, window, cx)
+                }) {
+                    return Some(local[index].0);
+                }
+            }
+        }
+        let cell_index = |m: &NotebookMatch| self.cell_order.iter().position(|id| id == &m.cell_id);
+        match direction {
+            Direction::Next => Some(
+                matches
+                    .iter()
+                    .position(|m| cell_index(m).is_some_and(|i| i >= self.selected_cell_index))
+                    .unwrap_or(0),
+            ),
+            Direction::Prev => Some(
+                matches
+                    .iter()
+                    .rposition(|m| cell_index(m).is_some_and(|i| i <= self.selected_cell_index))
+                    .unwrap_or(matches.len() - 1),
+            ),
+        }
+    }
+}
+
 impl Item for NotebookEditor {
-    type Event = ();
+    type Event = ItemEvent;
+
+    fn to_item_events(event: &Self::Event, f: &mut dyn FnMut(ItemEvent)) {
+        f(*event);
+    }
 
     fn can_split(&self) -> bool {
         true
@@ -2044,7 +2329,7 @@ impl Item for NotebookEditor {
     }
 
     fn show_toolbar(&self) -> bool {
-        false
+        true
     }
 
     // TODO
@@ -2053,8 +2338,12 @@ impl Item for NotebookEditor {
     }
 
     // TODO
-    fn as_searchable(&self, _: &Entity<Self>, _: &App) -> Option<Box<dyn SearchableItemHandle>> {
-        None
+    fn as_searchable(
+        &self,
+        handle: &Entity<Self>,
+        _: &App,
+    ) -> Option<Box<dyn SearchableItemHandle>> {
+        Some(Box::new(handle.clone()))
     }
 
     fn set_nav_history(
@@ -2150,6 +2439,7 @@ impl Item for NotebookEditor {
                     cell_order.push(cell_id.clone());
                     let cell_entity =
                         Cell::load(cell, &languages, notebook_language.clone(), window, cx);
+                    this.observe_cell_edits(&cell_entity, cx);
                     cell_map.insert(cell_id.clone(), cell_entity);
                 }
 
@@ -2158,6 +2448,9 @@ impl Item for NotebookEditor {
                 this.cell_map = cell_map;
                 this.cell_list =
                     ListState::new(this.cell_order.len(), gpui::ListAlignment::Top, px(1000.));
+                this.search_matches.clear();
+                cx.emit(ItemEvent::UpdateTab);
+                cx.emit(SearchEvent::MatchesInvalidated);
                 cx.notify();
             })?;
 
@@ -2213,6 +2506,7 @@ impl KernelSession for NotebookEditor {
                     cell.update(cx, |cell, cx| {
                         cell.handle_message(message, window, cx);
                     });
+                    self.notebook_changed(cx);
                 }
             }
         }
@@ -2258,6 +2552,202 @@ mod tests {
             }
         ]
     }"#;
+
+    async fn notebook_feature_fixture(
+        cx: &mut TestAppContext,
+    ) -> (Entity<Project>, Entity<NotebookItem>) {
+        cx.update(|cx| {
+            let settings_store = SettingsStore::test(cx);
+            cx.set_global(settings_store);
+            theme_settings::init(theme::LoadThemes::JustBase, cx);
+            editor::init(cx);
+        });
+        let mut notebook: serde_json::Value =
+            serde_json::from_str(NOTEBOOK_WITH_ONE_CODE_CELL).unwrap();
+        notebook["cells"][0]["source"] = json!(["needle = 1\nprint(needle)"]);
+        notebook["cells"][0]["outputs"] = json!([{"output_type":"stream","name":"stdout","text":["needle in preserved output\n"]}]);
+        notebook["cells"].as_array_mut().unwrap().push(json!({"cell_type":"markdown","id":"markdown-note","metadata":{},"source":["A needle note"]}));
+        let fs = FakeFs::new(cx.executor());
+        fs.insert_tree(
+            path!("/notebooks"),
+            json!({ "test.ipynb": serde_json::to_string(&notebook).unwrap() }),
+        )
+        .await;
+        let project = Project::test(fs.clone(), [path!("/notebooks").as_ref()], cx).await;
+        cx.update(|cx| ReplStore::init(fs, cx));
+        let path = project.read_with(cx, |project, cx| ProjectPath {
+            worktree_id: project.worktrees(cx).next().unwrap().read(cx).id(),
+            path: rel_path("test.ipynb").into(),
+        });
+        let item = cx
+            .update(|cx| NotebookItem::try_open(&project, &path, cx).unwrap())
+            .await
+            .unwrap();
+        (project, item)
+    }
+
+    fn feature_editor(
+        project: Entity<Project>,
+        item: Entity<NotebookItem>,
+        window: &mut Window,
+        cx: &mut Context<NotebookEditor>,
+    ) -> NotebookEditor {
+        let mut notebook = NotebookEditor::new(project, item, window, cx);
+        // These tests exercise editing and presentation, so cancel kernel startup
+        // before it probes real TCP ports or starts an interpreter.
+        notebook.kernel = Kernel::Shutdown;
+        notebook
+    }
+
+    #[gpui::test]
+    async fn no_ai_fork_notebook_search_navigates_code_and_markdown(cx: &mut TestAppContext) {
+        let (project, item) = notebook_feature_fixture(cx).await;
+        let cx = cx.add_empty_window();
+        let notebook =
+            cx.update(|window, cx| cx.new(|cx| feature_editor(project, item, window, cx)));
+        let query = Arc::new(
+            SearchQuery::text(
+                "needle",
+                false,
+                false,
+                false,
+                Default::default(),
+                Default::default(),
+                false,
+                None,
+            )
+            .unwrap(),
+        );
+        let matches = notebook
+            .update_in(cx, |notebook, window, cx| {
+                notebook.find_matches(query, window, cx)
+            })
+            .await;
+        assert_eq!(
+            matches.len(),
+            3,
+            "search code and markdown source, excluding outputs"
+        );
+        assert_eq!(matches[0].cell_id, matches[1].cell_id);
+        assert_ne!(matches[1].cell_id, matches[2].cell_id);
+        notebook.update_in(cx, |notebook, window, cx| {
+            let token = SearchToken::default();
+            notebook.update_matches(&matches, Some(2), token, window, cx);
+            notebook.activate_match(2, &matches, token, window, cx);
+            assert_eq!(notebook.selected_cell_index, 1);
+            assert_eq!(
+                notebook.active_match_index(Direction::Next, &matches, token, window, cx),
+                Some(2)
+            );
+            let next = notebook.match_index_for_direction(
+                &matches,
+                2,
+                Direction::Next,
+                1,
+                token,
+                window,
+                cx,
+            );
+            assert_eq!(next, 0, "navigation wraps to the first code cell");
+            let previous = notebook.match_index_for_direction(
+                &matches,
+                0,
+                Direction::Prev,
+                1,
+                token,
+                window,
+                cx,
+            );
+            assert_eq!(previous, 2);
+            let Cell::Markdown(cell) = notebook.cell_map.get(&matches[2].cell_id).unwrap() else {
+                panic!("expected Markdown")
+            };
+            assert!(cell.read(cx).is_editing());
+            assert_eq!(notebook.get_matches(window, cx).0.len(), 3);
+            notebook.clear_matches(window, cx);
+            assert!(notebook.get_matches(window, cx).0.is_empty());
+        });
+    }
+
+    #[gpui::test]
+    async fn no_ai_fork_notebook_collapsing_preserves_outputs_and_dirty_state(
+        cx: &mut TestAppContext,
+    ) {
+        let (project, item) = notebook_feature_fixture(cx).await;
+        let cx = cx.add_empty_window();
+        let notebook =
+            cx.update(|window, cx| cx.new(|cx| feature_editor(project, item, window, cx)));
+        let before =
+            notebook.read_with(cx, |notebook, cx| notebook.serialized_notebook(cx).unwrap());
+        let dirty_before = notebook.read_with(cx, |notebook, cx| notebook.is_dirty(cx));
+        let cell = notebook.read_with(cx, |notebook, _| {
+            match notebook.cell_map.get(&notebook.cell_order[0]).unwrap() {
+                Cell::Code(cell) => cell.clone(),
+                _ => panic!("expected code"),
+            }
+        });
+        cell.update(cx, |cell, cx| {
+            assert!(cell.has_outputs());
+            cell.toggle_outputs(cx);
+            assert!(cell.outputs_collapsed);
+        });
+        notebook.read_with(cx, |notebook, cx| {
+            assert_eq!(notebook.serialized_notebook(cx).unwrap(), before);
+            assert_eq!(notebook.is_dirty(cx), dirty_before);
+        });
+        cell.update(cx, |cell, cx| {
+            cell.toggle_outputs(cx);
+            assert!(!cell.outputs_collapsed);
+        });
+    }
+
+    #[gpui::test]
+    async fn no_ai_fork_notebook_dirty_indicator_tracks_edits_and_save(cx: &mut TestAppContext) {
+        let (project, item) = notebook_feature_fixture(cx).await;
+        let cx = cx.add_empty_window();
+        let notebook =
+            cx.update(|window, cx| cx.new(|cx| feature_editor(project.clone(), item, window, cx)));
+        let events = Arc::new(std::sync::Mutex::new(Vec::new()));
+        let captured_events = events.clone();
+        let _subscription = cx.update(|_, cx| {
+            cx.subscribe(&notebook, move |_, event: &ItemEvent, _| {
+                captured_events.lock().unwrap().push(*event);
+            })
+        });
+        let cell_editor = notebook.read_with(cx, |notebook, cx| {
+            notebook
+                .cell_map
+                .get(&notebook.cell_order[0])
+                .unwrap()
+                .editor(cx)
+                .unwrap()
+                .clone()
+        });
+        cell_editor.update_in(cx, |editor, window, cx| {
+            editor.set_text("changed = True", window, cx)
+        });
+        notebook.read_with(cx, |notebook, cx| {
+            assert_eq!(notebook.save_status(cx), "Unsaved changes")
+        });
+        {
+            let events = events.lock().unwrap();
+            assert!(events.iter().any(|event| matches!(event, ItemEvent::Edit)));
+            assert!(
+                events
+                    .iter()
+                    .any(|event| matches!(event, ItemEvent::UpdateTab))
+            );
+        }
+        notebook
+            .update_in(cx, |notebook, window, cx| {
+                notebook.save(SaveOptions::default(), project, window, cx)
+            })
+            .await
+            .unwrap();
+        notebook.read_with(cx, |notebook, cx| {
+            assert_eq!(notebook.save_status(cx), "Saved")
+        });
+    }
 
     /// When the configured interpreter doesn't exist (e.g. Python isn't installed),
     /// running a cell must not leave it stuck in the executing state. It should

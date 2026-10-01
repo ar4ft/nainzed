@@ -93,7 +93,7 @@ jobs:
           cargo test --locked -p project --lib no_ai_fork_settings_cannot_enable_ai
           cargo test --locked -p repl --lib notebook::notebook_ui::tests::test_open_single_file_notebook
           cargo test --locked -p repl --lib notebook::notebook_ui::tests::test_save_goes_through_the_project
-          cargo test --locked -p repl --lib no_ai_fork_notebook_backup_failure_keeps_changes_dirty
+          cargo test --locked -p repl --lib no_ai_fork_notebook
           cargo check --locked -p zed --bin zed
       - name: Import Apple signing credentials into a temporary keychain
         env:
