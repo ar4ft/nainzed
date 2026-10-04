@@ -17,60 +17,78 @@ concurrency:
 permissions:
   contents: read
 jobs:
-  source-guards:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.checkout_ref || github.sha }}
-      - name: Reject unreviewed changes to AI and telemetry safeguards
-        run: script/audit-no-ai-source
-  mac:
-    needs: source-guards
+  validate:
+    uses: ./.github/workflows/no-ai-validate.yml
+    with:
+      checkout_ref: ${{ inputs.checkout_ref || github.sha }}
+  package:
+    # PRs get validation without waiting for release compilation and packaging.
+    if: github.event_name != 'pull_request'
+    needs: validate
     strategy:
       fail-fast: false
       matrix:
         runner: [macos-15, macos-15-intel]
     runs-on: ${{ matrix.runner }}
-    # A cold Intel build plus tests and thin LTO can exceed three hours.
-    timeout-minutes: 360
+    timeout-minutes: 330
     env:
       CARGO_INCREMENTAL: '0'
       ZED_RELEASE_CHANNEL: dev
       NO_AI_SIGNED_RELEASE: '0'
-      ZED_UPDATE_EXPLANATION: Build updates from the Zed No AI fork.
+      ZED_ALLOW_EMULATED_GPU: '1'
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ inputs.checkout_ref || github.sha }}
-      - name: Install the pinned Rust toolchain
-        run: rustup show
-      - uses: Swatinem/rust-cache@v2
+      - run: rustup show
+      - uses: actions/cache/restore@v4
+        id: rust-cache
+        timeout-minutes: 8
+        continue-on-error: true
         with:
-          key: no-ai-${{ matrix.runner }}
-          cache-on-failure: true
-      - name: Build dependencies
-        run: brew install cmake pkg-config
-      - name: Audit production dependencies for AI and telemetry
-        run: script/audit-no-ai
-      - name: Verify telemetry cannot collect or send data
-        run: cargo test --locked -p telemetry && cargo test --locked -p client --lib no_telemetry_fork
-      - name: Check fork update selection
-        run: cargo test --locked -p auto_update --lib no_ai_fork
-      - name: Check notebook data preservation
-        run: cargo test --locked -p notebook_safety
-      - name: Check the production application
-        run: cargo check --locked -p zed --bin zed && cargo check --locked -p remote_server --lib --bin remote_server
-      - name: Verify AI cannot be re-enabled through settings
-        run: cargo test --locked -p project --lib no_ai_fork_settings_cannot_enable_ai
-      - name: Check notebook open and save regressions
-        run: cargo test --locked -p repl --lib notebook::notebook_ui::tests::test_open_single_file_notebook && cargo test --locked -p repl --lib notebook::notebook_ui::tests::test_save_goes_through_the_project && cargo test --locked -p repl --lib no_ai_fork_notebook
-      - name: Check Python kernel discovery
-        run: cargo test --locked -p repl --lib kernels::native_kernel::test::test_get_kernelspecs
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git/db
+            target/release
+          key: no-ai-release-${{ matrix.runner }}-${{ hashFiles('rust-toolchain.toml', 'Cargo.lock') }}-${{ github.sha }}
+          restore-keys: |
+            no-ai-release-${{ matrix.runner }}-${{ hashFiles('rust-toolchain.toml', 'Cargo.lock') }}-
+      - run: brew install cmake pkg-config
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
       - name: Create application and installers
+        id: build
         run: script/build-no-ai-mac
+      - name: Check fresh startup network attempts
+        run: python3 script/privacy-no-ai-mac.py --app 'target/release/bundle/osx/Zed No AI.app' --output target/runtime-reports/privacy.json
+      - name: Measure startup, memory, large files and notebooks
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        run: python3 script/benchmark-no-ai-mac.py --app 'target/release/bundle/osx/Zed No AI.app' --output target/runtime-reports/mac-benchmark.json
+      - name: Measure notebook serialization and recovery
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        run: cargo run --locked --release -p notebook_safety --example benchmark > target/runtime-reports/notebook-benchmark.json
+      - name: Upload runtime reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: runtime-reports-${{ matrix.runner }}
+          path: target/runtime-reports/
+          if-no-files-found: warn
       - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         with:
           name: Zed-No-AI-${{ matrix.runner }}
           path: target/no-ai-*/*
           if-no-files-found: error
+      - name: Save Rust cache (best effort)
+        if: always() && steps.rust-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        timeout-minutes: 8
+        continue-on-error: true
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git/db
+            target/release
+          key: ${{ steps.rust-cache.outputs.cache-primary-key }}

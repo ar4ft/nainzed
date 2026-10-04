@@ -37,6 +37,7 @@ jupyter-websocket-client.workspace = true
 jupyter-protocol.workspace = true
 language.workspace = true
 log.workspace = true
+lsp.workspace = true
 markdown.workspace = true
 menu.workspace = true
 multi_buffer.workspace = true
@@ -53,6 +54,7 @@ smol.workspace = true
 telemetry.workspace = true
 terminal.workspace = true
 terminal_view.workspace = true
+text.workspace = true
 theme.workspace = true
 theme_settings.workspace = true
 ui.workspace = true
@@ -60,6 +62,8 @@ util.workspace = true
 uuid.workspace = true
 workspace.workspace = true
 picker.workspace = true
+paths.workspace = true
+sha2.workspace = true
 zed_actions.workspace = true
 
 [dev-dependencies]

@@ -55,18 +55,24 @@ jobs:
           with open(os.environ['GITHUB_OUTPUT'],'a') as f:
               f.write(f'tag={tag}\nversion={tag[1:]}\ncommit={commit}\n')
           PY
-  mac:
+  checks:
     needs: validate
+    uses: ./.github/workflows/no-ai-validate.yml
+    with:
+      checkout_ref: ${{ needs.validate.outputs.commit }}
+  mac:
+    needs: [validate, checks]
     strategy:
       fail-fast: false
       matrix:
         runner: [macos-15, macos-15-intel]
     runs-on: ${{ matrix.runner }}
-    timeout-minutes: 360
+    timeout-minutes: 330
     env:
       CARGO_INCREMENTAL: '0'
       ZED_RELEASE_CHANNEL: dev
       NO_AI_SIGNED_RELEASE: '1'
+      ZED_ALLOW_EMULATED_GPU: '1'
       ZED_NO_AI_RELEASE_VERSION: ${{ needs.validate.outputs.version }}
       ZED_NO_AI_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
       MACOS_SIGNING_IDENTITY: ${{ secrets.MACOS_SIGNING_IDENTITY }}
@@ -78,23 +84,22 @@ jobs:
           ref: ${{ needs.validate.outputs.commit }}
       - name: Install the pinned Rust toolchain
         run: rustup show
-      - uses: Swatinem/rust-cache@v2
+      - uses: actions/cache/restore@v4
+        id: rust-cache
+        timeout-minutes: 8
+        continue-on-error: true
         with:
-          key: no-ai-${{ matrix.runner }}
-          cache-on-failure: true
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git/db
+            target/release
+          key: no-ai-release-${{ matrix.runner }}-${{ hashFiles('rust-toolchain.toml', 'Cargo.lock') }}-${{ github.sha }}
+          restore-keys: |
+            no-ai-release-${{ matrix.runner }}-${{ hashFiles('rust-toolchain.toml', 'Cargo.lock') }}-
       - run: brew install cmake pkg-config
-      - name: Validate the editor and updater
-        run: |
-          script/audit-no-ai
-          cargo test --locked -p telemetry
-          cargo test --locked -p client --lib no_telemetry_fork
-          cargo test --locked -p auto_update --lib no_ai_fork
-          cargo test --locked -p notebook_safety
-          cargo test --locked -p project --lib no_ai_fork_settings_cannot_enable_ai
-          cargo test --locked -p repl --lib notebook::notebook_ui::tests::test_open_single_file_notebook
-          cargo test --locked -p repl --lib notebook::notebook_ui::tests::test_save_goes_through_the_project
-          cargo test --locked -p repl --lib no_ai_fork_notebook
-          cargo check --locked -p zed --bin zed
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
       - name: Import Apple signing credentials into a temporary keychain
         env:
           MACOS_CERTIFICATE_BASE64: ${{ secrets.MACOS_CERTIFICATE_BASE64 }}
@@ -131,6 +136,15 @@ jobs:
           xcrun stapler validate "target/no-ai-$(uname -m)/Zed-No-AI-$(uname -m).dmg"
           cd "target/no-ai-$(uname -m)"
           shasum -a 256 *.zip *.dmg > "SHA256SUMS-$(uname -m).txt"
+      - name: Check signed application startup network attempts
+        run: python3 script/privacy-no-ai-mac.py --app 'target/release/bundle/osx/Zed No AI.app' --output target/runtime-reports/privacy.json
+      - name: Upload startup privacy report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: signed-runtime-reports-${{ matrix.runner }}
+          path: target/runtime-reports/
+          if-no-files-found: warn
       - uses: actions/upload-artifact@v4
         with:
           name: signed-${{ matrix.runner }}
@@ -141,6 +155,17 @@ jobs:
         run: |
           security delete-keychain "$RUNNER_TEMP/no-ai-signing.keychain-db" || true
           rm -f "$RUNNER_TEMP/signing.p12" "$RUNNER_TEMP/notarization-key.p8"
+      - name: Save Rust cache (best effort)
+        if: always() && steps.rust-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        timeout-minutes: 8
+        continue-on-error: true
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git/db
+            target/release
+          key: ${{ steps.rust-cache.outputs.cache-primary-key }}
   publish:
     needs: [validate, mac]
     runs-on: ubuntu-latest

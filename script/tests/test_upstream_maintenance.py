@@ -116,7 +116,7 @@ class GuardTests(unittest.TestCase):
             for name in guards.PROTECTED:
                 path = root/name
                 path.parent.mkdir(parents=True, exist_ok=True)
-                path.write_text('disabled implementation\n')
+                path.write_text('[dependencies]\n' if name.endswith('Cargo.toml') else 'disabled implementation\n')
                 manifest[name] = hashlib.sha256(path.read_bytes()).hexdigest()
             (root/'assets').mkdir()
             file = root/'assets/no-ai-source-guards.json'

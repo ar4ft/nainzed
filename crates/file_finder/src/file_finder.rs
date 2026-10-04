@@ -6,6 +6,7 @@ mod multi_select_tests;
 use futures::future::join_all;
 pub use open_path_prompt::OpenPathDelegate;
 
+#[cfg(feature = "collaboration")]
 use channel::ChannelStore;
 use client::ChannelId;
 use collections::HashMap;
@@ -358,6 +359,7 @@ pub struct FileFinderDelegate {
     file_finder: WeakEntity<FileFinder>,
     workspace: WeakEntity<Workspace>,
     project: Entity<Project>,
+    #[cfg(feature = "collaboration")]
     channel_store: Option<Entity<ChannelStore>>,
     search_count: usize,
     latest_search_id: usize,
@@ -964,6 +966,7 @@ impl FileFinderDelegate {
         cx: &mut Context<FileFinder>,
     ) -> Self {
         Self::subscribe_to_updates(&project, window, cx);
+        #[cfg(feature = "collaboration")]
         let channel_store = if FileFinderSettings::get_global(cx).include_channels {
             ChannelStore::try_global(cx)
         } else {
@@ -973,6 +976,7 @@ impl FileFinderDelegate {
             file_finder,
             workspace,
             project,
+            #[cfg(feature = "collaboration")]
             channel_store,
             search_count: 0,
             latest_search_id: 0,
@@ -1139,6 +1143,7 @@ impl FileFinderDelegate {
             );
 
             // Add channel matches
+            #[cfg(feature = "collaboration")]
             if let Some(channel_store) = &self.channel_store {
                 let channel_store = channel_store.read(cx);
                 let channels: Vec<_> = channel_store.channels().cloned().collect();

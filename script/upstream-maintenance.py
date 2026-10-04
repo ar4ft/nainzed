@@ -32,9 +32,9 @@ def review_report(root, previous, target, tag, conflicts):
         if line.startswith('+++ b/'):
             file = line[6:]
         elif line.startswith('+') and not line.startswith('+++'):
-            if re.search(r'(?i)telemetry|diagnostic|crash|hang.report|copilot|anthropic|openai|language.model|edit.prediction|agent|https?://|http.client|spawn|background', line):
+            if re.search(r'(?i)telemetry|diagnostic|crash|hang.report|copilot|anthropic|openai|language.model|edit.prediction|agent|livekit|webrtc|collab|rodio|cpal|https?://|http.client|reqwest|TcpStream|UdpSocket|connect\(|spawn|background', line):
                 flagged.add(file)
-            if re.search(r'https?://|http.client', line):
+            if re.search(r'https?://|http.client|reqwest|TcpStream|UdpSocket|connect\(', line):
                 added_urls.add(file)
     lines = [f'# Upstream review: {tag}', '', f'Previous upstream reference: `{previous}`',
              f'Incoming stable release: [`{tag}`](https://github.com/{UPSTREAM}/releases/tag/{tag}) (`{target}`)',
@@ -54,6 +54,8 @@ def review_report(root, previous, target, tag, conflicts):
               '- [ ] Confirm AI providers, agents and telemetry collectors remain disabled; review guard changes before refreshing hashes.',
               '- [ ] Review Apple Silicon and Intel dependency audits, regression tests and development packages.',
               '- [ ] Check Python kernel discovery and notebook open/save/data preservation.',
+              '- [ ] Review proxy-recorded startup traffic and benchmark artifacts; investigate unknown hosts or missing graphical checks.',
+              '- [ ] Confirm editor and remote-helper dependency trees still exclude call/audio, LiveKit and WebRTC implementations.',
               '- [ ] Confirm signing remains manual and no upstream workflow can replace the fork with upstream binaries.',
               '- [ ] Merge this PR manually only after resolving failures. No signed release is triggered by merging.', '']
     return '\n'.join(lines)

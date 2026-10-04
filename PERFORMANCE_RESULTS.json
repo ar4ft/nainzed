@@ -1,0 +1,36 @@
+{
+  "scope": "headless notebook serialization and recovery; excludes GUI and kernel",
+  "samples": 7,
+  "os": "linux",
+  "architecture": "x86_64",
+  "results": [
+    {
+      "cells": 50,
+      "input_bytes": 16053,
+      "save_median_ms": 0.5784250000000001,
+      "recovery_roundtrip_median_ms": 0.608522
+    },
+    {
+      "cells": 500,
+      "input_bytes": 161253,
+      "save_median_ms": 5.937905000000001,
+      "recovery_roundtrip_median_ms": 5.427492
+    },
+    {
+      "cells": 2000,
+      "input_bytes": 648753,
+      "save_median_ms": 28.856006,
+      "recovery_roundtrip_median_ms": 22.935569
+    }
+  ],
+  "measured_at_utc": "2026-10-04",
+  "build_profile": "release; seven samples after one warmup",
+  "production_dependencies": {
+    "target": "aarch64-apple-darwin",
+    "edges": "normal,build",
+    "before": 1045,
+    "after": 980,
+    "removed": 65,
+    "added": 0
+  }
+}

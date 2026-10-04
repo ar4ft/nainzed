@@ -1,3 +1,5 @@
+#[cfg(feature = "audio-ui")]
+use crate::pages::open_audio_test_window;
 use gpui::{Action as _, App};
 use itertools::Itertools as _;
 use settings::{
@@ -12,7 +14,6 @@ use ui::IntoElement;
 use crate::{
     ActionLink, DynamicItem, PROJECT, SettingField, SettingItem, SettingsFieldMetadata,
     SettingsPage, SettingsPageItem, SubPageLink, USER, active_language, all_language_names,
-    pages::open_audio_test_window,
 };
 
 const DEFAULT_STRING: String = String::new();
@@ -71,7 +72,6 @@ pub(crate) fn settings_data(cx: &App) -> Vec<SettingsPage> {
         debugger_page(),
         terminal_page(),
         version_control_page(),
-        collaboration_page(),
         network_page(),
         developer_page(cx),
     ]
@@ -8158,6 +8158,7 @@ fn version_control_page() -> SettingsPage {
     }
 }
 
+#[cfg(feature = "audio-ui")]
 fn collaboration_page() -> SettingsPage {
     fn calls_section() -> [SettingsPageItem; 3] {
         [

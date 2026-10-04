@@ -53,6 +53,7 @@ use crate::components::{
     EnumVariantDropdown, NumberField, NumberFieldMode, NumberFieldType, SettingsInputField,
     SettingsSectionHeader, font_picker, icon_theme_picker, text_field_a11y_state, theme_picker,
 };
+#[cfg(feature = "audio-ui")]
 use crate::pages::{render_input_audio_device_dropdown, render_output_audio_device_dropdown};
 
 const NAVBAR_CONTAINER_TAB_INDEX: isize = 0;
@@ -491,6 +492,10 @@ pub fn init(cx: &mut App) {
 }
 
 fn init_renderers(cx: &mut App) {
+    #[cfg(feature = "audio-ui")]
+    cx.default_global::<SettingFieldRenderer>()
+        .add_basic_renderer::<settings::AudioInputDeviceName>(render_input_audio_device_dropdown)
+        .add_basic_renderer::<settings::AudioOutputDeviceName>(render_output_audio_device_dropdown);
     cx.default_global::<SettingFieldRenderer>()
         .add_renderer::<UnimplementedSettingField>(
             |settings_window, item, _, settings_file, _, sub_field, _, cx| {
@@ -637,8 +642,6 @@ fn init_renderers(cx: &mut App) {
         .add_basic_renderer::<settings::SemanticTokens>(render_dropdown)
         .add_basic_renderer::<settings::DocumentFoldingRanges>(render_dropdown)
         .add_basic_renderer::<settings::DocumentSymbols>(render_dropdown)
-        .add_basic_renderer::<settings::AudioInputDeviceName>(render_input_audio_device_dropdown)
-        .add_basic_renderer::<settings::AudioOutputDeviceName>(render_output_audio_device_dropdown)
         .add_basic_renderer::<settings::TerminalBell>(render_dropdown)
         // please semicolon stay on next line
         ;

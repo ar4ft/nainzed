@@ -38,6 +38,71 @@ pub struct ReplStore {
     _subscriptions: Vec<Subscription>,
 }
 
+#[cfg(test)]
+mod no_ai_fork_tests {
+    use super::*;
+
+    #[gpui::test]
+    fn no_ai_fork_notebook_prefers_project_python_environment(cx: &mut gpui::TestAppContext) {
+        fn python(name: &str, installed: bool) -> KernelSpecification {
+            KernelSpecification::PythonEnv(PythonEnvKernelSpecification {
+                name: name.into(),
+                path: format!("/{name}/bin/python").into(),
+                kernelspec: serde_json::from_value(serde_json::json!({
+                    "display_name": name, "language": "python", "argv": []
+                }))
+                .unwrap(),
+                has_ipykernel: installed,
+                environment_kind: Some("venv".into()),
+            })
+        }
+        let worktree = WorktreeId::from_usize(1);
+        let active = python("project-venv", true);
+        let fallback = python("global-python", true);
+        let unavailable = python("no-ipykernel", false);
+        let mut store = ReplStore {
+            fs: fs::FakeFs::new(cx.executor()),
+            enabled: true,
+            sessions: HashMap::default(),
+            kernel_specifications: vec![fallback.clone(), active.clone(), unavailable.clone()],
+            kernelspecs_initialized: true,
+            selected_kernel_for_worktree: HashMap::default(),
+            kernel_specifications_for_worktree: HashMap::default(),
+            active_python_toolchain_for_worktree: HashMap::default(),
+            remote_worktrees: HashSet::default(),
+            fetching_python_kernelspecs: HashSet::default(),
+            _subscriptions: Vec::new(),
+        };
+        store
+            .active_python_toolchain_for_worktree
+            .insert(worktree, active.path());
+        assert_eq!(store.notebook_kernelspec(worktree, "Python"), Some(active));
+        store
+            .selected_kernel_for_worktree
+            .insert(worktree, fallback.clone());
+        assert_eq!(
+            store.notebook_kernelspec(worktree, "python"),
+            Some(fallback)
+        );
+        store.selected_kernel_for_worktree.clear();
+        store
+            .active_python_toolchain_for_worktree
+            .insert(worktree, unavailable.path());
+        assert!(
+            store
+                .notebook_kernelspec(worktree, "python")
+                .unwrap()
+                .has_ipykernel()
+        );
+        assert!(store.notebook_kernelspec(worktree, "julia").is_none());
+        store.remote_worktrees.insert(worktree);
+        assert!(
+            store.notebook_kernelspec(worktree, "python").is_none(),
+            "local kernels must not leak into remote projects"
+        );
+    }
+}
+
 impl ReplStore {
     const NAMESPACE: &'static str = "repl";
 
@@ -316,6 +381,28 @@ impl ReplStore {
     ) {
         self.selected_kernel_for_worktree
             .insert(worktree_id, kernelspec);
+    }
+
+    pub fn notebook_kernelspec(
+        &self,
+        worktree_id: WorktreeId,
+        language: &str,
+    ) -> Option<KernelSpecification> {
+        if let Some(selected) = self.selected_kernel(worktree_id) {
+            return Some(selected.clone());
+        }
+        self.kernel_specifications_for_worktree(worktree_id)
+            .filter(|spec| {
+                spec.has_ipykernel() && spec.language().as_ref().eq_ignore_ascii_case(language)
+            })
+            .min_by_key(|spec| {
+                (
+                    !self.is_recommended_kernel(worktree_id, spec),
+                    !matches!(spec, KernelSpecification::PythonEnv(_)),
+                    spec.name().to_string(),
+                )
+            })
+            .cloned()
     }
 
     pub fn active_python_toolchain_path(&self, worktree_id: WorktreeId) -> Option<&SharedString> {

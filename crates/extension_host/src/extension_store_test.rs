@@ -1308,6 +1308,26 @@ fn init_test(cx: &mut TestAppContext) {
 }
 
 #[gpui::test]
+async fn no_ai_fork_empty_extension_update_check_never_sends(cx: &mut TestAppContext) {
+    init_test(cx);
+    let (store, _) = create_extension_store(cx);
+    let requests = Arc::new(AtomicUsize::new(0));
+    let observed = requests.clone();
+    let http = FakeHttpClient::create(move |_| {
+        observed.fetch_add(1, Ordering::SeqCst);
+        async { Ok(Response::builder().status(200).body("[]".into()).unwrap()) }
+    });
+    store.update(cx, |store, _| {
+        store.http_client = http;
+    });
+    let updates = store.update(cx, |store, cx| {
+        store.fetch_extensions_with_update_available(cx)
+    });
+    assert!(updates.await.unwrap().is_empty());
+    assert_eq!(requests.load(Ordering::SeqCst), 0);
+}
+
+#[gpui::test]
 async fn test_register_remote_client_syncs_only_the_new_client(
     cx: &mut TestAppContext,
     server_cx: &mut TestAppContext,

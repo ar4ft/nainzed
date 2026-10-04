@@ -73,6 +73,7 @@ pub(crate) const CODE_BLOCK_INSET: f32 = MEDIUM_SPACING_SIZE;
 pub(crate) const CONTROL_SIZE: f32 = 20.0;
 
 const NOTEBOOK_EXTENSION: &str = "ipynb";
+actions!(notebook, [RestoreDeletedCell]);
 
 pub fn init(cx: &mut App) {
     workspace::register_project_item::<NotebookEditor>(cx);
@@ -101,10 +102,17 @@ pub struct NotebookEditor {
     kernel: Kernel,
     kernel_specification: Option<KernelSpecification>,
     execution_requests: HashMap<String, CellId>,
+    pub(super) completion_requests:
+        HashMap<String, futures::channel::oneshot::Sender<jupyter_protocol::CompleteReply>>,
     kernel_picker_handle: PopoverMenuHandle<Picker<KernelPickerDelegate>>,
     saving: bool,
     search_matches: Vec<NotebookMatch>,
     saved_metadata: serde_json::Value,
+    recovery_dirty: bool,
+    recovery_pending: bool,
+    recovery_task: Task<()>,
+    recovery_io: Shared<Task<()>>,
+    deleted_cells: Vec<(usize, CellId, Cell)>,
 }
 
 enum SaveDestination {
@@ -213,6 +221,11 @@ impl NotebookEditor {
             saving: false,
             search_matches: Vec::new(),
             saved_metadata,
+            recovery_dirty: false,
+            recovery_pending: true,
+            recovery_task: Task::ready(()),
+            recovery_io: Task::ready(()).shared(),
+            deleted_cells: Vec::new(),
             project,
             languages: languages.clone(),
             worktree_id,
@@ -229,6 +242,7 @@ impl NotebookEditor {
             kernel: Kernel::Shutdown,
             kernel_specification: None,
             execution_requests: HashMap::default(),
+            completion_requests: HashMap::default(),
             kernel_picker_handle: PopoverMenuHandle::default(),
         };
         for cell in editor.cell_map.values() {
@@ -237,6 +251,7 @@ impl NotebookEditor {
         editor.launch_kernel(window, cx);
         editor.refresh_language(cx);
         editor.refresh_kernelspecs(cx);
+        editor.offer_recovery(window, cx);
 
         cx.subscribe(&notebook_item, |this, _item, _event, cx| {
             this.refresh_language(cx);
@@ -247,15 +262,50 @@ impl NotebookEditor {
         editor
     }
 
+    pub(super) fn request_completion(
+        &mut self,
+        code: String,
+        cursor_pos: usize,
+        _: &mut Context<Self>,
+    ) -> Option<(
+        String,
+        futures::channel::oneshot::Receiver<jupyter_protocol::CompleteReply>,
+    )> {
+        let Kernel::RunningKernel(kernel) = &mut self.kernel else {
+            return None;
+        };
+        let message: JupyterMessage = jupyter_protocol::CompleteRequest { code, cursor_pos }.into();
+        let id = message.header.msg_id.clone();
+        let (sender, receiver) = futures::channel::oneshot::channel();
+        kernel.request_tx().try_send(message).ok()?;
+        // At most one active editor request needs an answer. Dropping old senders
+        // cancels superseded requests and bounds memory while typing rapidly.
+        self.completion_requests.clear();
+        self.completion_requests.insert(id.clone(), sender);
+        Some((id, receiver))
+    }
+
     fn notebook_changed(&mut self, cx: &mut Context<Self>) {
+        self.notebook_state_changed(cx);
+        cx.emit(SearchEvent::MatchesInvalidated);
+    }
+
+    fn notebook_state_changed(&mut self, cx: &mut Context<Self>) {
         cx.emit(ItemEvent::Edit);
         cx.emit(ItemEvent::UpdateTab);
-        cx.emit(SearchEvent::MatchesInvalidated);
+        self.schedule_recovery(cx);
         cx.notify();
     }
 
     fn observe_cell_edits(&self, cell: &Cell, cx: &mut Context<Self>) {
         if let Some(editor) = cell.editor(cx).cloned() {
+            if matches!(cell, Cell::Code(_)) {
+                super::completion::KernelCompletionProvider::install(
+                    cx.entity().downgrade(),
+                    &editor,
+                    cx,
+                );
+            }
             let cell_id = cell.id(cx);
             cx.subscribe(&editor, move |this, _, event, cx| {
                 if matches!(event, editor::EditorEvent::Focused) {
@@ -291,6 +341,225 @@ impl NotebookEditor {
         }
     }
 
+    fn recovery_path(&self, cx: &App) -> Option<PathBuf> {
+        use sha2::{Digest, Sha256};
+        if !self.project.read(cx).is_local() {
+            return None;
+        }
+        let path = self
+            .project
+            .read(cx)
+            .absolute_path(&self.notebook_item.read(cx).project_path, cx)?;
+        let key = format!("{:x}", Sha256::digest(path.to_string_lossy().as_bytes()));
+        Some(
+            paths::data_dir()
+                .join("notebook-recovery")
+                .join(format!("{key}.json")),
+        )
+    }
+
+    fn schedule_recovery(&mut self, cx: &mut Context<Self>) {
+        if self.recovery_pending {
+            return;
+        }
+        if !self.is_dirty(cx) {
+            self.clear_recovery(cx);
+            return;
+        }
+        let Some(path) = self.recovery_path(cx) else {
+            return;
+        };
+        // Cancelling the previous task coalesces typing and streamed outputs.
+        self.recovery_task = cx.spawn(async move |this, cx| {
+            cx.background_executor()
+                .timer(std::time::Duration::from_millis(750))
+                .await;
+            let snapshot = this
+                .read_with(cx, |this, cx| {
+                    if !this.is_dirty(cx) {
+                        return None;
+                    }
+                    let draft = this.serialized_notebook(cx).ok()?;
+                    let record = notebook_safety::recovery_record(
+                        &this.notebook_item.read(cx).original_text,
+                        &draft,
+                    )
+                    .ok()?;
+                    Some((this.project.read(cx).fs().clone(), record))
+                })
+                .ok()
+                .flatten();
+            if let Some((fs, record)) = snapshot {
+                this.update(cx, |this, cx| {
+                    let previous = this.recovery_io.clone();
+                    // Debouncing may cancel timers, but never an in-flight write.
+                    // Saves, clean undo and subsequent snapshots queue behind it.
+                    this.recovery_io = cx
+                        .spawn(async move |_, _| {
+                            previous.await;
+                            let result = async {
+                                fs.create_dir(path.parent().unwrap()).await?;
+                                fs.atomic_write(path, record).await
+                            }
+                            .await;
+                            if let Err(error) = result {
+                                log::error!("Notebook recovery snapshot failed: {error}");
+                            }
+                        })
+                        .shared();
+                })
+                .ok();
+            }
+        });
+    }
+
+    fn clear_recovery(&mut self, cx: &mut Context<Self>) {
+        self.recovery_pending = false;
+        self.recovery_task = Task::ready(());
+        let Some(path) = self.recovery_path(cx) else {
+            return;
+        };
+        let fs = self.project.read(cx).fs().clone();
+        let previous = self.recovery_io.clone();
+        self.recovery_io = cx
+            .spawn(async move |_, _| {
+                previous.await;
+                if let Err(error) = fs
+                    .remove_file(
+                        &path,
+                        fs::RemoveOptions {
+                            ignore_if_not_exists: true,
+                            ..Default::default()
+                        },
+                    )
+                    .await
+                {
+                    log::error!("Could not remove saved notebook recovery snapshot: {error}");
+                }
+            })
+            .shared();
+    }
+
+    fn finish_recovery_check(&mut self, cx: &mut Context<Self>) {
+        self.recovery_pending = false;
+        self.schedule_recovery(cx);
+    }
+
+    fn offer_recovery(&mut self, window: &mut Window, cx: &mut Context<Self>) {
+        let Some(path) = self.recovery_path(cx) else {
+            self.recovery_pending = false;
+            return;
+        };
+        let fs = self.project.read(cx).fs().clone();
+        cx.spawn_in(window, async move |this, cx| {
+            let record = match fs.load(&path).await {
+                Ok(record) => record,
+                Err(error) => {
+                    if fs.metadata(&path).await.is_ok_and(|metadata| metadata.is_none()) {
+                        this.update(cx, |this, cx| this.finish_recovery_check(cx)).ok();
+                    } else {
+                        log::error!("Could not read notebook recovery snapshot; retained: {error}");
+                    }
+                    return;
+                }
+            };
+            let draft = this.read_with(cx, |this, cx| notebook_safety::restore_recovery(&record, &this.notebook_item.read(cx).original_text));
+            let draft = match draft {
+                Ok(Ok(Some(draft))) => draft,
+                Ok(Ok(None)) => {
+                    if fs.remove_file(&path, fs::RemoveOptions { ignore_if_not_exists: true, ..Default::default() }).await.is_ok() {
+                        this.update(cx, |this, cx| this.finish_recovery_check(cx)).ok();
+                    }
+                    return;
+                }
+                Ok(Err(error)) => {
+                    // Keep conflicting drafts separately so new edits can recover too.
+                    let retained = path.with_extension(format!("conflict-{}.json", uuid::Uuid::new_v4()));
+                    let moved = fs.rename(&path, &retained, fs::RenameOptions::default()).await.is_ok();
+                    let retained = if moved { &retained } else { &path };
+                    this.update_in(cx, |this, window, cx| {
+                        if moved { this.finish_recovery_check(cx); }
+                        crate::python_setup::show_message(window, cx, gpui::PromptLevel::Warning,
+                            "Notebook recovery needs review", Some(&format!("{error}. Snapshot: {}", retained.display())));
+                    }).ok();
+                    return;
+                }
+                Err(_) => return,
+            };
+            // Kernel startup can change notebook metadata while the prompt is open.
+            // Only user-visible cell changes prevent restoring this draft.
+            let checkpoint = this.read_with(cx, |this, cx| serde_json::to_value(this.to_notebook(cx)).map(|value| value["cells"].clone())).ok().and_then(Result::ok);
+            let decision = this.update_in(cx, |_, window, cx| window.prompt(gpui::PromptLevel::Info,
+                "Recover unsaved notebook changes?", Some("A local recovery snapshot is available. The notebook on disk will stay unchanged until you save."), &["Recover", "Discard"], cx));
+            let Ok(decision) = decision else { return; };
+            match decision.await.ok() {
+                Some(0) => {
+                    this.update_in(cx, |this, window, cx| {
+                        let current = serde_json::to_value(this.to_notebook(cx)).ok().map(|value| value["cells"].clone());
+                        if checkpoint.is_none() || current != checkpoint {
+                            crate::python_setup::show_message(window, cx, gpui::PromptLevel::Warning,
+                                "Notebook changed during recovery", Some("The recovery snapshot was retained. Reopen the notebook to recover it."));
+                            return;
+                        }
+                        if let Ok(nbformat::Notebook::V4(notebook)) = nbformat::parse_notebook(&draft) {
+                            this.notebook_item.update(cx, |item, _| { item.notebook = notebook.clone(); });
+                            this.replace_cells(&notebook, window, cx);
+                            this.recovery_dirty = true;
+                            this.recovery_pending = false;
+                            this.notebook_changed(cx);
+                        }
+                    }).ok();
+                }
+                Some(1) => {
+                    if fs.remove_file(&path, fs::RemoveOptions { ignore_if_not_exists: true, ..Default::default() }).await.is_ok() {
+                        this.update(cx, |this, cx| this.finish_recovery_check(cx)).ok();
+                    }
+                }
+                _ => {}
+            }
+        }).detach();
+    }
+
+    fn replace_cells(
+        &mut self,
+        notebook: &nbformat::v4::Notebook,
+        window: &mut Window,
+        cx: &mut Context<Self>,
+    ) {
+        self.cell_order.clear();
+        self.cell_map.clear();
+        self.deleted_cells.clear();
+        self.search_matches.clear();
+        self.selected_cell_index = 0;
+        for source in &notebook.cells {
+            let id = source.id();
+            let cell = Cell::load(
+                source,
+                &self.languages,
+                self.notebook_language.clone(),
+                window,
+                cx,
+            );
+            self.observe_cell_edits(&cell, cx);
+            if let Cell::Code(code) = &cell {
+                cx.subscribe_in(code, window, |this, _, event, window, cx| match event {
+                    CellEvent::Run(id) => this.execute_cell(id.clone(), window, cx),
+                    CellEvent::FocusedIn(id) => this.select_cell_by_id(id, cx),
+                })
+                .detach();
+            }
+            if let Cell::Markdown(markdown) = &cell {
+                cx.subscribe(markdown, |_, cell, _: &MarkdownCellEvent, cx| {
+                    cell.update(cx, |cell, cx| cell.reparse_markdown(cx));
+                })
+                .detach();
+            }
+            self.cell_order.push(id.clone());
+            self.cell_map.insert(id.clone(), cell);
+        }
+        self.cell_list = ListState::new(self.cell_order.len(), gpui::ListAlignment::Top, px(1000.));
+    }
+
     fn refresh_kernelspecs(&mut self, cx: &mut Context<Self>) {
         let store = ReplStore::global(cx);
         let project = self.project.clone();
@@ -324,7 +593,7 @@ impl NotebookEditor {
     }
 
     fn has_structural_changes(&self) -> bool {
-        self.cell_order != self.original_cell_order
+        self.recovery_dirty || self.cell_order != self.original_cell_order
     }
 
     fn has_content_changes(&self, cx: &App) -> bool {
@@ -356,6 +625,8 @@ impl NotebookEditor {
     }
 
     pub fn mark_as_saved(&mut self, cx: &mut Context<Self>) {
+        self.recovery_dirty = false;
+        self.clear_recovery(cx);
         self.original_cell_order = self.cell_order.clone();
         self.saved_metadata = serde_json::to_value(&self.notebook_item.read(cx).notebook.metadata)
             .unwrap_or_default();
@@ -409,14 +680,18 @@ impl NotebookEditor {
                 _ => None,
             })
             .collect();
+        let code_cells: HashMap<_, _> = self
+            .cell_map
+            .iter()
+            .filter_map(|(id, cell)| match cell {
+                Cell::Code(code) => Some((id.as_str(), code)),
+                _ => None,
+            })
+            .collect();
         let mut edited = serde_json::to_value(self.to_notebook(cx))?;
         if let Some(cells) = edited["cells"].as_array_mut() {
             for cell in cells {
-                if let Some((_, Cell::Code(code))) = self
-                    .cell_map
-                    .iter()
-                    .find(|(id, _)| cell["id"].as_str() == Some(id.as_str()))
-                {
+                if let Some(code) = cell["id"].as_str().and_then(|id| code_cells.get(id)) {
                     cell["outputs"] = serde_json::Value::Array(code.read(cx).raw_outputs.clone());
                 }
             }
@@ -446,6 +721,7 @@ impl NotebookEditor {
             Ok(json) => json,
             Err(error) => return Task::ready(Err(error)),
         };
+        let old_recovery_path = self.recovery_path(cx);
         let item = self.notebook_item.read(cx);
         let project_path = item.project_path.clone();
         let original_text = item.original_text.clone();
@@ -583,9 +859,33 @@ impl NotebookEditor {
                     // Edits made while the write was running must remain dirty.
                     if unchanged {
                         this.mark_as_saved(cx);
+                    } else {
+                        this.schedule_recovery(cx);
                     }
                     cx.notify();
                 });
+                if let Some(old_path) = old_recovery_path {
+                    let current_path = this
+                        .read_with(cx, |this, cx| this.recovery_path(cx))
+                        .ok()
+                        .flatten();
+                    if current_path.as_ref() != Some(&old_path) {
+                        if let Ok(previous) = this.read_with(cx, |this, _| this.recovery_io.clone())
+                        {
+                            previous.await;
+                        }
+                        let fs = project.read_with(cx, |project, _| project.fs().clone());
+                        let _ = fs
+                            .remove_file(
+                                &old_path,
+                                fs::RemoveOptions {
+                                    ignore_if_not_exists: true,
+                                    ..Default::default()
+                                },
+                            )
+                            .await;
+                    }
+                }
                 Ok(())
             }
             .await;
@@ -600,9 +900,18 @@ impl NotebookEditor {
 
     fn launch_kernel(&mut self, window: &mut Window, cx: &mut Context<Self>) {
         let spec = self.kernel_specification.clone().or_else(|| {
+            let language = self
+                .notebook_item
+                .read(cx)
+                .notebook
+                .metadata
+                .language_info
+                .as_ref()
+                .map(|info| info.name.as_str())
+                .unwrap_or("python");
             ReplStore::global(cx)
                 .read(cx)
-                .active_kernelspec(self.worktree_id, None, cx)
+                .notebook_kernelspec(self.worktree_id, language)
         });
 
         let spec = spec.unwrap_or_else(|| {
@@ -635,6 +944,8 @@ impl NotebookEditor {
         window: &mut Window,
         cx: &mut Context<Self>,
     ) {
+        // Replies from the previous interpreter must never reach a new completion menu.
+        self.completion_requests.clear();
         let entity_id = cx.entity_id();
         let working_directory = self
             .project
@@ -646,6 +957,27 @@ impl NotebookEditor {
         let view = cx.entity();
 
         self.kernel_specification = Some(spec.clone());
+        ReplStore::global(cx).update(cx, |store, cx| {
+            store.set_active_kernelspec(self.worktree_id, spec.clone(), cx)
+        });
+        if let KernelSpecification::PythonEnv(environment) = &spec {
+            if self.project.read(cx).is_local() {
+                let interpreter = environment.path.clone();
+                let resolve = self.project.read(cx).resolve_toolchain(
+                    interpreter.clone(),
+                    "Python".into(),
+                    cx,
+                );
+                cx.spawn(async move |this, cx| {
+                    let Ok(toolchain) = resolve.await else { return; };
+                    this.update(cx, |this, cx| {
+                        if !matches!(&this.kernel_specification, Some(KernelSpecification::PythonEnv(env)) if env.path == interpreter) { return; }
+                        let path = this.notebook_item.read(cx).project_path.clone();
+                        this.project.update(cx, |project, cx| project.activate_toolchain(path, toolchain, cx)).detach();
+                    }).ok();
+                }).detach();
+            }
+        }
 
         self.notebook_item.update(cx, |item, cx| {
             let kernel_name = spec.name().to_string();
@@ -1030,7 +1362,12 @@ impl NotebookEditor {
         }
         let index = self.selected_cell_index.min(self.cell_order.len() - 1);
         let cell_id = self.cell_order.remove(index);
-        self.cell_map.remove(&cell_id);
+        if let Some(cell) = self.cell_map.remove(&cell_id) {
+            self.deleted_cells.push((index, cell_id, cell));
+            if self.deleted_cells.len() > 20 {
+                self.deleted_cells.remove(0);
+            }
+        }
         self.cell_list.splice(index..index + 1, 0);
 
         if self.cell_order.is_empty() {
@@ -1042,6 +1379,24 @@ impl NotebookEditor {
         }
         self.notebook_mode = NotebookMode::Command;
         window.focus(&self.focus_handle, cx);
+        self.notebook_changed(cx);
+    }
+
+    fn restore_deleted_cell(
+        &mut self,
+        _: &RestoreDeletedCell,
+        _: &mut Window,
+        cx: &mut Context<Self>,
+    ) {
+        let Some((index, id, cell)) = self.deleted_cells.pop() else {
+            return;
+        };
+        let index = index.min(self.cell_order.len());
+        self.cell_order.insert(index, id.clone());
+        self.cell_map.insert(id, cell);
+        self.cell_list.splice(index..index, 1);
+        self.selected_cell_index = index;
+        self.cell_list.scroll_to_reveal_item(index);
         self.notebook_changed(cx);
     }
 
@@ -1551,6 +1906,16 @@ impl NotebookEditor {
                     }),
             )
             .child(
+                Button::new("restore-deleted-cell", "Restore deleted cell")
+                    .style(ButtonStyle::Subtle)
+                    .label_size(LabelSize::Small)
+                    .start_icon(Icon::new(IconName::Undo).size(IconSize::Small))
+                    .disabled(self.deleted_cells.is_empty())
+                    .on_click(cx.listener(|this, _, window, cx| {
+                        this.restore_deleted_cell(&RestoreDeletedCell, window, cx)
+                    })),
+            )
+            .child(
                 h_flex()
                     .gap_1()
                     .child(
@@ -1714,6 +2079,7 @@ impl Render for NotebookEditor {
                 cx.listener(|this, _: &AddCodeBlock, window, cx| this.add_code_block(window, cx)),
             )
             .on_action(cx.listener(|this, _: &DeleteCell, window, cx| this.delete_cell(window, cx)))
+            .on_action(cx.listener(Self::restore_deleted_cell))
             .on_action(
                 cx.listener(|this, action, window, cx| this.enter_edit_mode(action, window, cx)),
             )
@@ -2097,13 +2463,16 @@ impl SearchableItem for NotebookEditor {
         cx: &mut Context<Self>,
     ) {
         self.search_matches = matches.to_vec();
+        let mut by_cell: HashMap<_, Vec<_>> = HashMap::default();
+        for (index, found) in matches.iter().enumerate() {
+            by_cell
+                .entry(&found.cell_id)
+                .or_default()
+                .push((index, found));
+        }
         for (id, cell) in &self.cell_map {
             if let Some(editor) = cell.editor(cx).cloned() {
-                let local: Vec<_> = matches
-                    .iter()
-                    .enumerate()
-                    .filter(|(_, m)| &m.cell_id == id)
-                    .collect();
+                let local = by_cell.remove(id).unwrap_or_default();
                 let active = local.iter().position(|(i, _)| Some(*i) == active);
                 let ranges: Vec<_> = local.iter().map(|(_, m)| m.range.clone()).collect();
                 editor.update(cx, |editor, cx| {
@@ -2431,24 +2800,10 @@ impl Item for NotebookEditor {
                     item.original_text = buffer.read(cx).text();
                     item.notebook = notebook.clone();
                 });
-                let mut cell_order = vec![];
-                let mut cell_map = HashMap::default();
-
-                for cell in notebook.cells.iter() {
-                    let cell_id = cell.id();
-                    cell_order.push(cell_id.clone());
-                    let cell_entity =
-                        Cell::load(cell, &languages, notebook_language.clone(), window, cx);
-                    this.observe_cell_edits(&cell_entity, cx);
-                    cell_map.insert(cell_id.clone(), cell_entity);
-                }
-
-                this.cell_order = cell_order.clone();
-                this.original_cell_order = cell_order;
-                this.cell_map = cell_map;
-                this.cell_list =
-                    ListState::new(this.cell_order.len(), gpui::ListAlignment::Top, px(1000.));
-                this.search_matches.clear();
+                this.replace_cells(&notebook, window, cx);
+                this.original_cell_order = this.cell_order.clone();
+                this.recovery_dirty = false;
+                this.clear_recovery(cx);
                 cx.emit(ItemEvent::UpdateTab);
                 cx.emit(SearchEvent::MatchesInvalidated);
                 cx.notify();
@@ -2479,6 +2834,29 @@ impl ProjectItem for NotebookEditor {
 
 impl KernelSession for NotebookEditor {
     fn route(&mut self, message: &JupyterMessage, window: &mut Window, cx: &mut Context<Self>) {
+        if let JupyterMessageContent::CompleteReply(reply) = &message.content {
+            if let Some(parent) = &message.parent_header {
+                if let Some(sender) = self.completion_requests.remove(&parent.msg_id) {
+                    let _ = sender.send(reply.clone());
+                }
+            }
+            return;
+        }
+        // Display IDs can be shared across cells, and updates may be emitted
+        // under a different execution request. Update every matching output.
+        if let JupyterMessageContent::UpdateDisplayData(update) = &message.content {
+            let mut changed = false;
+            for cell in self.cell_map.values() {
+                if let Cell::Code(cell) = cell {
+                    changed |=
+                        cell.update(cx, |cell, cx| cell.update_display_data(update, window, cx));
+                }
+            }
+            if changed {
+                self.notebook_state_changed(cx);
+            }
+            return;
+        }
         // Handle kernel status updates (these are broadcast to all)
         if let JupyterMessageContent::Status(status) = &message.content {
             self.kernel.set_execution_state(&status.execution_state);
@@ -2506,7 +2884,7 @@ impl KernelSession for NotebookEditor {
                     cell.update(cx, |cell, cx| {
                         cell.handle_message(message, window, cx);
                     });
-                    self.notebook_changed(cx);
+                    self.notebook_state_changed(cx);
                 }
             }
         }
@@ -2747,6 +3125,190 @@ mod tests {
         notebook.read_with(cx, |notebook, cx| {
             assert_eq!(notebook.save_status(cx), "Saved")
         });
+    }
+
+    #[gpui::test]
+    async fn no_ai_fork_notebook_clear_and_display_update_protocol(cx: &mut TestAppContext) {
+        let (project, item) = notebook_feature_fixture(cx).await;
+        let cx = cx.add_empty_window();
+        let notebook =
+            cx.update(|window, cx| cx.new(|cx| feature_editor(project, item, window, cx)));
+        let cell = notebook.read_with(cx, |notebook, _| {
+            match notebook.cell_map.get(&notebook.cell_order[0]).unwrap() {
+                Cell::Code(cell) => cell.clone(),
+                _ => unreachable!(),
+            }
+        });
+        cell.update_in(cx, |cell, window, cx| {
+            cell.handle_message(
+                &jupyter_protocol::ClearOutput { wait: true }.into(),
+                window,
+                cx,
+            );
+            assert_eq!(
+                cell.raw_outputs.len(),
+                1,
+                "wait keeps the previous output until replacement arrives"
+            );
+            let display: jupyter_protocol::DisplayData = serde_json::from_value(json!({
+                "data":{"text/plain":"before"}, "metadata":{}, "transient":{"display_id":"shared"}
+            }))
+            .unwrap();
+            cell.handle_message(&display.into(), window, cx);
+            assert_eq!(cell.raw_outputs.len(), 1);
+        });
+        notebook.update_in(cx, |notebook, window, cx| {
+            let update: jupyter_protocol::UpdateDisplayData = serde_json::from_value(json!({
+                "data":{"text/plain":"after"}, "metadata":{"custom":true}, "transient":{"display_id":"shared"}
+            })).unwrap();
+            notebook.route(&update.into(), window, cx);
+            let saved: serde_json::Value = serde_json::from_str(&notebook.serialized_notebook(cx).unwrap()).unwrap();
+            assert_eq!(saved["cells"][0]["outputs"][0]["data"]["text/plain"], "after");
+            assert_eq!(saved["cells"][0]["outputs"][0]["metadata"]["custom"], true);
+        });
+        cell.update_in(cx, |cell, window, cx| {
+            cell.handle_message(
+                &jupyter_protocol::ClearOutput { wait: false }.into(),
+                window,
+                cx,
+            );
+            assert!(!cell.has_outputs());
+            assert!(cell.raw_outputs.is_empty());
+        });
+    }
+
+    #[gpui::test]
+    async fn no_ai_fork_notebook_restores_deleted_cell_and_writes_recovery(
+        cx: &mut TestAppContext,
+    ) {
+        let (project, item) = notebook_feature_fixture(cx).await;
+        let fs = project.read_with(cx, |project, _| project.fs().clone());
+        let cx = cx.add_empty_window();
+        let notebook =
+            cx.update(|window, cx| cx.new(|cx| feature_editor(project, item, window, cx)));
+        let (path, before) = notebook.read_with(cx, |notebook, cx| {
+            (
+                notebook.recovery_path(cx).unwrap(),
+                notebook.serialized_notebook(cx).unwrap(),
+            )
+        });
+        cx.run_until_parked();
+        notebook.update_in(cx, |notebook, window, cx| {
+            notebook.delete_cell(window, cx);
+            assert_eq!(notebook.cell_order.len(), 1);
+        });
+        cx.run_until_parked();
+        cx.executor()
+            .advance_clock(std::time::Duration::from_secs(2));
+        cx.run_until_parked();
+        let record = fs
+            .load(&path)
+            .await
+            .expect("unsaved changes should have a recovery snapshot");
+        let draft: serde_json::Value = serde_json::from_str(&record).unwrap();
+        let restored: serde_json::Value =
+            serde_json::from_str(draft["draft_text"].as_str().unwrap()).unwrap();
+        assert_eq!(restored["cells"].as_array().unwrap().len(), 1);
+        notebook.update_in(cx, |notebook, window, cx| {
+            notebook.restore_deleted_cell(&RestoreDeletedCell, window, cx);
+            assert_eq!(
+                notebook.serialized_notebook(cx).unwrap(),
+                before,
+                "restore keeps source and outputs"
+            );
+        });
+        cx.run_until_parked();
+        assert!(
+            fs.metadata(&path).await.unwrap().is_none(),
+            "clean undo removes obsolete recovery"
+        );
+    }
+
+    #[gpui::test]
+    async fn no_ai_fork_notebook_completion_reply_does_not_change_content(cx: &mut TestAppContext) {
+        let (project, item) = notebook_feature_fixture(cx).await;
+        let cx = cx.add_empty_window();
+        let notebook =
+            cx.update(|window, cx| cx.new(|cx| feature_editor(project, item, window, cx)));
+        let request: JupyterMessage = jupyter_protocol::CompleteRequest {
+            code: "str.up".into(),
+            cursor_pos: 6,
+        }
+        .into();
+        let (sender, receiver) = futures::channel::oneshot::channel();
+        notebook.update_in(cx, |notebook, window, cx| {
+            let before = notebook.serialized_notebook(cx).unwrap();
+            notebook
+                .completion_requests
+                .insert(request.header.msg_id.clone(), sender);
+            let mut reply: JupyterMessage = jupyter_protocol::CompleteReply {
+                matches: vec!["upper".into()],
+                ..Default::default()
+            }
+            .into();
+            reply.parent_header = Some(request.header.clone());
+            notebook.route(&reply, window, cx);
+            assert_eq!(notebook.serialized_notebook(cx).unwrap(), before);
+            assert!(notebook.completion_requests.is_empty());
+        });
+        assert_eq!(receiver.await.unwrap().matches, vec!["upper"]);
+    }
+
+    #[gpui::test]
+    async fn no_ai_fork_notebook_recovers_despite_kernel_metadata_changes(cx: &mut TestAppContext) {
+        let (project, item) = notebook_feature_fixture(cx).await;
+        let fs = project.read_with(cx, |project, _| project.fs().clone());
+        let original = item.read_with(cx, |item, _| item.original_text.clone());
+        let mut draft: serde_json::Value = serde_json::from_str(&original).unwrap();
+        draft["cells"][0]["source"] = json!(["recovered_value = 42"]);
+        let draft = serde_json::to_string(&draft).unwrap();
+        let record = notebook_safety::recovery_record(&original, &draft).unwrap();
+        let cx = cx.add_empty_window();
+        let notebook =
+            cx.update(|window, cx| cx.new(|cx| feature_editor(project, item.clone(), window, cx)));
+        cx.run_until_parked();
+        let path = notebook.read_with(cx, |notebook, cx| notebook.recovery_path(cx).unwrap());
+        fs.create_dir(path.parent().unwrap()).await.unwrap();
+        fs.atomic_write(path.clone(), record.clone()).await.unwrap();
+        notebook.update_in(cx, |notebook, window, cx| {
+            notebook.recovery_pending = true;
+            notebook.offer_recovery(window, cx);
+        });
+        cx.run_until_parked();
+        assert!(cx.has_pending_prompt());
+        // Simulate the kernel_info_reply that used to make recovery refuse its draft.
+        item.update(cx, |item, cx| {
+            item.notebook.metadata.kernelspec = None;
+            cx.emit(());
+        });
+        cx.run_until_parked();
+        cx.executor()
+            .advance_clock(std::time::Duration::from_secs(2));
+        cx.run_until_parked();
+        assert_eq!(
+            fs.load(&path).await.unwrap(),
+            record,
+            "startup must not overwrite a pending draft"
+        );
+        cx.simulate_prompt_answer("Recover");
+        cx.run_until_parked();
+        notebook.read_with(cx, |notebook, cx| {
+            let recovered: serde_json::Value =
+                serde_json::from_str(&notebook.serialized_notebook(cx).unwrap()).unwrap();
+            assert_eq!(
+                recovered["cells"][0]["source"],
+                json!(["recovered_value = 42"])
+            );
+            assert!(notebook.is_dirty(cx));
+            assert!(!notebook.recovery_pending);
+        });
+        assert_eq!(
+            fs.load(path!("/notebooks/test.ipynb").as_ref())
+                .await
+                .unwrap(),
+            original,
+            "recovery does not overwrite disk before Save"
+        );
     }
 
     /// When the configured interpreter doesn't exist (e.g. Python isn't installed),

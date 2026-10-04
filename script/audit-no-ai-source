@@ -3,16 +3,42 @@
 import hashlib
 import json
 from pathlib import Path
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from no_ai_policy import audit_manifests
 
 PROTECTED = (
     'crates/telemetry/src/telemetry.rs',
     'crates/client/src/telemetry.rs',
+    'crates/client/src/client.rs',
     'crates/language_model/src/registry.rs',
     'crates/project/src/project.rs',
     'crates/zed/src/main.rs',
     'crates/zed/src/zed.rs',
     'crates/zed/src/zed/app_menus.rs',
     'crates/settings_ui/src/page_data.rs',
+    'crates/zed/Cargo.toml',
+    'crates/remote_server/Cargo.toml',
+    'crates/settings_ui/Cargo.toml',
+    'crates/settings_ui/src/pages.rs',
+    'crates/title_bar/Cargo.toml',
+    'crates/title_bar/src/title_bar.rs',
+    'crates/file_finder/Cargo.toml',
+    'crates/file_finder/src/file_finder.rs',
+    'crates/notifications/Cargo.toml',
+    'crates/notifications/src/notifications.rs',
+    'crates/auto_update/src/auto_update.rs',
+    'crates/extension_host/src/extension_host.rs',
+    'script/no_ai_policy.py',
+    'script/audit-no-ai',
+    'script/audit-no-ai-source',
+    'script/build-no-ai-mac',
+    'script/sign-no-ai-mac',
+    'script/privacy-no-ai-mac.py',
+    'script/no_ai_runtime.py',
+    '.github/workflows/no-ai-release.yml',
+    '.github/workflows/no-ai-mac.yml',
+    '.github/workflows/no-ai-validate.yml',
 )
 
 
@@ -28,6 +54,7 @@ def audit(root):
     if changed:
         raise ValueError('Unreviewed AI/telemetry safeguard changes:\n' + '\n'.join(changed)
                          + '\nReview the implementation and regression tests before updating the guard hashes.')
+    audit_manifests(root)
 
 
 if __name__ == '__main__':

@@ -8,14 +8,15 @@ If a merge conflicts, the workflow aborts it and opens a draft PR containing onl
 
 ## Checks and review
 
-`Build Zed No AI for Mac` accepts normal PR events and reusable workflow calls. Bot-created PRs using `GITHUB_TOKEN` do not generate new PR workflow runs, so the weekly workflow calls the reusable checks itself with the exact clean-merge commit. The maintenance run is linked in the PR and reports its final result on the update commit as `upstream/mac-validation`, because reusable jobs alone attach to the caller's commit. Manual fixes pushed to an open PR trigger normal PR checks, including GitHub's proposed merge commit. A source audit runs on Linux first, followed by Apple Silicon and Intel checks and development package builds. No Apple signing credentials are passed to those jobs.
+`Build Zed No AI for Mac` accepts normal PR events and reusable workflow calls. Bot-created PRs using `GITHUB_TOKEN` do not generate new PR workflow runs, so the weekly workflow calls the reusable checks itself with the exact clean-merge commit. The maintenance run is linked in the PR and reports its final result on the update commit as `upstream/mac-validation`, because reusable jobs alone attach to the caller's commit. Manual fixes pushed to an open PR trigger normal PR checks, including GitHub's proposed merge commit. Source/privacy guard tests run on Linux first, followed by Apple Silicon and Intel validation. Normal PRs do not build installers. Clean weekly update calls and branch builds continue to development packages with startup proxy checks and benchmark artifacts. Cache restore/save operations are best effort and bounded to eight minutes each. No Apple signing credentials are passed to those jobs.
 
 The checks include:
 
 - Protected source fingerprints for the inert telemetry APIs, empty model registry, enforced AI settings, startup hooks, app menus and settings pages.
-- Production dependency rejection for known AI providers/engines, agents, crash capture and hang telemetry.
+- Production dependency rejection for known AI providers/engines and agent families, crash capture, hang telemetry, and removed collaboration/audio implementations, in both the editor and remote helper.
 - Tests that AI and telemetry cannot be re-enabled and telemetry property expressions are never evaluated.
-- Application and remote-helper compilation, notebook preservation/open/save regressions, Python kernel discovery and updater selection/rollback tests.
+- Application and remote-helper compilation, notebook preservation/open/save/recovery regressions, Python environment selection, kernel completion/output protocol, and updater selection/rollback tests.
+- Actual-application startup proxy checks and Mac startup/memory/large-file/notebook reports for package builds; see [NETWORK_PRIVACY.md](NETWORK_PRIVACY.md) and [PERFORMANCE.md](PERFORMANCE.md).
 
 The protected-source audit intentionally rejects **any** change to a protected implementation, including legitimate upstream edits. Read the relevant diff, confirm the fork's restrictions remain enforced, update the implementation and regression tests if needed, and only then refresh the corresponding SHA-256 values in `assets/no-ai-source-guards.json`. Do not blindly regenerate the manifest to make a failed check pass. New code outside the protected files still needs human review; neither fingerprints nor the dependency denylist proves that every possible future AI or telemetry implementation is absent.
 

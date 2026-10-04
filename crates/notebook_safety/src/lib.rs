@@ -3,6 +3,37 @@ use anyhow::{Context as _, Result, bail, ensure};
 use serde_json::Value;
 use std::collections::{HashMap, HashSet};
 
+/// A recovery snapshot retains the exact disk version it was based on. Never
+/// restore a draft over an independently changed file without resolving it.
+pub fn recovery_record(original_text: &str, draft_text: &str) -> Result<String> {
+    let draft: Value = serde_json::from_str(draft_text)?;
+    validate(&draft)?;
+    Ok(serde_json::to_string(&serde_json::json!({
+        "version": 1, "original_text": original_text, "draft_text": draft_text
+    }))?)
+}
+
+pub fn restore_recovery(record: &str, current_text: &str) -> Result<Option<String>> {
+    let record: Value = serde_json::from_str(record)?;
+    ensure!(
+        record["version"] == 1,
+        "Unsupported recovery snapshot version"
+    );
+    let draft = record["draft_text"]
+        .as_str()
+        .context("Missing recovery draft")?;
+    let draft_json: Value = serde_json::from_str(draft)?;
+    validate(&draft_json)?;
+    if serde_json::from_str::<Value>(current_text).is_ok_and(|current| current == draft_json) {
+        return Ok(None);
+    }
+    ensure!(
+        record["original_text"].as_str() == Some(current_text),
+        "Notebook changed on disk; recovery snapshot was retained for manual reconciliation"
+    );
+    Ok(Some(draft.to_owned()))
+}
+
 /// Preserve fields that the editor does not understand, while applying its edits.
 /// `preserve_outputs` identifies cells whose outputs have not been run or cleared.
 pub fn prepare_save(
@@ -70,6 +101,40 @@ fn merge(original: &mut Value, edited: &Value) {
             }
         }
         (original, edited) => *original = edited.clone(),
+    }
+}
+
+#[cfg(test)]
+mod recovery_tests {
+    use super::*;
+    fn notebook(source: &str) -> String {
+        serde_json::json!({"nbformat":4,"nbformat_minor":5,"metadata":{"custom":"preserved"},"cells":[{
+            "id":"code", "cell_type":"code", "metadata":{}, "execution_count":null,
+            "source":[source], "outputs":[{"output_type":"display_data","data":{"image/png":"abcd"},"metadata":{}}]
+        }]}).to_string()
+    }
+    #[test]
+    fn recovery_preserves_draft_outputs_and_unknown_metadata() {
+        let original = notebook("before");
+        let draft = notebook("after");
+        let record = recovery_record(&original, &draft).unwrap();
+        assert_eq!(restore_recovery(&record, &original).unwrap(), Some(draft));
+    }
+    #[test]
+    fn recovery_refuses_independent_disk_edits() {
+        let record = recovery_record(&notebook("before"), &notebook("draft")).unwrap();
+        assert!(restore_recovery(&record, &notebook("external edit")).is_err());
+    }
+    #[test]
+    fn recovery_ignores_a_draft_that_has_already_been_saved() {
+        let draft = notebook("after");
+        let record = recovery_record(&notebook("before"), &draft).unwrap();
+        assert_eq!(restore_recovery(&record, &draft).unwrap(), None);
+    }
+    #[test]
+    fn recovery_rejects_invalid_records() {
+        assert!(restore_recovery("{}", &notebook("before")).is_err());
+        assert!(recovery_record(&notebook("before"), "{\"cells\":[{}]}").is_err());
     }
 }
 

@@ -185,6 +185,48 @@ mod tests {
     use super::*;
     use crate::TelemetrySettings;
     use settings::Settings;
+    #[gpui::test]
+    async fn no_telemetry_fork_never_reaches_http_transport(cx: &mut gpui::TestAppContext) {
+        use http_client::{AsyncBody, HttpClient as _};
+        use std::sync::atomic::{AtomicUsize, Ordering};
+        let requests = Arc::new(AtomicUsize::new(0));
+        let observed = requests.clone();
+        let http = http_client::FakeHttpClient::create(move |_| {
+            observed.fetch_add(1, Ordering::SeqCst);
+            async { anyhow::bail!("recorded request") }
+        });
+        // Prove this transport observes sends before exercising telemetry.
+        assert!(
+            http.get("http://test.example/control", AsyncBody::empty(), false)
+                .await
+                .is_err()
+        );
+        assert_eq!(requests.swap(0, Ordering::SeqCst), 1);
+        let telemetry =
+            cx.update(|cx| Telemetry::new(Arc::new(clock::FakeSystemClock::new()), http, cx));
+        cx.update(|cx| {
+            telemetry.start(
+                Some("installation".into()),
+                Some("system".into()),
+                "version".into(),
+                cx,
+            )
+        });
+        telemetry.log_edit_event("private-file", false);
+        telemetry
+            .report_remote_event(
+                "private-event",
+                "ssh",
+                "private-id".into(),
+                None,
+                "version".into(),
+            )
+            .unwrap();
+        telemetry.flush_events_inner().await.unwrap();
+        telemetry.flush_events().await;
+        cx.run_until_parked();
+        assert_eq!(requests.load(Ordering::SeqCst), 0);
+    }
     #[test]
     fn no_telemetry_fork_settings_cannot_enable_reporting() {
         let content = serde_json::from_str(

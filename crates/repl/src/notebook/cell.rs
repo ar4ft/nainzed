@@ -658,6 +658,7 @@ pub struct CodeCell {
     editor: Entity<editor::Editor>,
     outputs: Vec<Output>,
     pub(super) outputs_collapsed: bool,
+    clear_output_on_next: bool,
     pub(super) outputs_changed: bool,
     pub(super) raw_outputs: Vec<serde_json::Value>,
     selected: bool,
@@ -746,6 +747,7 @@ impl CodeCell {
             outputs,
             outputs_changed: false,
             outputs_collapsed: false,
+            clear_output_on_next: false,
             raw_outputs,
             selected: false,
             cell_position: None,
@@ -817,6 +819,7 @@ impl CodeCell {
     }
 
     pub fn clear_outputs(&mut self) {
+        self.clear_output_on_next = false;
         self.outputs_changed = true;
         self.outputs.clear();
         self.raw_outputs.clear();
@@ -887,6 +890,26 @@ impl CodeCell {
         window: &mut Window,
         cx: &mut Context<Self>,
     ) {
+        if let JupyterMessageContent::ClearOutput(clear) = &message.content {
+            if clear.wait {
+                self.clear_output_on_next = true;
+            } else {
+                self.clear_outputs();
+            }
+            cx.notify();
+            return;
+        }
+        if self.clear_output_on_next
+            && matches!(
+                &message.content,
+                JupyterMessageContent::StreamContent(_)
+                    | JupyterMessageContent::DisplayData(_)
+                    | JupyterMessageContent::ExecuteResult(_)
+                    | JupyterMessageContent::ErrorOutput(_)
+            )
+        {
+            self.clear_outputs();
+        }
         if matches!(
             &message.content,
             JupyterMessageContent::StreamContent(_)
@@ -923,12 +946,26 @@ impl CodeCell {
                 });
             }
             JupyterMessageContent::DisplayData(display_data) => {
-                self.outputs
-                    .push(Output::new(&display_data.data, None, window, cx));
+                self.outputs.push(Output::new(
+                    &display_data.data,
+                    display_data
+                        .transient
+                        .as_ref()
+                        .and_then(|t| t.display_id.clone()),
+                    window,
+                    cx,
+                ));
             }
             JupyterMessageContent::ExecuteResult(execute_result) => {
-                self.outputs
-                    .push(Output::new(&execute_result.data, None, window, cx));
+                self.outputs.push(Output::new(
+                    &execute_result.data,
+                    execute_result
+                        .transient
+                        .as_ref()
+                        .and_then(|t| t.display_id.clone()),
+                    window,
+                    cx,
+                ));
             }
             JupyterMessageContent::ExecuteInput(input) => {
                 self.execution_count = serde_json::to_value(&input.execution_count)
@@ -950,6 +987,37 @@ impl CodeCell {
             _ => {}
         }
         cx.notify();
+    }
+
+    pub fn update_display_data(
+        &mut self,
+        update: &jupyter_protocol::UpdateDisplayData,
+        window: &mut Window,
+        cx: &mut Context<Self>,
+    ) -> bool {
+        let Some(id) = update.transient.display_id.as_deref() else {
+            return false;
+        };
+        let mut changed = false;
+        for output in &mut self.outputs {
+            if output.display_id().as_deref() == Some(id) {
+                *output = Output::new(&update.data, Some(id.to_owned()), window, cx);
+                changed = true;
+            }
+        }
+        for output in &mut self.raw_outputs {
+            if output["transient"]["display_id"].as_str() == Some(id) {
+                output["data"] = serde_json::to_value(&update.data).expect("valid display data");
+                output["metadata"] =
+                    serde_json::to_value(&update.metadata).expect("valid display metadata");
+                changed = true;
+            }
+        }
+        if changed {
+            self.outputs_changed = true;
+            cx.notify();
+        }
+        changed
     }
 
     pub fn gutter_output(&self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
