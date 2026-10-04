@@ -723,7 +723,8 @@ impl CodeCell {
 
             editor.disable_mouse_wheel_zoom();
             editor.disable_scrollbars_and_minimap(window, cx);
-            editor.set_text(source.clone(), window, cx);
+            // Buffer::local already contains the source. Replacing it with the
+            // same text creates an edit and makes a freshly loaded cell dirty.
             editor.set_show_gutter(false, cx);
             editor.set_use_modal_editing(true);
             editor

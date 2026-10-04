@@ -376,7 +376,7 @@ impl NotebookEditor {
                 .await;
             let snapshot = this
                 .read_with(cx, |this, cx| {
-                    if !this.is_dirty(cx) {
+                    if this.recovery_pending || !this.is_dirty(cx) {
                         return None;
                     }
                     let draft = this.serialized_notebook(cx).ok()?;
@@ -446,6 +446,8 @@ impl NotebookEditor {
     }
 
     fn offer_recovery(&mut self, window: &mut Window, cx: &mut Context<Self>) {
+        self.recovery_pending = true;
+        self.recovery_task = Task::ready(());
         let Some(path) = self.recovery_path(cx) else {
             self.recovery_pending = false;
             return;
@@ -3194,6 +3196,7 @@ mod tests {
         });
         cx.run_until_parked();
         notebook.update_in(cx, |notebook, window, cx| {
+            assert!(!notebook.is_dirty(cx), "loaded notebook cells start saved");
             notebook.delete_cell(window, cx);
             assert_eq!(notebook.cell_order.len(), 1);
         });
@@ -3211,6 +3214,10 @@ mod tests {
         assert_eq!(restored["cells"].as_array().unwrap().len(), 1);
         notebook.update_in(cx, |notebook, window, cx| {
             notebook.restore_deleted_cell(&RestoreDeletedCell, window, cx);
+            assert!(
+                !notebook.is_dirty(cx),
+                "restoring an unchanged cell restores clean state"
+            );
             assert_eq!(
                 notebook.serialized_notebook(cx).unwrap(),
                 before,
@@ -3266,6 +3273,13 @@ mod tests {
         let cx = cx.add_empty_window();
         let notebook =
             cx.update(|window, cx| cx.new(|cx| feature_editor(project, item.clone(), window, cx)));
+        cx.run_until_parked();
+        // Register a recovery timer before opening the prompt. Merely blocking
+        // new timers is insufficient: this queued timer must be cancelled too.
+        item.update(cx, |item, cx| {
+            item.notebook.metadata.language_info = None;
+            cx.emit(());
+        });
         cx.run_until_parked();
         let path = notebook.read_with(cx, |notebook, cx| notebook.recovery_path(cx).unwrap());
         fs.create_dir(path.parent().unwrap()).await.unwrap();
