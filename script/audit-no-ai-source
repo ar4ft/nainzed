@@ -36,10 +36,12 @@ PROTECTED = (
     'script/audit-no-ai-source',
     'script/build-no-ai-mac',
     'script/sign-no-ai-mac',
+    'script/publish-no-ai-prerelease.py',
     'script/privacy-no-ai-mac.py',
     'script/no_ai_runtime.py',
     '.github/workflows/no-ai-release.yml',
     '.github/workflows/no-ai-mac.yml',
+    '.github/workflows/no-ai-prerelease.yml',
     '.github/workflows/no-ai-validate.yml',
 )
 
