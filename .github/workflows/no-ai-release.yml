@@ -47,7 +47,7 @@ jobs:
           commit=subprocess.check_output(['git','rev-parse','refs/tags/'+tag+'^{commit}'],text=True).strip()
           if subprocess.run(['git','merge-base','--is-ancestor',commit,'origin/main']).returncode != 0: raise SystemExit('Tag must belong to main')
           # /latest is public; a 404 means this is the first signed release.
-          result=subprocess.run(['gh','api','repos/ar4ft/zed-no-ai/releases/latest'],capture_output=True,text=True)
+          result=subprocess.run(['gh','api','repos/ar4ft/nainzed/releases/latest'],capture_output=True,text=True)
           if result.returncode==0:
               latest=json.loads(result.stdout)['tag_name']
               if re.fullmatch(r'v[0-9]+\.[0-9]+\.[0-9]+',latest) and tuple(map(int,tag[1:].split('.'))) <= tuple(map(int,latest[1:].split('.'))): raise SystemExit('Version must be newer than the latest release')
@@ -189,10 +189,10 @@ jobs:
           cat SHA256SUMS-*.txt > SHA256SUMS.txt
           sha256sum -c SHA256SUMS.txt
           printf 'Signed and notarized Apple Silicon and Intel builds of Zed No AI.\n\nSource: `%s`\n\nAI and telemetry are disabled. Automatic updates use this fork and verify Apple signatures before installation.\n' "$RELEASE_COMMIT" > release-notes.txt
-          if gh release view "$RELEASE_TAG" --repo ar4ft/zed-no-ai --json isDraft > existing.json 2>/dev/null; then
+          if gh release view "$RELEASE_TAG" --repo ar4ft/nainzed --json isDraft > existing.json 2>/dev/null; then
             python3 -c 'import json; assert json.load(open("existing.json"))["isDraft"], "Refusing to overwrite a published release"'
           else
-            gh release create "$RELEASE_TAG" --repo ar4ft/zed-no-ai --verify-tag --draft --title "Zed No AI $RELEASE_TAG" --notes-file release-notes.txt
+            gh release create "$RELEASE_TAG" --repo ar4ft/nainzed --verify-tag --draft --title "Zed No AI $RELEASE_TAG" --notes-file release-notes.txt
           fi
-          gh release upload "$RELEASE_TAG" --repo ar4ft/zed-no-ai --clobber *.dmg *.zip SHA256SUMS.txt
-          gh release edit "$RELEASE_TAG" --repo ar4ft/zed-no-ai --draft=false --latest --notes-file release-notes.txt
+          gh release upload "$RELEASE_TAG" --repo ar4ft/nainzed --clobber *.dmg *.zip SHA256SUMS.txt
+          gh release edit "$RELEASE_TAG" --repo ar4ft/nainzed --draft=false --latest --notes-file release-notes.txt

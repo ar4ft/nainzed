@@ -15,7 +15,7 @@ Expected network use during normal editing includes:
 - Language-server and extension installation/update downloads, including GitHub and the Zed extension registry. Upstream extension registry domains also host other services; they are not broadly allowlisted by the startup check.
 - User-selected Git remotes, SSH hosts, remote language servers and Jupyter servers.
 - Explicit Python setup and `ipykernel` installation through the selected interpreter's package index.
-- Automatic updates from `github.com/ar4ft/zed-no-ai` in signed releases only, when enabled. Development builds do not update automatically.
+- Automatic updates from `github.com/ar4ft/nainzed` in signed releases only, when enabled. Development builds do not update automatically.
 
 Downloaded tools and extensions have their own network behavior. Local editor logs and notebook recovery snapshots stay on disk. Recovery snapshots contain notebook source and outputs and use atomic temporary files with owner-only permissions on macOS. Recovery is local-project only; remote notebook backups and normal saves still go through the project filesystem.
 

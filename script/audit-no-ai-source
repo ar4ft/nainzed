@@ -29,6 +29,7 @@ PROTECTED = (
     'crates/notifications/Cargo.toml',
     'crates/notifications/src/notifications.rs',
     'crates/auto_update/src/auto_update.rs',
+    'crates/auto_update/src/fork_release.rs',
     'crates/extension_host/src/extension_host.rs',
     'script/no_ai_policy.py',
     'script/audit-no-ai',

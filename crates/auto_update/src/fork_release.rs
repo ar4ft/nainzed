@@ -2,7 +2,7 @@ use anyhow::{Context as _, Result, ensure};
 use semver::Version;
 use serde::Deserialize;
 
-pub const REPOSITORY: &str = "ar4ft/zed-no-ai";
+pub const REPOSITORY: &str = "ar4ft/nainzed";
 pub const BUNDLE_ID: &str = "io.github.ar4ft.ZedNoAI";
 pub const VERSION: Option<&str> = option_env!("ZED_NO_AI_RELEASE_VERSION");
 pub const TEAM_ID: Option<&str> = option_env!("ZED_NO_AI_TEAM_ID");
@@ -79,8 +79,8 @@ mod tests {
     use super::*;
     fn release() -> serde_json::Value {
         serde_json::json!({"tag_name":"v1.0.1","draft":false,"prerelease":false,"assets":[
-            {"name":"Zed-No-AI-arm64.dmg","browser_download_url":"https://github.com/ar4ft/zed-no-ai/releases/download/v1.0.1/Zed-No-AI-arm64.dmg"},
-            {"name":"Zed-No-AI-x86_64.dmg","browser_download_url":"https://github.com/ar4ft/zed-no-ai/releases/download/v1.0.1/Zed-No-AI-x86_64.dmg"}
+            {"name":"Zed-No-AI-arm64.dmg","browser_download_url":"https://github.com/ar4ft/nainzed/releases/download/v1.0.1/Zed-No-AI-arm64.dmg"},
+            {"name":"Zed-No-AI-x86_64.dmg","browser_download_url":"https://github.com/ar4ft/nainzed/releases/download/v1.0.1/Zed-No-AI-x86_64.dmg"}
         ]})
     }
     #[test]
@@ -95,6 +95,10 @@ mod tests {
     fn no_ai_fork_rejects_untrusted_or_incomplete_releases() {
         let mut unsafe_url = release();
         unsafe_url["assets"][0]["browser_download_url"] = "https://example.com/app.dmg".into();
+        let mut old_repository = release();
+        old_repository["assets"][0]["browser_download_url"] =
+            "https://github.com/ar4ft/zed-no-ai/releases/download/v1.0.1/Zed-No-AI-arm64.dmg"
+                .into();
         let mut draft = release();
         draft["draft"] = true.into();
         let mut prerelease = release();
@@ -103,7 +107,14 @@ mod tests {
         missing["assets"].as_array_mut().unwrap().pop();
         let mut invalid = release();
         invalid["tag_name"] = "v1.0.1-beta".into();
-        for value in [unsafe_url, draft, prerelease, missing, invalid] {
+        for value in [
+            unsafe_url,
+            old_repository,
+            draft,
+            prerelease,
+            missing,
+            invalid,
+        ] {
             assert!(parse(&serde_json::to_vec(&value).unwrap(), "aarch64").is_err());
         }
     }

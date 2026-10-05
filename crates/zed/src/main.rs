@@ -185,7 +185,7 @@ fn main() {
         unsafe {
             std::env::set_var(
                 "ZED_UPDATE_EXPLANATION",
-                "Install a signed release from github.com/ar4ft/zed-no-ai/releases for automatic updates.",
+                "Install a signed release from github.com/ar4ft/nainzed/releases for automatic updates.",
             );
         }
     }

@@ -19,7 +19,7 @@ The remaining incoming changes relative to the fork were AI-specific assets/mode
 
 ## Validation
 
-- The complete editor/build scripts, dependencies and regression-test implementations are identical to the PR's previously validated source. Apple Silicon and Intel development builds passed for that source in [run 36767803640](https://github.com/ar4ft/zed-no-ai/actions/runs/36767803640).
+- The complete editor/build scripts, dependencies and regression-test implementations are identical to the PR's previously validated source. Apple Silicon and Intel development builds passed for that source in [run 36767803640](https://github.com/ar4ft/nainzed/actions/runs/36767803640).
 - Protected-source and production dependency audits pass after conflict resolution.
 - All six local maintenance tests pass; all fork workflows validate.
 - No Apple-signed release is created by this merge.

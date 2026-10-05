@@ -1,4 +1,4 @@
-# Zed No AI
+# nainzed
 
 A macOS-focused fork of [Zed](https://github.com/zed-industries/zed) for text editing, folder/file browsing, Python, and Jupyter notebooks. No AI services are started by the application. Application telemetry collection and sending are removed. AI cannot be re-enabled with a user or project setting.
 
@@ -42,7 +42,7 @@ The script creates `target/release/bundle/osx/Zed No AI.app`, plus ZIP and DMG p
 
 The **Build Zed No AI for Mac** workflow first runs Linux source/privacy guards and Apple Silicon/Intel regression checks through **Validate Zed No AI for Mac**. PRs stop after validation; branch pushes and manual development builds then create packages and run actual-application startup privacy and performance checks. Cache restore/save are best effort and limited to eight minutes each. Download development installers and `runtime-reports-*` from the repository’s Actions tab. No Apple credentials are needed for development builds.
 
-The [validated Mac build](https://github.com/ar4ft/zed-no-ai/actions/runs/36767803640) passed the AI/telemetry checks and notebook tests and produced packages for both Apple Silicon and Intel. It predates the notebook search, output collapsing, and status improvements; use a successful later run for those changes. Nine standalone notebook preservation/recovery tests pass locally. Native runtime checks for the latest changes must pass in the new package run before treating those packages as validated.
+The [validated Mac build](https://github.com/ar4ft/nainzed/actions/runs/36767803640) passed the AI/telemetry checks and notebook tests and produced packages for both Apple Silicon and Intel. It predates the notebook search, output collapsing, and status improvements; use a successful later run for those changes. Nine standalone notebook preservation/recovery tests pass locally. Native runtime checks for the latest changes must pass in the new package run before treating those packages as validated.
 
 ## Python and Jupyter
 
@@ -74,11 +74,11 @@ A weekly stable-update workflow opens draft PRs, reports conflicts and sensitive
 
 ## Repository
 
-The fork is published at [ar4ft/zed-no-ai](https://github.com/ar4ft/zed-no-ai). `main` is the default and maintained branch. The original source snapshot is upstream `decbf641b18f1982b3475c037e7c5c554471574f`; `UPSTREAM_REVISION` records the most recently reviewed upstream stable release.
+The fork is published at [ar4ft/nainzed](https://github.com/ar4ft/nainzed). `main` is the default and maintained branch. The original source snapshot is upstream `decbf641b18f1982b3475c037e7c5c554471574f`; `UPSTREAM_REVISION` records the most recently reviewed upstream stable release.
 
 ```sh
-git clone https://github.com/ar4ft/zed-no-ai.git
-cd zed-no-ai
+git clone https://github.com/ar4ft/nainzed.git
+cd nainzed
 ./script/build-no-ai-mac
 ```
 

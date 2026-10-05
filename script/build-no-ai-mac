@@ -18,7 +18,7 @@ if [[ "${NO_AI_SIGNED_RELEASE:-0}" == 1 ]]; then
 else
     # Inherited release metadata must not enable updates in a development build.
     unset ZED_NO_AI_RELEASE_VERSION ZED_NO_AI_TEAM_ID
-    export ZED_UPDATE_EXPLANATION='Install signed releases from github.com/ar4ft/zed-no-ai/releases for automatic updates.'
+    export ZED_UPDATE_EXPLANATION='Install signed releases from github.com/ar4ft/nainzed/releases for automatic updates.'
 fi
 export CARGO_BUNDLE_SKIP_BUILD=true
 # Generate redistribution notices before embedding assets in the release binary.

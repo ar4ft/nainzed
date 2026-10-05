@@ -52,7 +52,7 @@ jobs:
         run: |
           state=failure
           if [[ "$VALIDATION_RESULT" == success ]]; then state=success; fi
-          gh api --method POST "repos/ar4ft/zed-no-ai/statuses/$UPDATE_COMMIT" \
+          gh api --method POST "repos/ar4ft/nainzed/statuses/$UPDATE_COMMIT" \
             -f state="$state" -f context='upstream/mac-validation' \
             -f description="AI, telemetry and both Mac checks: $VALIDATION_RESULT" \
             -f target_url="$VALIDATION_URL" >/dev/null

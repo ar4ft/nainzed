@@ -8,7 +8,7 @@ import subprocess
 import tempfile
 from pathlib import Path
 
-FORK = 'ar4ft/zed-no-ai'
+FORK = 'ar4ft/nainzed'
 UPSTREAM = 'zed-industries/zed'
 
 
