@@ -46,10 +46,15 @@ def publish(directory, repository, commit, run_number, run_url):
         raise ValueError('Expected this repository\'s Actions run URL')
 
     directory = Path(directory)
+    installers = {}
     for name in ASSETS:
-        path = directory / name
-        if not path.is_file() or not path.stat().st_size:
+        # upload-artifact preserves no-ai-arm64/ and no-ai-x86_64/ directories.
+        paths = list(directory.rglob(name))
+        if len(paths) > 1:
+            raise ValueError(f'Ambiguous installer: {name}')
+        if not paths or not paths[0].is_file() or not paths[0].stat().st_size:
             raise ValueError(f'Missing or empty installer: {name}')
+        installers[name] = paths[0]
 
     tag = f'dev-{run_number}-{commit[:12]}'
     url = f'https://github.com/{repository}/releases/tag/{tag}'
@@ -70,7 +75,7 @@ def publish(directory, repository, commit, run_number, run_url):
 
     checksums = []
     for name in ASSETS:
-        with (directory / name).open('rb') as file:
+        with installers[name].open('rb') as file:
             digest = hashlib.file_digest(file, 'sha256').hexdigest()
         checksums.append(f'{digest}  {name}\n')
     (directory / 'SHA256SUMS.txt').write_text(''.join(checksums))
@@ -88,7 +93,7 @@ def publish(directory, repository, commit, run_number, run_url):
            '--draft', '--prerelease', '--latest=false', '--title', f'nainzed development build {run_number}',
            '--notes-file', str(notes))
     gh('release', 'upload', tag, '--repo', repository, '--clobber',
-       *(str(directory / name) for name in (*ASSETS, 'SHA256SUMS.txt')))
+       *(str(installers[name]) for name in ASSETS), str(directory / 'SHA256SUMS.txt'))
     gh('release', 'edit', tag, '--repo', repository, '--draft=false', '--prerelease',
        '--latest=false', '--notes-file', str(notes))
     return url

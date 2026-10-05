@@ -82,6 +82,35 @@ class PrereleasePublishing(unittest.TestCase):
                 self.publish()
         self.assertFalse(any(call.args[:2] == ('release', 'edit') for call in gh.call_args_list))
 
+    def test_downloaded_artifacts_can_keep_architecture_directories(self):
+        expected = []
+        for name in prerelease.ASSETS:
+            architecture = 'arm64' if 'arm64' in name else 'x86_64'
+            directory = self.packages / f'no-ai-{architecture}'
+            directory.mkdir(exist_ok=True)
+            path = directory / name
+            (self.packages / name).rename(path)
+            expected.append(str(path))
+        with patch.object(prerelease, 'gh', side_effect=[
+            response(returncode=1, stderr='HTTP 404'), response(), response(), response()
+        ]) as gh:
+            self.publish()
+        upload = gh.call_args_list[2].args
+        for path in expected:
+            self.assertIn(path, upload)
+        sums = (self.packages / 'SHA256SUMS.txt').read_text()
+        for name in prerelease.ASSETS:
+            self.assertIn('  ' + name + '\n', sums)
+
+    def test_ambiguous_installer_names_prevent_publication(self):
+        duplicate = self.packages / 'duplicate'
+        duplicate.mkdir()
+        (duplicate / prerelease.ASSETS[0]).write_bytes(b'wrong installer')
+        with patch.object(prerelease, 'gh') as gh:
+            with self.assertRaisesRegex(ValueError, 'Ambiguous installer'):
+                self.publish()
+            gh.assert_not_called()
+
     def test_published_build_is_preserved_on_retry(self):
         with patch.object(prerelease, 'gh', return_value=response(self.existing())) as gh:
             self.publish()
