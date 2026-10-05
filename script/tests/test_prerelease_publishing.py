@@ -27,6 +27,9 @@ class PrereleasePublishing(unittest.TestCase):
         self.temporary = tempfile.TemporaryDirectory()
         self.addCleanup(self.temporary.cleanup)
         self.packages = Path(self.temporary.name)
+        tag_patch = patch.object(prerelease, 'tag_commit', return_value=COMMIT)
+        tag_patch.start()
+        self.addCleanup(tag_patch.stop)
         for name in prerelease.ASSETS:
             (self.packages / name).write_bytes(name.encode())
 
@@ -61,7 +64,8 @@ class PrereleasePublishing(unittest.TestCase):
                          [('release', 'create'), ('release', 'upload'), ('release', 'edit')])
         self.assertIn('--draft', calls[1])
         self.assertIn('--prerelease', calls[1])
-        self.assertEqual(calls[1][calls[1].index('--target') + 1], COMMIT)
+        self.assertIn('--verify-tag', calls[1])
+        self.assertNotIn('--target', calls[1])
         for name in (*prerelease.ASSETS, 'SHA256SUMS.txt'):
             self.assertIn(str(self.packages / name), calls[2])
         self.assertIn('--draft=false', calls[3])
@@ -118,13 +122,34 @@ class PrereleasePublishing(unittest.TestCase):
         self.assertFalse((self.packages / 'SHA256SUMS.txt').exists())
 
     def test_stable_unrelated_and_incomplete_published_releases_cannot_be_overwritten(self):
-        for changes in [{'prerelease': False}, {'target_commitish': 'b' * 40}, {'assets': []}]:
+        for changes in [{'prerelease': False}, {'assets': []}]:
             with self.subTest(changes=changes), patch.object(
                 prerelease, 'gh', return_value=response(self.existing(**changes))
             ) as gh:
                 with self.assertRaises(ValueError):
                     self.publish()
                 gh.assert_called_once()
+
+    def test_wrong_tag_source_is_rejected_before_release_changes(self):
+        with patch.object(prerelease, 'tag_commit', return_value='b' * 40), patch.object(prerelease, 'gh') as gh:
+            with self.assertRaisesRegex(ValueError, 'different source commit'):
+                self.publish()
+            gh.assert_not_called()
+
+    def test_existing_tag_allows_release_metadata_to_name_main(self):
+        with patch.object(prerelease, 'gh', return_value=response(self.existing(target_commitish='main'))) as gh:
+            self.publish()
+            gh.assert_called_once()
+
+    def test_new_build_sets_the_source_when_creating_its_tag(self):
+        with patch.object(prerelease, 'tag_commit', return_value=None), patch.object(
+            prerelease, 'gh', side_effect=[response(returncode=1, stderr='HTTP 404'),
+                                        response(), response(), response()]
+        ) as gh:
+            self.publish()
+        create = gh.call_args_list[1].args
+        self.assertEqual(create[create.index('--target') + 1], COMMIT)
+        self.assertNotIn('--verify-tag', create)
 
     def test_permission_error_is_not_treated_as_a_missing_release(self):
         with patch.object(prerelease, 'gh', return_value=response(returncode=1, stderr='HTTP 403')) as gh:

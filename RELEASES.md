@@ -10,6 +10,8 @@ Tag pushes do not sign or publish anything. Existing unsigned builds must be rep
 
 To publish an older successful development run without rebuilding, manually run **Publish completed development build** on `main` and enter its Actions run ID. It verifies that the run was a successful `main` development build and that both Mac packaging/runtime-check jobs passed, then publishes that run's original installers and source commit. This recovery workflow also uses no Apple credentials.
 
+GitHub can restrict the Actions token from creating tags for older workflow revisions. If the recovery workflow reports this permission error, create its `dev-BUILD_NUMBER-COMMIT` tag at the run's full source commit using your maintainer account, then retry. Existing tags are checked against the original source commit before publication. Normal builds create their own development tags.
+
 ## 1. Enroll with Apple
 
 Enroll at [Apple Developer Program](https://developer.apple.com/programs/enroll/). Enrollment normally costs US$99 per year, with regional pricing and eligibility exceptions. Use the same team for signing and every subsequent release; changing the team requires a manually installed release to establish the new trust.

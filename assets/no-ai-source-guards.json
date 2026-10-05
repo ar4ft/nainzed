@@ -27,7 +27,7 @@
   "script/audit-no-ai-source": "3df3ffab73b0a811e494739045c4c33023a6bd5e5b88b7c5e696adb38b28d753",
   "script/build-no-ai-mac": "b09305ac1daa0a818318e35aa09303e4b949853ce5c1c6929fe967916889e9c3",
   "script/sign-no-ai-mac": "6f3737f208f2603b1e6412cb03dc7466dfdac506c5435f998cdc54be8f7f4d2f",
-  "script/publish-no-ai-prerelease.py": "c1f258c0a4e8810344735647280bbc193a2cb5278a3155ecc96b4295a61e7a88",
+  "script/publish-no-ai-prerelease.py": "8c0383a23580490a91d762fc1bf769143eb6f7f2a51641635a131d647b797df6",
   "script/privacy-no-ai-mac.py": "0a1a63e4b29a73dfa888b87387d8e863e350cc6f7fb28bd1236673555abdf50c",
   "script/no_ai_runtime.py": "20b6784a972975ca3b628ecc4de6df94f305b794a091d8032939a2b472c4596d",
   ".github/workflows/no-ai-release.yml": "276c07c62659f71beb59dcb678ef943c8772f1ab0013c055801322613868c655",

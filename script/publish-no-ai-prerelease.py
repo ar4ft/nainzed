@@ -36,6 +36,22 @@ def completed_build(repository, run_id):
     return run
 
 
+def tag_commit(repository, tag):
+    result = gh('api', f'repos/{repository}/git/ref/tags/{tag}', check=False)
+    if result.returncode:
+        if 'HTTP 404' in result.stderr:
+            return None
+        raise RuntimeError(result.stderr.strip() or 'Cannot inspect release tag')
+    obj = json.loads(result.stdout)['object']
+    for _ in range(16):
+        if obj['type'] == 'commit':
+            return obj['sha']
+        if obj['type'] != 'tag':
+            break
+        obj = json.loads(gh('api', f'repos/{repository}/git/tags/{obj["sha"]}').stdout)['object']
+    raise ValueError('Release tag does not resolve to a commit')
+
+
 def publish(directory, repository, commit, run_number, run_url):
     if not re.fullmatch(r'[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+', repository):
         raise ValueError('Expected owner/repository')
@@ -58,6 +74,9 @@ def publish(directory, repository, commit, run_number, run_url):
 
     tag = f'dev-{run_number}-{commit[:12]}'
     url = f'https://github.com/{repository}/releases/tag/{tag}'
+    tagged_commit = tag_commit(repository, tag)
+    if tagged_commit is not None and tagged_commit != commit:
+        raise ValueError('Release tag points to a different source commit')
     result = gh('api', f'repos/{repository}/releases/tags/{tag}', check=False)
     existing = None
     if result.returncode:
@@ -65,8 +84,13 @@ def publish(directory, repository, commit, run_number, run_url):
             raise RuntimeError(result.stderr.strip() or 'Cannot inspect existing release')
     else:
         existing = json.loads(result.stdout)
-        if not existing['prerelease'] or existing['target_commitish'] != commit:
+        if not existing['prerelease']:
             raise ValueError('Refusing to change an unrelated or stable release')
+        # target_commitish can be "main" even when an existing tag pins the
+        # correct source. The resolved tag is authoritative for published builds.
+        if ((tagged_commit is None and not existing['draft'])
+                or (tagged_commit is None and existing['target_commitish'] != commit)):
+            raise ValueError('Existing release is not pinned to the requested source commit')
         if not existing['draft']:
             names = {asset['name'] for asset in existing['assets']}
             if not set((*ASSETS, 'SHA256SUMS.txt')).issubset(names):
@@ -89,9 +113,18 @@ def publish(directory, repository, commit, run_number, run_url):
         'Apple signing and notarization remain a separate manual release workflow.\n'
     )
     if existing is None:
-        gh('release', 'create', tag, '--repo', repository, '--target', commit,
-           '--draft', '--prerelease', '--latest=false', '--title', f'nainzed development build {run_number}',
-           '--notes-file', str(notes))
+        # Explicit older target SHAs can require workflow-write permission, even
+        # when the tag exists. Use the verified tag without a target override.
+        target = ('--verify-tag',) if tagged_commit is not None else ('--target', commit)
+        try:
+            gh('release', 'create', tag, '--repo', repository, *target,
+               '--draft', '--prerelease', '--latest=false', '--title', f'nainzed development build {run_number}',
+               '--notes-file', str(notes))
+        except RuntimeError as error:
+            if tagged_commit is None and '403' in str(error):
+                raise RuntimeError(f'{error}\nFor historical builds, create tag {tag} at {commit} '
+                                   'with maintainer permissions, then retry.') from error
+            raise
     gh('release', 'upload', tag, '--repo', repository, '--clobber',
        *(str(installers[name]) for name in ASSETS), str(directory / 'SHA256SUMS.txt'))
     gh('release', 'edit', tag, '--repo', repository, '--draft=false', '--prerelease',
