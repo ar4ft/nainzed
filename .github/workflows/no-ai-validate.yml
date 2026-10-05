@@ -58,6 +58,8 @@ jobs:
         run: script/audit-no-ai
       - name: Verify telemetry cannot collect or send data
         run: cargo test --locked -p telemetry && cargo test --locked -p client --lib no_telemetry_fork
+      - name: Check keymaps load without removed AI and collaboration actions
+        run: cargo test --locked -p settings --lib no_ai_fork_keymap
       - name: Check extension startup avoids empty update requests
         run: cargo test --locked -p extension_host --lib no_ai_fork_empty_extension_update_check_never_sends
       - name: Check fork update selection

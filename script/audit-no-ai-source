@@ -16,6 +16,7 @@ PROTECTED = (
     'crates/zed/src/main.rs',
     'crates/zed/src/zed.rs',
     'crates/zed/src/zed/app_menus.rs',
+    'crates/settings/src/keymap_file.rs',
     'crates/settings_ui/src/page_data.rs',
     'crates/zed/Cargo.toml',
     'crates/remote_server/Cargo.toml',

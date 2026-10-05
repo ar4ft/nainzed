@@ -309,6 +309,9 @@ impl KeymapFile {
 
             if let Some(unbind) = unbind {
                 for (keystrokes, action) in unbind {
+                    if Self::is_removed_fork_action(&action.0) {
+                        continue;
+                    }
                     let result = Self::load_unbinding(
                         keystrokes,
                         action,
@@ -341,6 +344,9 @@ impl KeymapFile {
 
             if let Some(bindings) = bindings {
                 for (keystrokes, action) in bindings {
+                    if Self::is_removed_fork_action(&action.0) {
+                        continue;
+                    }
                     let result = Self::load_keybinding(
                         keystrokes,
                         action,
@@ -527,6 +533,50 @@ impl KeymapFile {
             }
         };
         Ok(name_and_input)
+    }
+
+    /// Upstream keymaps still contain actions from features removed by this fork.
+    /// Drop those bindings before building actions: the production binary does
+    /// not register their types. Also apply this to user keymaps and unbindings
+    /// so shared action types cannot restore AI shortcuts or shadow editing keys.
+    /// Malformed values and unrelated unknown actions retain normal validation.
+    fn is_removed_fork_action(action: &Value) -> bool {
+        let Ok(Some((name, _))) = Self::parse_action_value(action) else {
+            return false;
+        };
+        [
+            "acp::",
+            "agent::",
+            "agents::",
+            "agents_sidebar::",
+            "zed_predict_onboarding::",
+            "assistant::",
+            "edit_prediction::",
+            "inline_assistant::",
+            "copilot::",
+            "copilot_chat::",
+            "agent_servers::",
+            "zeta::",
+            "skill_creator::",
+            "collab_panel::",
+            "channel_modal::",
+            "onboarding::",
+        ]
+        .iter()
+        .any(|namespace| name.starts_with(namespace))
+            || matches!(
+                name.as_str(),
+                "editor::AcceptEditPrediction"
+                    | "editor::AcceptNextWordEditPrediction"
+                    | "editor::AcceptNextLineEditPrediction"
+                    | "editor::ShowEditPrediction"
+                    | "editor::NextEditPrediction"
+                    | "editor::PreviousEditPrediction"
+                    | "editor::ToggleEditPrediction"
+                    | "git::GenerateCommitMessage"
+                    | "dev::EditPredictionContextGoBack"
+                    | "dev::EditPredictionContextGoForward"
+            )
     }
 
     fn build_keymap_action(
@@ -1536,6 +1586,128 @@ mod tests {
     };
 
     gpui::actions!(test_keymap_file, [StringAction, InputAction]);
+
+    #[gpui::test]
+    fn no_ai_fork_keymap_skips_removed_actions_before_building(cx: &mut App) {
+        // None of these actions is registered in this test, matching production.
+        for name in [
+            "acp::TestAction",
+            "agent::Keep",
+            "agents::TestAction",
+            "agents_sidebar::NewThreadInGroup",
+            "zed_predict_onboarding::TestAction",
+            "assistant::TestAction",
+            "edit_prediction::ToggleMenu",
+            "inline_assistant::ThumbsUpResult",
+            "copilot::TestAction",
+            "copilot_chat::TestAction",
+            "agent_servers::TestAction",
+            "zeta::NextEdit",
+            "skill_creator::SaveSkill",
+            "collab_panel::ToggleFocus",
+            "channel_modal::ToggleMode",
+            "onboarding::Finish",
+            "editor::AcceptEditPrediction",
+            "editor::AcceptNextWordEditPrediction",
+            "editor::AcceptNextLineEditPrediction",
+            "editor::ShowEditPrediction",
+            "editor::NextEditPrediction",
+            "editor::PreviousEditPrediction",
+            "editor::ToggleEditPrediction",
+            "git::GenerateCommitMessage",
+            "dev::EditPredictionContextGoBack",
+            "dev::EditPredictionContextGoForward",
+        ] {
+            // Cover both raw strings and actions with arguments, including unbinds.
+            for action in [serde_json::json!(name), serde_json::json!([name, {}])] {
+                let json = serde_json::json!([{
+                    "unbind": {"ctrl-b": action.clone()},
+                    "bindings": {
+                        "ctrl-a": action,
+                        "ctrl-c": "test_keymap_file::StringAction",
+                        "ctrl-d": null
+                    }
+                }]);
+                match KeymapFile::load(&json.to_string(), cx) {
+                    crate::KeymapFileLoadResult::Success { key_bindings } => {
+                        assert_eq!(key_bindings.len(), 2, "{name}");
+                        assert_eq!(
+                            key_bindings[0].action().name(),
+                            "test_keymap_file::StringAction"
+                        );
+                    }
+                    result => panic!("failed to load without {name}: {result:?}"),
+                }
+            }
+        }
+    }
+
+    #[gpui::test]
+    fn no_ai_fork_keymap_preserves_unrelated_errors(cx: &mut App) {
+        for field in ["bindings", "unbind"] {
+            for action in [
+                serde_json::json!("unknown::MissingAction"),
+                serde_json::json!("agent_tools::NotAnAiNamespace"),
+                serde_json::json!(["agent::Keep"]),
+                serde_json::json!(["agent::Keep", {}, null]),
+                serde_json::json!(42),
+            ] {
+                let json = serde_json::json!([{
+                    (field): {"ctrl-a": action},
+                    "context": "Editor"
+                }, {
+                    "bindings": {"ctrl-c": "test_keymap_file::StringAction"}
+                }]);
+                match KeymapFile::load(&json.to_string(), cx) {
+                    crate::KeymapFileLoadResult::SomeFailedToLoad { key_bindings, .. } => {
+                        assert_eq!(key_bindings.len(), 1);
+                    }
+                    result => panic!("expected validation error for {json}: {result:?}"),
+                }
+            }
+        }
+    }
+
+    #[gpui::test]
+    fn no_ai_fork_keymap_upstream_mac_presets_skip_removed_actions(cx: &mut App) {
+        let mut removed_count = 0;
+        for asset_path in [
+            "keymaps/default-macos.json",
+            "keymaps/vim.json",
+            "keymaps/specific-overrides-macos.json",
+            "keymaps/macos/atom.json",
+            "keymaps/macos/textmate.json",
+            "keymaps/macos/vscode.json",
+            "keymaps/macos/emacs.json",
+            "keymaps/macos/jetbrains.json",
+            "keymaps/macos/cursor.json",
+            "keymaps/macos/sublime_text.json",
+        ] {
+            let mut keymap =
+                KeymapFile::parse(util::asset_str::<crate::SettingsAssets>(asset_path).as_ref())
+                    .unwrap();
+            for section in &mut keymap.0 {
+                if let Some(bindings) = &mut section.bindings {
+                    bindings.retain(|_, action| KeymapFile::is_removed_fork_action(&action.0));
+                    removed_count += bindings.len();
+                }
+                if let Some(unbind) = &mut section.unbind {
+                    unbind.retain(|_, action| KeymapFile::is_removed_fork_action(&action.0));
+                    removed_count += unbind.len();
+                }
+            }
+            match keymap.load_keymap(cx) {
+                crate::KeymapFileLoadResult::Success { key_bindings } => {
+                    assert!(key_bindings.is_empty(), "{asset_path}")
+                }
+                result => panic!("removed actions in {asset_path} broke startup: {result:?}"),
+            }
+        }
+        assert!(
+            removed_count > 0,
+            "exercise the actual bundled removed actions"
+        );
+    }
 
     #[test]
     fn can_deserialize_keymap_with_trailing_comma() {
