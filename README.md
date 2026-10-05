@@ -74,10 +74,10 @@ A weekly stable-update workflow opens draft PRs, reports conflicts and sensitive
 
 ## Repository
 
-The fork is published at [ar4ft/zed-no-ai](https://github.com/ar4ft/zed-no-ai). The AI-disabled source is on the `no-ai` branch. The original source snapshot is upstream `decbf641b18f1982b3475c037e7c5c554471574f`; `UPSTREAM_REVISION` records the most recently reviewed upstream stable release.
+The fork is published at [ar4ft/zed-no-ai](https://github.com/ar4ft/zed-no-ai). `main` is the default and maintained branch. The original source snapshot is upstream `decbf641b18f1982b3475c037e7c5c554471574f`; `UPSTREAM_REVISION` records the most recently reviewed upstream stable release.
 
 ```sh
-git clone --branch no-ai https://github.com/ar4ft/zed-no-ai.git
+git clone https://github.com/ar4ft/zed-no-ai.git
 cd zed-no-ai
 ./script/build-no-ai-mac
 ```

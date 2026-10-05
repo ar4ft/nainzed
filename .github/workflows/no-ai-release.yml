@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: Existing vMAJOR.MINOR.PATCH tag on main or no-ai
+        description: Existing vMAJOR.MINOR.PATCH tag on main
         required: true
         type: string
 concurrency:
@@ -45,7 +45,7 @@ jobs:
           if not re.fullmatch(r'v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)',tag): raise SystemExit('Expected vMAJOR.MINOR.PATCH')
           if not re.fullmatch(r'[A-Z0-9]{10}',os.environ['APPLE_TEAM_ID']): raise SystemExit('Invalid Apple team ID')
           commit=subprocess.check_output(['git','rev-parse','refs/tags/'+tag+'^{commit}'],text=True).strip()
-          if not any(subprocess.run(['git','merge-base','--is-ancestor',commit,'origin/'+b]).returncode==0 for b in ['main','no-ai']): raise SystemExit('Tag must belong to a fork branch')
+          if subprocess.run(['git','merge-base','--is-ancestor',commit,'origin/main']).returncode != 0: raise SystemExit('Tag must belong to main')
           # /latest is public; a 404 means this is the first signed release.
           result=subprocess.run(['gh','api','repos/ar4ft/zed-no-ai/releases/latest'],capture_output=True,text=True)
           if result.returncode==0:

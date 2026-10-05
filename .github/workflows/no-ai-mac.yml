@@ -2,7 +2,7 @@ name: Build Zed No AI for Mac
 on:
   workflow_dispatch:
   pull_request:
-    branches: [main, no-ai]
+    branches: [main]
   workflow_call:
     inputs:
       checkout_ref:
@@ -10,7 +10,7 @@ on:
         required: true
         type: string
   push:
-    branches: [main, no-ai]
+    branches: [main]
 concurrency:
   group: no-ai-mac-${{ inputs.checkout_ref || github.sha }}
   cancel-in-progress: true

@@ -40,7 +40,7 @@ On your Mac, `base64 < certificate.p12 | tr -d '\n' | pbcopy` copies the certifi
 
 ## 5. Publish the first release
 
-After the secrets are configured, tag a commit containing this pipeline on `main` or `no-ai`. Pushing the tag does not start signing:
+After the secrets are configured, tag a commit containing this pipeline on `main`. Pushing the tag does not start signing:
 
 ```sh
 git checkout main
@@ -50,7 +50,7 @@ git tag -a v1.0.0 -m 'Zed No AI 1.0.0'
 git push origin v1.0.0
 ```
 
-Open [Signed Zed No AI release](https://github.com/ar4ft/zed-no-ai/actions/workflows/no-ai-release.yml). Click **Run workflow**, choose the `main` or `no-ai` branch, enter the existing tag (for example `v1.0.0`), and run it. This explicit manual action starts signing and notarization. Both Mac jobs must pass before the draft becomes public and the release becomes the latest update. A partial failure can leave a draft, which is invisible to the update feed. Re-run failed jobs, or manually dispatch the workflow with that existing tag. Published releases are not overwritten by retries. Fixes after a published release require a new, increasing version such as `v1.0.1`; never move an existing release tag.
+Open [Signed Zed No AI release](https://github.com/ar4ft/zed-no-ai/actions/workflows/no-ai-release.yml). Click **Run workflow**, choose the `main` branch, enter the existing tag (for example `v1.0.0`), and run it. This explicit manual action starts signing and notarization. Both Mac jobs must pass before the draft becomes public and the release becomes the latest update. A partial failure can leave a draft, which is invisible to the update feed. Re-run failed jobs, or manually dispatch the workflow with that existing tag. Published releases are not overwritten by retries. Fixes after a published release require a new, increasing version such as `v1.0.1`; never move an existing release tag.
 
 Download the architecture's signed DMG or ZIP from [Releases](https://github.com/ar4ft/zed-no-ai/releases) and replace the existing unsigned app. Subsequent signed versions use automatic updates. Release assets include `SHA256SUMS.txt` for manual verification. Keep the Developer ID certificate valid and renew it before expiry; the signing identity and Apple team must match the updater's embedded team.
 
