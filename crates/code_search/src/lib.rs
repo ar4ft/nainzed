@@ -21,7 +21,7 @@ use std::{collections::HashMap, sync::Arc, time::Duration};
 use ui::{ListItem, Tooltip, prelude::*};
 use util::rel_path::RelPath;
 use workspace::{
-    HideStatusItem, ItemHandle, Panel, StatusItemView, Workspace,
+    HideStatusItem, Panel, Workspace,
     dock::{DockPosition, PanelEvent},
 };
 
@@ -888,37 +888,6 @@ impl Render for CodeSearchPanel {
                         )),
                 )
             })
-    }
-}
-
-pub struct CodeSearchButton;
-impl Render for CodeSearchButton {
-    fn render(&mut self, _: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
-        if !CodeSearchSettings::get_global(cx).enabled || !CodeSearchSettings::get_global(cx).button
-        {
-            return div().hidden();
-        }
-        div().child(
-            IconButton::new("code-search-indicator", IconName::Code)
-                .icon_size(IconSize::Small)
-                .aria_label("Code Search")
-                .tooltip(|_, cx| Tooltip::for_action("Code Search", &ToggleFocus, cx))
-                .on_click(|_, window, cx| window.dispatch_action(Box::new(ToggleFocus), cx)),
-        )
-    }
-}
-impl StatusItemView for CodeSearchButton {
-    fn set_active_pane_item(
-        &mut self,
-        _: Option<&dyn ItemHandle>,
-        _: &mut Window,
-        _: &mut Context<Self>,
-    ) {
-    }
-    fn hide_setting(&self, _: &App) -> Option<HideStatusItem> {
-        Some(HideStatusItem::new(|s| {
-            s.code_search.get_or_insert_default().button = Some(false)
-        }))
     }
 }
 

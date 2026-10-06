@@ -40,7 +40,7 @@ Use an absolute executable path; `~`, environment-variable expansion, shell comm
 
 ## Use the panel
 
-Open a local project folder. Click the **Code Search** code icon next to the existing magnifier or run **code search: Toggle Focus** from the command palette. The macOS shortcut is **Cmd+Ctrl+Shift+F**. The panel docks alongside Files and Outline and can be moved left/right and resized through nain's dock controls. Dock position and resized width are saved by the workspace.
+Open a local project folder. Click the **Code Search** code icon in the panel dock or run **code search: Toggle Focus** from the command palette. The macOS shortcut is **Cmd+Ctrl+Shift+F**. The panel docks alongside Files and Outline and can be moved left/right and resized through nain's dock controls. Its dock icon indicates when the panel is active. Dock position and resized width are saved by the workspace.
 
 - **Text** searches literal source text.
 - **Symbol** searches parsed symbol names.
