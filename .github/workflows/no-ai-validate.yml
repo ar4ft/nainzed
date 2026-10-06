@@ -29,6 +29,7 @@ jobs:
     env:
       CARGO_INCREMENTAL: '0'
       KACHE_GC_EVICT_SHARED: '1'
+      KACHE_MAX_SIZE: 1536MiB
       ZED_RELEASE_CHANNEL: dev
       NO_AI_SIGNED_RELEASE: '0'
       ZED_UPDATE_EXPLANATION: Build updates from the nain fork.
@@ -44,6 +45,8 @@ jobs:
       - name: Restore compiler and dependency caches
         id: rust-cache
         uses: ./.github/actions/rust-build-cache
+        timeout-minutes: 8
+        continue-on-error: true
         with:
           profile: debug
       - name: Build dependencies
@@ -57,6 +60,7 @@ jobs:
       - name: Save bounded compiler caches (best effort)
         if: always() && !cancelled() && github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && inputs.checkout_ref == github.sha
         uses: ./.github/actions/save-rust-build-cache
+        timeout-minutes: 8
         continue-on-error: true
         with:
           compiler-key: ${{ steps.rust-cache.outputs.compiler-key }}

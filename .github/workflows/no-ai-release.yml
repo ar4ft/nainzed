@@ -71,6 +71,7 @@ jobs:
     env:
       CARGO_INCREMENTAL: '0'
       KACHE_GC_EVICT_SHARED: '1'
+      KACHE_MAX_SIZE: 1536MiB
       ZED_RELEASE_CHANNEL: dev
       NO_AI_SIGNED_RELEASE: '1'
       ZED_ALLOW_EMULATED_GPU: '1'
@@ -92,6 +93,8 @@ jobs:
       - name: Restore compiler and dependency caches
         id: rust-cache
         uses: ./.github/actions/rust-build-cache
+        timeout-minutes: 8
+        continue-on-error: true
         with:
           profile: release
       - run: brew install cmake pkg-config
@@ -164,6 +167,7 @@ jobs:
       - name: Save bounded compiler caches (best effort)
         if: always() && !cancelled() && github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         uses: ./.github/actions/save-rust-build-cache
+        timeout-minutes: 8
         continue-on-error: true
         with:
           compiler-key: ${{ steps.rust-cache.outputs.compiler-key }}

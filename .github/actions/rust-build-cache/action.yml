@@ -27,7 +27,6 @@ runs:
     - name: Restore Cargo dependency sources
       id: sources
       uses: actions/cache/restore@v4
-      timeout-minutes: 8
       continue-on-error: true
       with:
         path: |
@@ -39,7 +38,6 @@ runs:
     - name: Restore compiler outputs
       id: compiler
       uses: actions/cache/restore@v4
-      timeout-minutes: 8
       continue-on-error: true
       with:
         path: ${{ runner.temp }}/nain-kache
@@ -49,7 +47,6 @@ runs:
           nain-kache-v1-1.0.0-${{ runner.os }}-${{ runner.arch }}-${{ inputs.profile }}-
     - name: Install Kache 1.0.0
       uses: kunobi-ninja/kache-action@ad7317540dcdd71c904f7a60a87b620a0c0e67ed # v1
-      timeout-minutes: 8
       with:
         version: '1.0.0'
         cache-dir: ${{ runner.temp }}/nain-kache

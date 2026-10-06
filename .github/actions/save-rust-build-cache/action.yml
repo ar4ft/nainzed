@@ -25,7 +25,6 @@ runs:
     - name: Save Cargo dependency sources
       if: inputs.sources-key != '' && inputs.sources-hit != 'true'
       uses: actions/cache/save@v4
-      timeout-minutes: 8
       continue-on-error: true
       with:
         path: |
@@ -36,7 +35,6 @@ runs:
     - name: Save compiler snapshot
       if: inputs.compiler-key != '' && inputs.compiler-hit != 'true'
       uses: actions/cache/save@v4
-      timeout-minutes: 8
       continue-on-error: true
       with:
         path: ${{ runner.temp }}/nain-kache
