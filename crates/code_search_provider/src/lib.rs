@@ -270,6 +270,7 @@ pub fn locate_executable(explicit: Option<&Path>) -> Result<PathBuf> {
         .unwrap_or_default();
     if let Some(home) = std::env::var_os("HOME") {
         candidates.extend([
+            PathBuf::from(&home).join(".agx/bin/agx"),
             PathBuf::from(&home).join(".cargo/bin/agx"),
             PathBuf::from(home).join(".local/bin/agx"),
         ]);
@@ -861,6 +862,47 @@ mod tests {
                 "Accepted {case}"
             );
         }
+    }
+    #[test]
+    fn installer_location_is_found_without_a_terminal_path() {
+        const CHILD: &str = "NAIN_TEST_AGX_DISCOVERY_CHILD";
+        if let Some(home) = std::env::var_os(CHILD) {
+            let expected = PathBuf::from(home)
+                .join(".agx/bin/agx")
+                .canonicalize()
+                .unwrap();
+            assert_eq!(locate_executable(None).unwrap(), expected);
+            return;
+        }
+        let home = tempfile::tempdir().unwrap();
+        // Retain a Cargo installation too: the native install wins among HOME fallbacks.
+        for relative in [".agx/bin/agx", ".cargo/bin/agx"] {
+            let path = home.path().join(relative);
+            std::fs::create_dir_all(path.parent().unwrap()).unwrap();
+            std::fs::write(&path, "test executable").unwrap();
+            #[cfg(unix)]
+            {
+                use std::os::unix::fs::PermissionsExt;
+                std::fs::set_permissions(&path, std::fs::Permissions::from_mode(0o700)).unwrap();
+            }
+        }
+        // Run in a child so HOME/PATH changes cannot race with parallel Rust tests.
+        let output = Command::new(std::env::current_exe().unwrap())
+            .args([
+                "--exact",
+                "tests::installer_location_is_found_without_a_terminal_path",
+            ])
+            .env(CHILD, home.path())
+            .env("HOME", home.path())
+            .env("PATH", "")
+            .output()
+            .unwrap();
+        assert!(
+            output.status.success(),
+            "{}\n{}",
+            String::from_utf8_lossy(&output.stdout),
+            String::from_utf8_lossy(&output.stderr)
+        );
     }
     #[test]
     fn configured_invalid_executable_never_falls_back() {

@@ -51,9 +51,9 @@
   "assets/settings/default.json": "27656d30e1432b90804fac48992f57632848e389750416897b85029013458942",
   "crates/code_search/Cargo.toml": "759b84e07693a1955d2084d961667d5ce5ac9fe7fca9851a419789712a654ca6",
   "crates/code_search/src/code_search_settings.rs": "b0ccf4178a76ed29f760ee369fda2b8233e1dea704d2019dc8def8f3fa9e0f7f",
-  "crates/code_search/src/lib.rs": "ea34d46c7de8b84cdecd66391df2a118804942e2a26dec3f4c5454788b219b97",
+  "crates/code_search/src/lib.rs": "126da04d1396ba1e4dd0c8744b05318336cdf80ac29902e1be1e203bd27c7b22",
   "crates/code_search_provider/Cargo.toml": "d3ce5db7df883676e765ac43f113ad0443862b81573ce6fbf0ffe0da2993b213",
-  "crates/code_search_provider/src/lib.rs": "3566224422af2f0d1e30bd036b5e59529d3eaca989260a3307150c8fc76f9f32",
+  "crates/code_search_provider/src/lib.rs": "cd5379efde67b5d08f5d2de9a4f0b7cc70b2a23bf6511acb42601f0e02d46902",
   "crates/code_search_provider/tests/worker.py": "fe7742eda59849fbbfa5fbe1f4619abe968ef09a758daf590cec749ac2f33172",
   "crates/settings_content/src/code_search.rs": "5a46c3dfe3e0108001042ca757d8e74c83b26f5e0e822a879820a0b059ca5465",
   "crates/settings_content/src/settings_content.rs": "6f4ec9eb42f0889e8dd813d84eeee4f902c8340345cb478c56275b0ed2afe7a8"

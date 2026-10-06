@@ -1008,6 +1008,8 @@ mod tests {
     async fn no_ai_fork_code_search_unsaved_buffers_exclude_notebooks(cx: &mut TestAppContext) {
         let (_, panel, mut cx) = panel(cx).await;
         let project = panel.read_with(&cx, |panel, _| panel.project.clone());
+        // BufferStore holds weak references; retain handles as open editors would.
+        let mut open_buffers = Vec::new();
         for path in ["/project/main.py", "/project/notebook.ipynb"] {
             let buffer = project
                 .update(&mut cx, |project, cx| {
@@ -1017,6 +1019,7 @@ mod tests {
                 .await
                 .unwrap();
             buffer.update(&mut cx, |buffer, cx| buffer.set_text("unsaved source", cx));
+            open_buffers.push(buffer);
         }
         panel.update_in(&mut cx, |panel, window, cx| {
             panel
@@ -1027,6 +1030,11 @@ mod tests {
             assert_eq!(request.documents[0].path, "main.py");
             assert_eq!(request.documents[0].content, "unsaved source");
             assert_eq!(request.mode, SearchMode::Symbol);
+        });
+        drop(open_buffers);
+        cx.run_until_parked();
+        panel.read_with(&cx, |panel, cx| {
+            assert!(panel.request(false, cx).unwrap().documents.is_empty());
         });
     }
     #[gpui::test]

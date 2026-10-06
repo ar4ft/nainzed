@@ -4,23 +4,34 @@ Code Search is an optional, dockable panel built into nain. Install the normal *
 
 ## Install agx
 
-Agentgrep 0.3 or later must support restricted editor protocol v1 and result schema 2. From a terminal:
+Agentgrep must support restricted editor protocol v1 and result schema 2 (available since 0.3.0). On Apple Silicon and Intel Macs, the [official installer](https://github.com/ar4ft/agentgrep/blob/main/docs/installation.md) downloads the prebuilt executable without Rust or Homebrew:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/ar4ft/agentgrep/main/scripts/install.sh | sh
+. "$HOME/.agx/env"
+agx --version
+```
+
+The default selects the newest published release, including development prereleases. Current agentgrep releases are unsigned development builds; the installer does not enable automatic updates. See agentgrep's installation guide for version pins, `--stable`, script inspection, and signing details. Rerun the installer explicitly to upgrade, then restart nain so existing workers use the new binary.
+
+The installer uses `~/.agx/bin/agx` and can update your shell profile. Nain also checks that location directly, so Finder launches do not depend on sourcing the shell profile. Discovery order is an explicitly configured executable, absolute directories in nain's PATH, `~/.agx/bin/agx`, `~/.cargo/bin/agx`, `~/.local/bin/agx`, `/opt/homebrew/bin/agx`, and `/usr/local/bin/agx`. Existing installations on PATH keep priority; check `command -v agx` if you have multiple copies.
+
+Source installation remains supported:
 
 ```sh
 git clone https://github.com/ar4ft/agentgrep.git
 cd agentgrep
 cargo install --path . --locked
-agx --version
 ```
 
-Cargo installs `agx` into `~/.cargo/bin`. The adapter checks an explicitly configured executable first, then absolute directories in nain's PATH, `~/.cargo/bin/agx`, `~/.local/bin/agx`, `/opt/homebrew/bin/agx`, and `/usr/local/bin/agx`. This covers launching nain from Finder with a different PATH from the terminal.
+Cargo installs `agx` into `~/.cargo/bin`. A custom installer `--prefix` puts it under `PREFIX/bin/agx`; configure that absolute path in nain.
 
 If discovery fails, open **Menu → Settings** or **Open Settings File** from the command palette and add the following using your actual Mac username:
 
 ```json
 {
   "code_search": {
-    "agx_path": "/Users/YOUR_USERNAME/.cargo/bin/agx"
+    "agx_path": "/Users/YOUR_USERNAME/.agx/bin/agx"
   }
 }
 ```
@@ -53,13 +64,13 @@ Queries and source stay in the local worker; the adapter does not retain worker 
 
 ## Verify the integration
 
-Normal CI runs deterministic subprocess tests covering the restricted argv/handshake, persistent workers, multi-root grouping, cancellation/restart, frame bounds, stale responses, and path confinement, plus native panel tests for navigation, literal previews, unsaved-buffer collection, notebook exclusion, and disabled settings. The production AI/telemetry dependency and source audits still run.
+Normal CI runs deterministic subprocess tests covering the restricted argv/handshake, persistent workers, multi-root grouping, cancellation/restart, frame bounds, stale responses, path confinement, and Finder-style discovery without a terminal PATH, plus native panel tests for navigation, literal previews, unsaved-buffer collection, notebook exclusion, and disabled settings. The production AI/telemetry dependency and source audits still run.
 
 To test against your installed real worker:
 
 ```sh
-NAIN_TEST_AGX="$HOME/.cargo/bin/agx" cargo test --locked \
+NAIN_TEST_AGX="$HOME/.agx/bin/agx" cargo test --locked \
   -p code_search_provider --lib real_worker -- --ignored
 ```
 
-The real-worker integration test is explicit because CI does not download/install an optional runtime tool into the app. This implementation was tested against agentgrep 0.3.0, including all three search modes and unsaved-buffer version transitions. Native macOS UI and packaged-app validation run through the existing Apple Silicon and Intel pipeline before prerelease publication.
+The real-worker integration test is explicit because CI does not download/install an optional runtime tool into the app. This implementation was tested against agentgrep 0.3.0 and 0.3.3, including all three search modes and unsaved-buffer version transitions. Native macOS UI and packaged-app validation run through the existing Apple Silicon and Intel pipeline before prerelease publication.
