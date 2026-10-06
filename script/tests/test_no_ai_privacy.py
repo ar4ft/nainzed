@@ -5,7 +5,7 @@ import unittest
 
 SCRIPT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(SCRIPT))
-from no_ai_policy import forbidden_dependencies, audit_manifests
+from no_ai_policy import forbidden_dependencies, audit_manifests, PRODUCTION_CRATES
 
 spec = importlib.util.spec_from_file_location('privacy', SCRIPT / 'privacy-no-ai-mac.py')
 privacy = importlib.util.module_from_spec(spec)
@@ -44,7 +44,7 @@ class PrivacyChecks(unittest.TestCase):
         import tempfile
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
-            for name in ['zed', 'remote_server']:
+            for name in PRODUCTION_CRATES:
                 path = root / 'crates' / name / 'Cargo.toml'
                 path.parent.mkdir(parents=True)
                 path.write_text('[dependencies]\nserde="1"\n[dev-dependencies]\ncall="1"\n')
@@ -52,6 +52,10 @@ class PrivacyChecks(unittest.TestCase):
             with (root / 'crates/zed/Cargo.toml').open('a') as file:
                 file.write('[target.\'cfg(target_os = "macos")\'.dependencies]\nstealth={package="agent_new",version="1"}\n')
             with self.assertRaisesRegex(ValueError, 'stealth'):
+                audit_manifests(root)
+            with (root / 'crates/code_search_provider/Cargo.toml').open('a') as file:
+                file.write('[build-dependencies]\nprovider={package="open_ai",version="1"}\n')
+            with self.assertRaisesRegex(ValueError, 'code_search_provider.*provider'):
                 audit_manifests(root)
 
 

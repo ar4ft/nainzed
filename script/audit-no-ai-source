@@ -8,6 +8,17 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from no_ai_policy import audit_manifests
 
 PROTECTED = (
+    'crates/code_search/Cargo.toml',
+    'crates/code_search/src/lib.rs',
+    'crates/code_search/src/code_search_settings.rs',
+    'crates/code_search_provider/Cargo.toml',
+    'crates/code_search_provider/src/lib.rs',
+    'crates/code_search_provider/tests/worker.py',
+    'crates/settings_content/src/code_search.rs',
+    'crates/settings_content/src/settings_content.rs',
+    'assets/settings/default.json',
+    'assets/keymaps/default-macos.json',
+    'assets/keymaps/default-linux.json',
     'crates/telemetry/src/telemetry.rs',
     'crates/client/src/telemetry.rs',
     'crates/client/src/client.rs',

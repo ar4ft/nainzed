@@ -12,6 +12,8 @@ import time
 # Keeping this selection in one Cargo invocation unifies shared dependency features.
 # Production dependency audits and application checks run separately without test features.
 SUITES = (
+    ('code_search_provider', None),
+    ('code_search', 'no_ai_fork_code_search'),
     ('telemetry', None),
     ('client', 'no_telemetry_fork'),
     ('settings', 'no_ai_fork_keymap'),

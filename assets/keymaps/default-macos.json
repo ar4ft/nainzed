@@ -1,4 +1,9 @@
 [
+  {
+    "context": "Workspace",
+    "bindings": {"cmd-ctrl-shift-f": "code_search::ToggleFocus"}
+  },
+
   // Standard macOS bindings
   {
     "use_key_equivalents": true,
@@ -1768,4 +1773,24 @@
       "shift-tab": "skill_creator::FocusPreviousField",
     },
   },
+  {
+    "context": "CodeSearch",
+    "bindings": {
+      "enter": "code_search::OpenSelected",
+      "cmd-enter": "code_search::Search",
+      "escape": "code_search::Cancel",
+      "up": "menu::SelectPrevious",
+      "down": "menu::SelectNext"
+    }
+  },
+  {
+    "context": "CodeSearch > Editor",
+    "bindings": {
+      "enter": "code_search::OpenSelected",
+      "cmd-enter": "code_search::Search",
+      "escape": "code_search::Cancel",
+      "up": "menu::SelectPrevious",
+      "down": "menu::SelectNext"
+    }
+  }
 ]

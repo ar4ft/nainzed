@@ -995,6 +995,17 @@
       "on_drop": true,
     },
   },
+  "code_search": {
+    // Optional local agx adapter. Opening this panel does not start a worker.
+    "enabled": true,
+    "button": true,
+    "dock": "left",
+    "default_width": 360,
+    // Set an absolute path if agx is unavailable in PATH or common install locations.
+    "agx_path": null,
+    // Text, symbol, or lexical BM25 ranked search.
+    "default_mode": "symbol",
+  },
   "outline_panel": {
     // Whether to show the outline panel button in the status bar
     "button": true,

@@ -1,4 +1,9 @@
 [
+  {
+    "context": "Workspace",
+    "bindings": {"ctrl-alt-shift-g": "code_search::ToggleFocus"}
+  },
+
   // Standard Linux bindings
   {
     "bindings": {
@@ -1675,4 +1680,24 @@
       "shift-tab": "skill_creator::FocusPreviousField",
     },
   },
+  {
+    "context": "CodeSearch",
+    "bindings": {
+      "enter": "code_search::OpenSelected",
+      "ctrl-enter": "code_search::Search",
+      "escape": "code_search::Cancel",
+      "up": "menu::SelectPrevious",
+      "down": "menu::SelectNext"
+    }
+  },
+  {
+    "context": "CodeSearch > Editor",
+    "bindings": {
+      "enter": "code_search::OpenSelected",
+      "ctrl-enter": "code_search::Search",
+      "escape": "code_search::Cancel",
+      "up": "menu::SelectPrevious",
+      "down": "menu::SelectNext"
+    }
+  }
 ]

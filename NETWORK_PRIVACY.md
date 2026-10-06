@@ -17,6 +17,8 @@ Expected network use during normal editing includes:
 - Explicit Python setup and `ipykernel` installation through the selected interpreter's package index.
 - Automatic updates from `github.com/ar4ft/nainzed` in signed releases only, when enabled. Development builds do not update automatically.
 
+The optional [Code Search adapter](CODE_SEARCH.md) launches only `agx serve --stdio --restricted`, requires the handshake to disable network/telemetry/models/hybrid search, and sends local queries and unsaved source through bounded in-memory stdio messages. Its API admits only text, symbol, and lexical BM25 modes. It does not install/update agx, invoke a shell, or retain worker stderr. The startup proxy test does not exercise this subprocess; protocol tests, source guards, and review of the separately installed agentgrep worker support this boundary.
+
 Downloaded tools and extensions have their own network behavior. Local editor logs and notebook recovery snapshots stay on disk. Recovery snapshots contain notebook source and outputs and use atomic temporary files with owner-only permissions on macOS. Recovery is local-project only; remote notebook backups and normal saves still go through the project filesystem.
 
 On a Mac, run:

@@ -13,6 +13,7 @@ A macOS-focused fork of [Zed](https://github.com/zed-industries/zed) for text ed
 - Removes AI provider and agent crates from the production dependency tree, including the AI settings page implementations.
 - Creates a `.bak` copy before overwriting a notebook, refuses conflicting edits, and preserves rich outputs, Markdown attachments, and unknown notebook fields.
 - Keeps a draggable title bar above editor tabs and an account-free **Menu** with settings, keymaps, themes, and extensions.
+- Adds an optional dockable **Code Search** panel using the installed `agx` command for local text, symbols, and lexical BM25 ranking, with filters, previews, unsaved-buffer overrides, and no model or network operations. See [CODE_SEARCH.md](CODE_SEARCH.md) for installation and shortcuts.
 - Adds **repl: Set Up Python** and an **Install ipykernel** prompt in the kernel menu.
 - Adds notebook search across code and Markdown cells, per-cell output collapsing, and saved/unsaved status with tab updates.
 - Adds kernel-backed notebook autocomplete, project Python environment selection, local unsaved-draft recovery, and restoration of the last 20 deleted cells.

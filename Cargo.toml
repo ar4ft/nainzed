@@ -34,6 +34,8 @@ members = [
     "crates/cloud_api_types",
     "crates/cloud_llm_client",
     "crates/codestral",
+    "crates/code_search",
+    "crates/code_search_provider",
     "crates/collab",
     "crates/collab_ui",
     "crates/collections",
@@ -275,6 +277,9 @@ publish = false
 edition = "2024"
 
 [workspace.dependencies]
+blake3 = "1.8"
+code_search = { path = "crates/code_search" }
+code_search_provider = { path = "crates/code_search_provider" }
 notebook_safety = { path = "crates/notebook_safety" }
 
 #

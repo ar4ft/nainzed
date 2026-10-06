@@ -2,6 +2,8 @@
 import re
 import tomllib
 
+PRODUCTION_CRATES = ('zed', 'remote_server', 'code_search', 'code_search_provider')
+
 FORBIDDEN = re.compile(
     # Shared settings/protocol types remain; implementation families do not.
     r'^(?:agent(?:_(?!settings$).*)?|copilot(?:_.*)?|edit_prediction(?:_(?!types$).*)?|language_models|'
@@ -19,7 +21,7 @@ def forbidden_dependencies(tree):
 
 def audit_manifests(root):
     problems = []
-    for crate in ('zed', 'remote_server'):
+    for crate in PRODUCTION_CRATES:
         path = root / 'crates' / crate / 'Cargo.toml'
         content = tomllib.loads(path.read_text())
         tables = [content] + list(content.get('target', {}).values())

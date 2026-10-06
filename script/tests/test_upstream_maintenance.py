@@ -118,7 +118,7 @@ class GuardTests(unittest.TestCase):
                 path.parent.mkdir(parents=True, exist_ok=True)
                 path.write_text('[dependencies]\n' if name.endswith('Cargo.toml') else 'disabled implementation\n')
                 manifest[name] = hashlib.sha256(path.read_bytes()).hexdigest()
-            (root/'assets').mkdir()
+            (root/'assets').mkdir(exist_ok=True)
             file = root/'assets/no-ai-source-guards.json'
             file.write_text(json.dumps(manifest))
             guards.audit(root)

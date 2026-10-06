@@ -1,5 +1,6 @@
 mod action;
 mod agent;
+mod code_search;
 mod editor;
 mod extension;
 mod fallible_options;
@@ -16,6 +17,7 @@ mod workspace;
 pub use action::{ActionName, ActionWithArguments, CommandAliasTarget};
 pub use agent::*;
 use anyhow::Context;
+pub use code_search::*;
 pub use editor::*;
 pub use extension::*;
 pub use fallible_options::*;
@@ -270,6 +272,9 @@ pub struct SettingsContent {
 
     pub language_models: Option<AllLanguageModelSettingsContent>,
 
+    /// Optional local search through the installed agx restricted worker.
+    pub code_search: Option<CodeSearchSettingsContent>,
+
     pub outline_panel: Option<OutlinePanelSettingsContent>,
 
     pub project_panel: Option<ProjectPanelSettingsContent>,
@@ -406,7 +411,7 @@ fallible_options::flattened_deserialize!(SettingsContent {
         agent_servers, audio, auto_update, base_keymap, collaboration_panel, debugger, diagnostics,
         git,
         global_lsp_settings, image_viewer, markdown_preview, repl, helix_mode, hide_mouse,
-        journal, log, line_indicator_format, language_models, outline_panel, project_panel,
+        journal, log, line_indicator_format, language_models, code_search, outline_panel, project_panel,
         node, proxy, reduce_motion, server_url, credentials_url, session, telemetry, terminal,
         title_bar, vim_mode, calls, which_key, vim, modeline_lines, feature_flags,
         instrumentation,
