@@ -2,6 +2,7 @@ import importlib.util
 import io
 import json
 from pathlib import Path
+import sys
 import tempfile
 import unittest
 from unittest.mock import MagicMock, patch
@@ -37,7 +38,7 @@ class NativeTestRunner(unittest.TestCase):
         command = popen.call_args.args[0]
         self.assertEqual(command[:6], ['cargo', 'test', '--locked', '--no-run', '--lib', '--message-format=json'])
         self.assertEqual(command.count('-p'), len(native.PACKAGES))
-        self.assertEqual(binaries['repl'], Path('/tmp/repl-test'))
+        self.assertEqual(binaries['repl'], Path('/tmp/repl-test').resolve())
         self.assertEqual(paths, {'/tmp/native-libs'})
 
     def test_invalid_compilation_cannot_be_treated_as_passing_tests(self):
@@ -53,12 +54,12 @@ class NativeTestRunner(unittest.TestCase):
     def test_library_runner_matches_cargo_context_and_fails_closed(self):
         # A subprocess fixture verifies cwd and loader environment instead of mocking them.
         with tempfile.TemporaryDirectory() as temporary:
-            root = Path(temporary)
+            root = Path(temporary).resolve()
             crate = root / 'crates' / 'repl'
             crate.mkdir(parents=True)
             binary = root / 'test-binary'
-            binary.write_text('''#!/usr/bin/env python3
-import os, pathlib, sys
+            # macOS SIP strips DYLD_LIBRARY_PATH when running /usr/bin/env.
+            binary.write_text(f'#!{sys.executable}\n' + '''import os, pathlib, sys
 assert pathlib.Path.cwd() == pathlib.Path(os.environ['CARGO_MANIFEST_DIR'])
 assert pathlib.Path(os.environ['CARGO_MANIFEST_PATH']).parent == pathlib.Path.cwd()
 key = 'DYLD_LIBRARY_PATH' if sys.platform == 'darwin' else 'LD_LIBRARY_PATH'
