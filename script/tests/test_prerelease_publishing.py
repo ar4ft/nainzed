@@ -42,7 +42,7 @@ class PrereleasePublishing(unittest.TestCase):
         return dict(release, **changes)
 
     def test_missing_architecture_or_empty_installer_prevents_publication(self):
-        installer = self.packages / 'Zed-No-AI-x86_64.dmg'
+        installer = self.packages / 'nain-x86_64.dmg'
         installer.unlink()
         with patch.object(prerelease, 'gh') as gh:
             with self.assertRaisesRegex(ValueError, 'Missing or empty'):
@@ -77,6 +77,26 @@ class PrereleasePublishing(unittest.TestCase):
         for line in sums:
             checksum, name = line.split('  ')
             self.assertEqual(checksum, hashlib.sha256((self.packages / name).read_bytes()).hexdigest())
+
+    def test_historical_builds_keep_their_original_installer_names(self):
+        for name, legacy in zip(prerelease.ASSETS, prerelease.LEGACY_ASSETS):
+            (self.packages / name).rename(self.packages / legacy)
+        with patch.object(prerelease, 'gh', side_effect=[
+            response(returncode=1, stderr='HTTP 404'), response(), response(), response()
+        ]) as gh:
+            self.publish()
+        upload = gh.call_args_list[2].args
+        for name in prerelease.LEGACY_ASSETS:
+            self.assertIn(str(self.packages / name), upload)
+        self.assertIn('Zed-No-AI-arm64.dmg', (self.packages / 'SHA256SUMS.txt').read_text())
+
+    def test_partial_new_build_cannot_borrow_a_legacy_architecture(self):
+        path = self.packages / 'nain-x86_64.dmg'
+        path.rename(self.packages / 'Zed-No-AI-x86_64.dmg')
+        with patch.object(prerelease, 'gh') as gh:
+            with self.assertRaisesRegex(ValueError, 'Missing or empty'):
+                self.publish()
+            gh.assert_not_called()
 
     def test_upload_failure_keeps_release_unpublished(self):
         with patch.object(prerelease, 'gh', side_effect=[

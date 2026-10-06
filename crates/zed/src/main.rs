@@ -75,7 +75,7 @@ fn build_application() -> Application {
 }
 
 fn files_not_created_on_launch(errors: HashMap<io::ErrorKind, Vec<&Path>>) {
-    let message = "Zed failed to launch";
+    let message = "nain failed to launch";
     let error_details = errors
         .into_iter()
         .flat_map(|(kind, paths)| {
@@ -157,7 +157,7 @@ fn fail_to_open_window(e: anyhow::Error, _cx: &mut App) {
             proxy
                 .add_notification(
                     notification_id,
-                    Notification::new("Zed failed to launch")
+                    Notification::new("nain failed to launch")
                         .body(Some(
                             format!(
                                 "{e:?}. See https://zed.dev/docs/linux for troubleshooting steps."
@@ -595,6 +595,9 @@ fn main() {
         diagnostics::init(cx);
 
         workspace::init(app_state.clone(), cx);
+        // Window chrome is required even when AI and collaboration are disabled.
+        title_bar::init(cx);
+        onboarding::init(cx);
         ui_prompt::init(cx);
 
         go_to_line::init(cx);
@@ -1078,7 +1081,7 @@ fn handle_open_request(request: OpenRequest, app_state: Arc<AppState>, cx: &mut 
     }
 
     if !request.open_channel_notes.is_empty() || request.join_channel.is_some() {
-        log::warn!("Collaboration links are disabled in Zed No AI");
+        log::warn!("Collaboration links are disabled in nain");
     }
     if let Some(task) = task {
         cx.spawn(async move |cx| {
@@ -1108,6 +1111,18 @@ pub(crate) async fn restore_or_create_workspace(
     app_state: Arc<AppState>,
     cx: &mut AsyncApp,
 ) -> Result<()> {
+    let first_open = cx.update(|cx| {
+        KeyValueStore::global(cx)
+            .read_kvp(onboarding::FIRST_OPEN)
+            .ok()
+            .flatten()
+            .is_none()
+    });
+    if first_open {
+        return cx
+            .update(|cx| onboarding::show_onboarding_view(app_state, cx))
+            .await;
+    }
     if let Some(multi_workspaces) = restorable_workspaces(cx, &app_state).await {
         let mut error_count = 0;
         for multi_workspace in multi_workspaces {
@@ -1473,6 +1488,7 @@ fn parse_url_arg(arg: &str, cx: &App) -> String {
         Ok(path) => format!("file://{}", path.display()),
         Err(_) => {
             if arg.starts_with("file://")
+                || arg.starts_with("nain://")
                 || arg.starts_with("zed://")
                 || arg.starts_with("zed-cli://")
                 || arg.starts_with("ssh://")

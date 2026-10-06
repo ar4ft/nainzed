@@ -134,6 +134,12 @@ impl OpenRequest {
         }
 
         for url in request.urls {
+            // Keep the existing parser and safety checks for our branded scheme.
+            let url = if let Some(path) = url.strip_prefix("nain://") {
+                format!("zed://{path}")
+            } else {
+                url
+            };
             if let Some(server_name) = url.strip_prefix("zed-cli://") {
                 this.kind = Some(OpenRequestKind::CliConnection(connect_to_cli(server_name)?));
             } else if let Some(action_index) = url.strip_prefix("zed-dock-action://") {
@@ -152,7 +158,7 @@ impl OpenRequest {
                     extension_id: extension_id.to_string(),
                 });
             } else if url.starts_with("zed://skill") || url.starts_with("zed://agent") {
-                anyhow::bail!("AI links are unavailable in Zed No AI");
+                anyhow::bail!("AI links are unavailable in nain");
             } else if url == "zed://" || url == "zed://open" || url == "zed://open/" {
                 this.kind = Some(OpenRequestKind::FocusApp);
             } else if let Some(schema_path) = url.strip_prefix("zed://schemas/") {
@@ -1422,7 +1428,14 @@ mod tests {
     fn test_parse_focus_app_url(cx: &mut TestAppContext) {
         let _app_state = init_test(cx);
 
-        for url in ["zed://", "zed://open", "zed://open/"] {
+        for url in [
+            "zed://",
+            "zed://open",
+            "zed://open/",
+            "nain://",
+            "nain://open",
+            "nain://open/",
+        ] {
             let request = cx.update(|cx| {
                 OpenRequest::parse(
                     RawOpenRequest {

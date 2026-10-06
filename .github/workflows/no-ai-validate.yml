@@ -1,4 +1,4 @@
-name: Validate Zed No AI for Mac
+name: Validate nain for Mac
 on:
   workflow_call:
     inputs:
@@ -30,7 +30,7 @@ jobs:
       CARGO_INCREMENTAL: '0'
       ZED_RELEASE_CHANNEL: dev
       NO_AI_SIGNED_RELEASE: '0'
-      ZED_UPDATE_EXPLANATION: Build updates from the Zed No AI fork.
+      ZED_UPDATE_EXPLANATION: Build updates from the nain fork.
     steps:
       - uses: actions/checkout@v4
         with:
@@ -62,6 +62,8 @@ jobs:
         run: cargo test --locked -p settings --lib no_ai_fork_keymap
       - name: Check extension startup avoids empty update requests
         run: cargo test --locked -p extension_host --lib no_ai_fork_empty_extension_update_check_never_sends
+      - name: Check editor window chrome with AI disabled
+        run: cargo test --locked -p title_bar --lib no_ai_fork_workspace_keeps_title_bar
       - name: Check fork update selection
         run: cargo test --locked -p auto_update --lib no_ai_fork
       - name: Check notebook data preservation

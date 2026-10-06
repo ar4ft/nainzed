@@ -28,7 +28,7 @@ if ! cargo bundle --version 2>/dev/null | grep -q '0.6.1-zed'; then
     cargo install cargo-bundle --git https://github.com/zed-industries/cargo-bundle.git --branch zed-deploy --locked
 fi
 (cd crates/zed && cargo bundle --release --select-workspace-root)
-app='target/release/bundle/osx/Zed No AI.app'
+app='target/release/bundle/osx/nain.app'
 test -d "$app"
 cp target/release/cli "$app/Contents/MacOS/cli"
 cp crates/zed/resources/Document.icns "$app/Contents/Resources/Document.icns"
@@ -41,17 +41,17 @@ else
     codesign --force --deep --sign - "$app"
 fi
 architecture="$(uname -m)"
-package_dir="target/no-ai-${architecture}"
+package_dir="target/nain-${architecture}"
 mkdir -p "$package_dir"
 # Preserve app permissions and symlinks in a downloadable archive.
-ditto -c -k --sequesterRsrc --keepParent "$app" "$package_dir/Zed-No-AI-${architecture}.zip"
+ditto -c -k --sequesterRsrc --keepParent "$app" "$package_dir/nain-${architecture}.zip"
 staging="$(mktemp -d)"
 trap 'rm -rf "$staging"' EXIT
-ditto "$app" "$staging/Zed No AI.app"
+ditto "$app" "$staging/nain.app"
 ln -s /Applications "$staging/Applications"
-hdiutil create -volname 'Zed No AI' -srcfolder "$staging" -ov -format UDZO "$package_dir/Zed-No-AI-${architecture}.dmg"
+hdiutil create -volname 'nain' -srcfolder "$staging" -ov -format UDZO "$package_dir/nain-${architecture}.dmg"
 if [[ "${NO_AI_SIGNED_RELEASE:-0}" == 1 ]]; then
-    dmg="$package_dir/Zed-No-AI-${architecture}.dmg"
+    dmg="$package_dir/nain-${architecture}.dmg"
     codesign --force --timestamp --sign "$MACOS_SIGNING_IDENTITY" "$dmg"
     xcrun notarytool submit "$dmg" --key "$APPLE_NOTARIZATION_KEY_PATH" --key-id "$APPLE_NOTARIZATION_KEY_ID" --issuer "$APPLE_NOTARIZATION_ISSUER_ID" --wait --output-format json > "$staging/dmg-notary.json"
     python3 - "$staging/dmg-notary.json" <<'VERIFY'

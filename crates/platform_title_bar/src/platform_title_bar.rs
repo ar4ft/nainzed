@@ -219,6 +219,7 @@ impl Render for PlatformTitleBar {
             .window_control_area(WindowControlArea::Drag)
             .w_full()
             .h(height)
+            .flex_shrink_0()
             .map(|this| {
                 this.on_mouse_down_out(cx.listener(move |this, _ev, _window, _cx| {
                     this.should_move = false;
@@ -352,6 +353,7 @@ impl Render for PlatformTitleBar {
 
         v_flex()
             .w_full()
+            .flex_shrink_0()
             .child(title_bar)
             .child(self.system_window_tabs.clone().into_any_element())
     }

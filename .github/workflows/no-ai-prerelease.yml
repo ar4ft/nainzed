@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       run_id:
-        description: Successful main run ID from Build Zed No AI for Mac
+        description: Successful main run ID from Build nain for Mac
         required: true
         type: string
 concurrency:
@@ -31,7 +31,7 @@ jobs:
         with:
           github-token: ${{ github.token }}
           run-id: ${{ inputs.run_id }}
-          pattern: Zed-No-AI-*
+          pattern: '{nain-*,Zed-No-AI-*}'
           merge-multiple: true
           path: packages
       - name: Verify completed checks and publish their installers

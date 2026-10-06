@@ -1693,7 +1693,7 @@
     // Zero Data Retention
     "anthropic_retention": false,
   },
-  // AI is permanently disabled in Zed No AI. This cannot be overridden.
+  // AI is permanently disabled in nain. This cannot be overridden.
   "disable_ai": true,
   // Automatically update Zed. This setting may be ignored on Linux if
   // installed through a package manager.

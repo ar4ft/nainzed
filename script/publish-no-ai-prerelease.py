@@ -8,8 +8,10 @@ import subprocess
 from pathlib import Path
 
 
-ASSETS = tuple(f'Zed-No-AI-{arch}.{extension}'
+ASSETS = tuple(f'nain-{arch}.{extension}'
                for arch in ('arm64', 'x86_64') for extension in ('dmg', 'zip'))
+
+LEGACY_ASSETS = tuple(name.replace('nain-', 'Zed-No-AI-') for name in ASSETS)
 
 
 def gh(*args, check=True):
@@ -62,9 +64,12 @@ def publish(directory, repository, commit, run_number, run_url):
         raise ValueError('Expected this repository\'s Actions run URL')
 
     directory = Path(directory)
+    assets = ASSETS
+    if not any(directory.rglob('nain-*.dmg')) and any(directory.rglob('Zed-No-AI-*.dmg')):
+        assets = LEGACY_ASSETS
     installers = {}
-    for name in ASSETS:
-        # upload-artifact preserves no-ai-arm64/ and no-ai-x86_64/ directories.
+    for name in assets:
+        # upload-artifact preserves architecture directories.
         paths = list(directory.rglob(name))
         if len(paths) > 1:
             raise ValueError(f'Ambiguous installer: {name}')
@@ -93,12 +98,12 @@ def publish(directory, repository, commit, run_number, run_url):
             raise ValueError('Existing release is not pinned to the requested source commit')
         if not existing['draft']:
             names = {asset['name'] for asset in existing['assets']}
-            if not set((*ASSETS, 'SHA256SUMS.txt')).issubset(names):
+            if not set((*assets, 'SHA256SUMS.txt')).issubset(names):
                 raise ValueError('Published prerelease is incomplete; refusing to overwrite it')
             return url
 
     checksums = []
-    for name in ASSETS:
+    for name in assets:
         with installers[name].open('rb') as file:
             digest = hashlib.file_digest(file, 'sha256').hexdigest()
         checksums.append(f'{digest}  {name}\n')
@@ -118,7 +123,7 @@ def publish(directory, repository, commit, run_number, run_url):
         target = ('--verify-tag',) if tagged_commit is not None else ('--target', commit)
         try:
             gh('release', 'create', tag, '--repo', repository, *target,
-               '--draft', '--prerelease', '--latest=false', '--title', f'nainzed development build {run_number}',
+               '--draft', '--prerelease', '--latest=false', '--title', f'nain development build {run_number}',
                '--notes-file', str(notes))
         except RuntimeError as error:
             if tagged_commit is None and '403' in str(error):
@@ -126,7 +131,7 @@ def publish(directory, repository, commit, run_number, run_url):
                                    'with maintainer permissions, then retry.') from error
             raise
     gh('release', 'upload', tag, '--repo', repository, '--clobber',
-       *(str(installers[name]) for name in ASSETS), str(directory / 'SHA256SUMS.txt'))
+       *(str(installers[name]) for name in assets), str(directory / 'SHA256SUMS.txt'))
     gh('release', 'edit', tag, '--repo', repository, '--draft=false', '--prerelease',
        '--latest=false', '--notes-file', str(notes))
     return url

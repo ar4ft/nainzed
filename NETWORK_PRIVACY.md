@@ -23,5 +23,5 @@ On a Mac, run:
 
 ```sh
 python3 script/privacy-no-ai-mac.py \
-  --app '/Applications/Zed No AI.app' --output privacy.json
+  --app '/Applications/nain.app' --output privacy.json
 ```

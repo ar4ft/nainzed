@@ -560,13 +560,14 @@ impl KeymapFile {
             "skill_creator::",
             "collab_panel::",
             "channel_modal::",
-            "onboarding::",
         ]
         .iter()
         .any(|namespace| name.starts_with(namespace))
             || matches!(
                 name.as_str(),
-                "editor::AcceptEditPrediction"
+                "onboarding::SignIn"
+                    | "onboarding::OpenAccount"
+                    | "editor::AcceptEditPrediction"
                     | "editor::AcceptNextWordEditPrediction"
                     | "editor::AcceptNextLineEditPrediction"
                     | "editor::ShowEditPrediction"
@@ -1586,6 +1587,26 @@ mod tests {
     };
 
     gpui::actions!(test_keymap_file, [StringAction, InputAction]);
+    gpui::actions!(onboarding, [Finish]);
+
+    #[gpui::test]
+    fn no_ai_fork_keymap_keeps_editor_setup_shortcut(cx: &mut App) {
+        let json = serde_json::json!([{
+            "context": "Onboarding",
+            "bindings": {
+                "cmd-enter": "onboarding::Finish",
+                "alt-tab": "onboarding::SignIn",
+                "alt-shift-a": "onboarding::OpenAccount"
+            }
+        }]);
+        match KeymapFile::load(&json.to_string(), cx) {
+            crate::KeymapFileLoadResult::Success { key_bindings } => {
+                assert_eq!(key_bindings.len(), 1);
+                assert_eq!(key_bindings[0].action().name(), "onboarding::Finish");
+            }
+            result => panic!("failed to load editor setup shortcuts: {result:?}"),
+        }
+    }
 
     #[gpui::test]
     fn no_ai_fork_keymap_skips_removed_actions_before_building(cx: &mut App) {
@@ -1606,7 +1627,8 @@ mod tests {
             "skill_creator::SaveSkill",
             "collab_panel::ToggleFocus",
             "channel_modal::ToggleMode",
-            "onboarding::Finish",
+            "onboarding::SignIn",
+            "onboarding::OpenAccount",
             "editor::AcceptEditPrediction",
             "editor::AcceptNextWordEditPrediction",
             "editor::AcceptNextLineEditPrediction",

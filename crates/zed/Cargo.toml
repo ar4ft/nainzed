@@ -146,6 +146,7 @@ language_extension.workspace = true
 language_model.workspace = true
 language_models = { workspace = true, optional = true }
 language_onboarding.workspace = true
+onboarding.workspace = true
 language_selector.workspace = true
 language_tools.workspace = true
 languages = { workspace = true, features = ["load-grammars"] }
@@ -246,7 +247,6 @@ image.workspace = true
 pkg-config = "0.3.22"
 
 [dev-dependencies]
-onboarding.workspace = true
 web_search_providers.workspace = true
 web_search.workspace = true
 edit_prediction.workspace = true
@@ -282,34 +282,34 @@ repl = { workspace = true, features = ["test-support"] }
 [package.metadata.bundle-dev]
 icon = ["resources/app-icon-dev@2x.png", "resources/app-icon-dev.png"]
 identifier = "io.github.ar4ft.ZedNoAI"
-name = "Zed No AI"
+name = "nain"
 osx_minimum_system_version = "10.15.7"
 osx_info_plist_exts = ["resources/info/*"]
-osx_url_schemes = ["zed"]
+osx_url_schemes = ["nain", "zednoai", "zed-cli"]
 
 [package.metadata.bundle-nightly]
 icon = ["resources/app-icon-nightly@2x.png", "resources/app-icon-nightly.png"]
-identifier = "dev.zed.Zed-Nightly"
-name = "Zed Nightly"
+identifier = "io.github.ar4ft.ZedNoAI"
+name = "nain"
 osx_minimum_system_version = "10.15.7"
 osx_info_plist_exts = ["resources/info/*"]
-osx_url_schemes = ["zed"]
+osx_url_schemes = ["nain", "zednoai", "zed-cli"]
 
 [package.metadata.bundle-preview]
 icon = ["resources/app-icon-preview@2x.png", "resources/app-icon-preview.png"]
-identifier = "dev.zed.Zed-Preview"
-name = "Zed Preview"
+identifier = "io.github.ar4ft.ZedNoAI"
+name = "nain"
 osx_minimum_system_version = "10.15.7"
 osx_info_plist_exts = ["resources/info/*"]
-osx_url_schemes = ["zed"]
+osx_url_schemes = ["nain", "zednoai", "zed-cli"]
 
 [package.metadata.bundle-stable]
 icon = ["resources/app-icon@2x.png", "resources/app-icon.png"]
-identifier = "dev.zed.Zed"
-name = "Zed"
+identifier = "io.github.ar4ft.ZedNoAI"
+name = "nain"
 osx_minimum_system_version = "10.15.7"
 osx_info_plist_exts = ["resources/info/*"]
-osx_url_schemes = ["zed"]
+osx_url_schemes = ["nain", "zednoai", "zed-cli"]
 
 [package.metadata.cargo-shear]
 ignored = ["profiling", "tracing"]
@@ -317,7 +317,7 @@ ignored = ["profiling", "tracing"]
 [package.metadata.bundle]
 icon = ["resources/app-icon-dev@2x.png", "resources/app-icon-dev.png"]
 identifier = "io.github.ar4ft.ZedNoAI"
-name = "Zed No AI"
+name = "nain"
 osx_minimum_system_version = "10.15.7"
 osx_info_plist_exts = ["resources/info/DocumentTypes.plist", "resources/info/Permissions.plist", "resources/info/SupportedPlatforms.plist"]
-osx_url_schemes = ["zednoai", "zed-cli"]
+osx_url_schemes = ["nain", "zednoai", "zed-cli"]

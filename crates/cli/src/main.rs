@@ -31,7 +31,9 @@ use walkdir::WalkDir;
 
 use std::io::IsTerminal;
 
-const URL_PREFIX: [&'static str; 5] = ["zed://", "http://", "https://", "file://", "ssh://"];
+const URL_PREFIX: [&'static str; 6] = [
+    "nain://", "zed://", "http://", "https://", "file://", "ssh://",
+];
 
 struct Detect;
 
@@ -48,21 +50,21 @@ trait InstalledApp {
 
 #[derive(Parser, Debug)]
 #[command(
-    name = "zed",
+    name = "nain",
     disable_version_flag = true,
-    before_help = "The Zed CLI binary.
-This CLI is a separate binary that invokes Zed.
+    before_help = "The nain CLI binary.
+This CLI is a separate binary that invokes nain.
 
 Examples:
-    `zed`
-          Simply opens Zed
-    `zed --foreground`
+    `nain`
+          Simply opens nain
+    `nain --foreground`
           Runs in foreground (shows all logs)
-    `zed path-to-your-project`
-          Open your project in Zed
-    `zed -n path-to-file `
+    `nain path-to-your-project`
+          Open your project in nain
+    `nain -n path-to-file `
           Open file/folder in a new window",
-    after_help = "To read from stdin, append '-', e.g. 'ps axf | zed -'"
+    after_help = "To read from stdin, append '-', e.g. 'ps axf | nain -'"
 )]
 struct Args {
     /// Wait for all of the given paths to be opened/closed before exiting.
@@ -79,7 +81,7 @@ struct Args {
     /// Reuse an existing window, replacing its workspace
     #[arg(short, long, overrides_with_all = ["add", "new", "existing", "classic"], hide = true)]
     reuse: bool,
-    /// Open in existing Zed window
+    /// Open in existing nain window
     #[arg(short = 'e', long = "existing", overrides_with_all = ["add", "new", "reuse", "classic"])]
     existing: bool,
     /// Use the classic open behavior: new window for directories, reuse for files
@@ -95,18 +97,18 @@ struct Args {
     )]
     #[arg(long, value_name = "DIR", value_hint = clap::ValueHint::DirPath)]
     user_data_dir: Option<String>,
-    /// The paths to open in Zed (space-separated).
+    /// The paths to open in nain (space-separated).
     ///
     /// Use `path:line:column` syntax to open a file at the given line and column.
     #[arg(trailing_var_arg = true, value_hint = clap::ValueHint::AnyPath)]
     paths_with_position: Vec<String>,
-    /// Print Zed's version and the app path.
+    /// Print nain's version and the app path.
     #[arg(short, long)]
     version: bool,
     /// Run zed in the foreground (useful for debugging)
     #[arg(long)]
     foreground: bool,
-    /// Custom path to Zed.app or the zed binary
+    /// Custom path to nain.app or the zed binary
     #[arg(long)]
     zed: Option<PathBuf>,
     /// Run zed in dev-server mode
@@ -124,7 +126,7 @@ struct Args {
     #[cfg(target_os = "windows")]
     #[arg(long, value_name = "USER@DISTRO")]
     wsl: Option<String>,
-    /// Not supported in Zed CLI, only supported on Zed binary
+    /// Not supported in nain CLI, only supported on Zed binary
     /// Will attempt to give the correct command to run
     #[arg(long)]
     system_specs: bool,
@@ -204,7 +206,7 @@ fn parse_path_with_position(argument_str: &str) -> anyhow::Result<String> {
 
 /// Returns whether a `--diff` argument refers to an existing path, allowing a
 /// trailing `:line:column` suffix (parsed later by the Zed side, matching how
-/// regular `zed path:line:column` arguments are handled).
+/// regular `nain path:line:column` arguments are handled).
 fn diff_path_exists(diff_path: &str) -> bool {
     Path::new(diff_path).exists() || PathWithPosition::parse_str(diff_path).path.exists()
 }
@@ -512,7 +514,7 @@ fn run() -> Result<()> {
 
     let args = Args::parse();
 
-    // `zed --askpass` Makes zed operate in nc/netcat mode for use with askpass
+    // `nain --askpass` Makes zed operate in nc/netcat mode for use with askpass
     if let Some(socket) = &args.askpass {
         askpass::main(socket);
         return Ok(());
@@ -604,7 +606,7 @@ fn run() -> Result<()> {
         {
             use collections::HashMap;
 
-            // On Linux, the desktop entry uses `cli` to spawn `zed`.
+            // On Linux, the desktop entry uses `cli` to spawn `nain`.
             // We need to handle env vars correctly since std::env::vars() may not contain
             // project-specific vars (e.g. those set by direnv).
             // By setting env to None here, the LSP will use worktree env vars instead,
@@ -841,7 +843,7 @@ fn anonymous_fd(path: &str) -> Option<fs::File> {
 }
 
 /// Shows an interactive prompt asking the user to choose the default open
-/// behavior for `zed <path>`. Returns `None` if the prompt cannot be shown
+/// behavior for `nain <path>`. Returns `None` if the prompt cannot be shown
 /// (e.g. stdin is not a terminal) or the user cancels.
 fn prompt_open_behavior() -> Option<cli::CliBehaviorSetting> {
     if !std::io::stdin().is_terminal() {
@@ -851,7 +853,7 @@ fn prompt_open_behavior() -> Option<cli::CliBehaviorSetting> {
     let blue = console::Style::new().blue();
     let items = [
         format!(
-            "Add to existing Zed window ({})",
+            "Add to existing nain window ({})",
             blue.apply_to("zed --existing")
         ),
         format!("Open a new window ({})", blue.apply_to("zed --classic")),
@@ -860,7 +862,7 @@ fn prompt_open_behavior() -> Option<cli::CliBehaviorSetting> {
     let prompt = format!(
         "Configure default behavior for {}\n{}",
         blue.apply_to("zed <path>"),
-        console::style("You can change this later in Zed settings"),
+        console::style("You can change this later in nain settings"),
     );
 
     let selection = dialoguer::Select::new()
@@ -925,7 +927,7 @@ mod linux {
     impl InstalledApp for App {
         fn zed_version_string(&self) -> String {
             format!(
-                "Zed {}{}{} – {}",
+                "nain {}{}{} – {}",
                 if *release_channel::RELEASE_CHANNEL_NAME == "stable" {
                     "".to_string()
                 } else {
@@ -1202,7 +1204,7 @@ mod windows {
     impl InstalledApp for App {
         fn zed_version_string(&self) -> String {
             format!(
-                "Zed {}{}{} – {}",
+                "nain {}{}{} – {}",
                 if *release_channel::RELEASE_CHANNEL_NAME == "stable" {
                     "".to_string()
                 } else {
@@ -1375,7 +1377,7 @@ mod mac_os {
 
     impl InstalledApp for Bundle {
         fn zed_version_string(&self) -> String {
-            format!("Zed {} – {}", self.version(), self.path().display(),)
+            format!("nain {} – {}", self.version(), self.path().display(),)
         }
 
         fn launch(&self, url: String, user_data_dir: Option<&str>) -> anyhow::Result<()> {

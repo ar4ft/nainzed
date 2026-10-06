@@ -204,12 +204,7 @@ impl ReleaseChannel {
 
     /// Returns the display name for this [`ReleaseChannel`].
     pub fn display_name(&self) -> &'static str {
-        match self {
-            ReleaseChannel::Dev => "Zed Dev",
-            ReleaseChannel::Nightly => "Zed Nightly",
-            ReleaseChannel::Preview => "Zed Preview",
-            ReleaseChannel::Stable => "Zed",
-        }
+        "nain"
     }
 
     /// Returns the programmatic name for this [`ReleaseChannel`].
@@ -226,12 +221,8 @@ impl ReleaseChannel {
     /// and WM_CLASS on X11.
     /// This also has to match the bundle identifier for Zed on macOS.
     pub fn app_id(&self) -> &'static str {
-        match self {
-            ReleaseChannel::Dev => "dev.zed.Zed-Dev",
-            ReleaseChannel::Nightly => "dev.zed.Zed-Nightly",
-            ReleaseChannel::Preview => "dev.zed.Zed-Preview",
-            ReleaseChannel::Stable => "dev.zed.Zed",
-        }
+        // Retain the original fork identity for signing and existing installations.
+        "io.github.ar4ft.ZedNoAI"
     }
 
     /// Returns the query parameter for this [`ReleaseChannel`].

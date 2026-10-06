@@ -9629,6 +9629,7 @@ impl Render for Workspace {
                 this.child(
                     div()
                         .id("titlebar-region")
+                        .flex_shrink_0()
                         .track_focus(&self.titlebar_focus_handle)
                         .tab_group()
                         .role(gpui::Role::Toolbar)

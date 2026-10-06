@@ -1234,7 +1234,7 @@ async fn install_release_macos(
         .with_context(|| format!("invalid running app path {running_app_path:?}"))?;
 
     let mount_path = temp_dir.path().join("mounted-update");
-    let mounted_app_path = mount_path.join("Zed No AI.app");
+    let mounted_app_path = mount_path.join("nain.app");
     let mut cmd = new_command("/usr/bin/hdiutil");
     cmd.args(["attach", "-nobrowse"])
         .arg(&downloaded_dmg)
@@ -1278,7 +1278,7 @@ async fn install_release_macos(
             .parent()
             .context("App has no parent directory")?;
         let staging = tempfile::Builder::new()
-            .prefix(".ZedNoAI-update-")
+            .prefix(".nain-update-")
             .tempdir_in(parent)?;
         let staged_app = staging.path().join(running_app_filename);
         let backup = staging.path().join("previous.app");

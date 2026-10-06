@@ -12,7 +12,7 @@ fi
 : "${APPLE_NOTARIZATION_KEY_PATH:?App Store Connect private key path is required}"
 [[ "$MACOS_SIGNING_IDENTITY" == "Developer ID Application:"* ]] || { echo 'Expected a Developer ID Application certificate.' >&2; exit 1; }
 [[ "$ZED_NO_AI_TEAM_ID" =~ ^[A-Z0-9]{10}$ ]] || { echo 'Invalid Apple team ID.' >&2; exit 1; }
-app='target/release/bundle/osx/Zed No AI.app'
+app='target/release/bundle/osx/nain.app'
 # Sign embedded code from the inside out with the hardened runtime.
 while IFS= read -r -d '' binary; do
     if file -b "$binary" | grep -q 'Mach-O'; then
