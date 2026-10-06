@@ -61,7 +61,7 @@ jobs:
     with:
       checkout_ref: ${{ needs.validate.outputs.commit }}
   mac:
-    needs: [validate, checks]
+    needs: validate
     strategy:
       fail-fast: false
       matrix:
@@ -70,6 +70,7 @@ jobs:
     timeout-minutes: 330
     env:
       CARGO_INCREMENTAL: '0'
+      KACHE_GC_EVICT_SHARED: '1'
       ZED_RELEASE_CHANNEL: dev
       NO_AI_SIGNED_RELEASE: '1'
       ZED_ALLOW_EMULATED_GPU: '1'
@@ -82,20 +83,17 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ needs.validate.outputs.commit }}
+      - name: Verify signed packaging source and privacy safeguards
+        run: |
+          script/audit-no-ai-source
+          python3 -m unittest discover -s script/tests
       - name: Install the pinned Rust toolchain
         run: rustup show
-      - uses: actions/cache/restore@v4
+      - name: Restore compiler and dependency caches
         id: rust-cache
-        timeout-minutes: 8
-        continue-on-error: true
+        uses: ./.github/actions/rust-build-cache
         with:
-          path: |
-            ~/.cargo/registry
-            ~/.cargo/git/db
-            target/release
-          key: no-ai-release-${{ matrix.runner }}-${{ hashFiles('rust-toolchain.toml', 'Cargo.lock') }}-${{ github.sha }}
-          restore-keys: |
-            no-ai-release-${{ matrix.runner }}-${{ hashFiles('rust-toolchain.toml', 'Cargo.lock') }}-
+          profile: release
       - run: brew install cmake pkg-config
       - uses: actions/setup-python@v5
         with:
@@ -138,6 +136,14 @@ jobs:
           shasum -a 256 *.zip *.dmg > "SHA256SUMS-$(uname -m).txt"
       - name: Check signed application startup network attempts
         run: python3 script/privacy-no-ai-mac.py --app 'target/release/bundle/osx/nain.app' --output target/runtime-reports/privacy.json
+      - name: Record compiler cache statistics
+        if: always()
+        continue-on-error: true
+        run: |
+          if command -v kache >/dev/null 2>&1; then
+            mkdir -p target/runtime-reports
+            kache stats --json > target/runtime-reports/kache.json
+          fi
       - name: Upload startup privacy report
         if: always()
         uses: actions/upload-artifact@v4
@@ -155,19 +161,18 @@ jobs:
         run: |
           security delete-keychain "$RUNNER_TEMP/no-ai-signing.keychain-db" || true
           rm -f "$RUNNER_TEMP/signing.p12" "$RUNNER_TEMP/notarization-key.p8"
-      - name: Save Rust cache (best effort)
-        if: always() && steps.rust-cache.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v4
-        timeout-minutes: 8
+      - name: Save bounded compiler caches (best effort)
+        if: always() && !cancelled() && github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        uses: ./.github/actions/save-rust-build-cache
         continue-on-error: true
         with:
-          path: |
-            ~/.cargo/registry
-            ~/.cargo/git/db
-            target/release
-          key: ${{ steps.rust-cache.outputs.cache-primary-key }}
+          compiler-key: ${{ steps.rust-cache.outputs.compiler-key }}
+          compiler-hit: ${{ steps.rust-cache.outputs.compiler-hit }}
+          sources-key: ${{ steps.rust-cache.outputs.sources-key }}
+          sources-hit: ${{ steps.rust-cache.outputs.sources-hit }}
+
   publish:
-    needs: [validate, mac]
+    needs: [validate, checks, mac]
     runs-on: ubuntu-latest
     permissions:
       contents: write

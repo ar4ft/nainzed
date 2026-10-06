@@ -28,6 +28,7 @@ jobs:
     timeout-minutes: 180
     env:
       CARGO_INCREMENTAL: '0'
+      KACHE_GC_EVICT_SHARED: '1'
       ZED_RELEASE_CHANNEL: dev
       NO_AI_SIGNED_RELEASE: '0'
       ZED_UPDATE_EXPLANATION: Build updates from the nain fork.
@@ -40,50 +41,40 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.13'
-      - uses: actions/cache/restore@v4
+      - name: Restore compiler and dependency caches
         id: rust-cache
-        timeout-minutes: 8
-        continue-on-error: true
+        uses: ./.github/actions/rust-build-cache
         with:
-          path: |
-            ~/.cargo/registry
-            ~/.cargo/git/db
-            target/debug
-          key: no-ai-debug-${{ matrix.runner }}-${{ hashFiles('rust-toolchain.toml', 'Cargo.lock') }}-${{ github.sha }}
-          restore-keys: |
-            no-ai-debug-${{ matrix.runner }}-${{ hashFiles('rust-toolchain.toml', 'Cargo.lock') }}-
+          profile: debug
       - name: Build dependencies
         run: brew install cmake pkg-config
       - name: Audit production dependencies for AI and telemetry
         run: script/audit-no-ai
-      - name: Verify telemetry cannot collect or send data
-        run: cargo test --locked -p telemetry && cargo test --locked -p client --lib no_telemetry_fork
-      - name: Check keymaps load without removed AI and collaboration actions
-        run: cargo test --locked -p settings --lib no_ai_fork_keymap
-      - name: Check extension startup avoids empty update requests
-        run: cargo test --locked -p extension_host --lib no_ai_fork_empty_extension_update_check_never_sends
-      - name: Check editor window chrome with AI disabled
-        run: cargo test --locked -p title_bar --lib no_ai_fork_workspace_keeps_title_bar
-      - name: Check fork update selection
-        run: cargo test --locked -p auto_update --lib no_ai_fork
-      - name: Check notebook data preservation
-        run: cargo test --locked -p notebook_safety
-      - name: Check the production application
+      - name: Compile native safeguard tests once and run every selected suite
+        run: python3 script/test-no-ai-mac.py
+      - name: Check the production application without test feature unification
         run: cargo check --locked -p zed --bin zed && cargo check --locked -p remote_server --lib --bin remote_server
-      - name: Verify AI cannot be re-enabled through settings
-        run: cargo test --locked -p project --lib no_ai_fork_settings_cannot_enable_ai
-      - name: Check notebook open and save regressions
-        run: cargo test --locked -p repl --lib notebook::notebook_ui::tests::test_open_single_file_notebook && cargo test --locked -p repl --lib notebook::notebook_ui::tests::test_save_goes_through_the_project && cargo test --locked -p repl --lib no_ai_fork_notebook
-      - name: Check Python kernel discovery
-        run: cargo test --locked -p repl --lib kernels::native_kernel::test::test_get_kernelspecs
-      - name: Save Rust cache (best effort)
-        if: always() && steps.rust-cache.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v4
-        timeout-minutes: 8
+      - name: Save bounded compiler caches (best effort)
+        if: always() && !cancelled() && github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && inputs.checkout_ref == github.sha
+        uses: ./.github/actions/save-rust-build-cache
         continue-on-error: true
         with:
-          path: |
-            ~/.cargo/registry
-            ~/.cargo/git/db
-            target/debug
-          key: ${{ steps.rust-cache.outputs.cache-primary-key }}
+          compiler-key: ${{ steps.rust-cache.outputs.compiler-key }}
+          compiler-hit: ${{ steps.rust-cache.outputs.compiler-hit }}
+          sources-key: ${{ steps.rust-cache.outputs.sources-key }}
+          sources-hit: ${{ steps.rust-cache.outputs.sources-hit }}
+      - name: Record compiler cache statistics
+        if: always()
+        continue-on-error: true
+        run: |
+          if command -v kache >/dev/null 2>&1; then
+            mkdir -p target/runtime-reports
+            kache stats --json > target/runtime-reports/kache.json
+          fi
+      - name: Upload validation timing and cache reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: validation-reports-${{ matrix.runner }}
+          path: target/runtime-reports/
+          if-no-files-found: warn

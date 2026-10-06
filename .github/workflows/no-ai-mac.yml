@@ -12,7 +12,7 @@ on:
   push:
     branches: [main]
 concurrency:
-  group: no-ai-mac-${{ inputs.checkout_ref || github.sha }}
+  group: no-ai-mac-${{ inputs.checkout_ref || github.ref }}
   cancel-in-progress: true
 permissions:
   contents: read
@@ -24,7 +24,6 @@ jobs:
   package:
     # PRs get validation without waiting for release compilation and packaging.
     if: github.event_name != 'pull_request'
-    needs: validate
     strategy:
       fail-fast: false
       matrix:
@@ -33,6 +32,7 @@ jobs:
     timeout-minutes: 330
     env:
       CARGO_INCREMENTAL: '0'
+      KACHE_GC_EVICT_SHARED: '1'
       ZED_RELEASE_CHANNEL: dev
       NO_AI_SIGNED_RELEASE: '0'
       ZED_ALLOW_EMULATED_GPU: '1'
@@ -40,19 +40,16 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ inputs.checkout_ref || github.sha }}
+      - name: Verify packaging source and privacy safeguards
+        run: |
+          script/audit-no-ai-source
+          python3 -m unittest discover -s script/tests
       - run: rustup show
-      - uses: actions/cache/restore@v4
+      - name: Restore compiler and dependency caches
         id: rust-cache
-        timeout-minutes: 8
-        continue-on-error: true
+        uses: ./.github/actions/rust-build-cache
         with:
-          path: |
-            ~/.cargo/registry
-            ~/.cargo/git/db
-            target/release
-          key: no-ai-release-${{ matrix.runner }}-${{ hashFiles('rust-toolchain.toml', 'Cargo.lock') }}-${{ github.sha }}
-          restore-keys: |
-            no-ai-release-${{ matrix.runner }}-${{ hashFiles('rust-toolchain.toml', 'Cargo.lock') }}-
+          profile: release
       - run: brew install cmake pkg-config
       - uses: actions/setup-python@v5
         with:
@@ -68,6 +65,14 @@ jobs:
       - name: Measure notebook serialization and recovery
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: cargo run --locked --release -p notebook_safety --example benchmark > target/runtime-reports/notebook-benchmark.json
+      - name: Record compiler cache statistics
+        if: always()
+        continue-on-error: true
+        run: |
+          if command -v kache >/dev/null 2>&1; then
+            mkdir -p target/runtime-reports
+            kache stats --json > target/runtime-reports/kache.json
+          fi
       - name: Upload runtime reports
         if: always()
         uses: actions/upload-artifact@v4
@@ -81,17 +86,16 @@ jobs:
           name: nain-${{ matrix.runner }}
           path: target/nain-*/*
           if-no-files-found: error
-      - name: Save Rust cache (best effort)
-        if: always() && steps.rust-cache.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v4
-        timeout-minutes: 8
+      - name: Save bounded compiler caches (best effort)
+        if: always() && !cancelled() && github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && inputs.checkout_ref == ''
+        uses: ./.github/actions/save-rust-build-cache
         continue-on-error: true
         with:
-          path: |
-            ~/.cargo/registry
-            ~/.cargo/git/db
-            target/release
-          key: ${{ steps.rust-cache.outputs.cache-primary-key }}
+          compiler-key: ${{ steps.rust-cache.outputs.compiler-key }}
+          compiler-hit: ${{ steps.rust-cache.outputs.compiler-hit }}
+          sources-key: ${{ steps.rust-cache.outputs.sources-key }}
+          sources-hit: ${{ steps.rust-cache.outputs.sources-hit }}
+
   publish-prerelease:
     needs: [validate, package]
     # Upstream review builds and PRs must not publish unmerged code.

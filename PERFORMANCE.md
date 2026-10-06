@@ -32,3 +32,15 @@ python3 script/benchmark-no-ai-mac.py \
 ```
 
 Keep the machine idle and compare repeated runs. The tool terminates only the processes it starts and never uses your normal editor profile. The baseline must support `--user-data-dir`. No performance threshold is enforced until representative native baselines are available.
+
+## CI compilation and caching
+
+Mac validation and application packaging run concurrently on `main`; publication waits for source guards, both native validation jobs, and both packaging/runtime-check jobs. Hosted runner availability can still queue jobs. PRs run validation only. Manual signed builds also run native validation alongside packaging after the release tag and signing credentials pass their initial checks; Apple signing remains exclusive to manual dispatch.
+
+`script/test-no-ai-mac.py` compiles the selected safeguard test libraries in one `cargo test --locked --no-run --lib` invocation. This shares dependency features across telemetry, client, settings, extensions, window chrome, updater, project and notebook tests. It then executes every previous test selection from those binaries, with Cargo's crate working directories and native library paths. Missing binaries, unmatched filters, ignored-only selections and failed tests fail validation. Production dependency audits and application/helper checks run separately without test feature unification.
+
+The pinned [Kache action](https://github.com/kunobi-ninja/kache-action) installs checksum-verified Kache 1.0.0 and enables eligible Rust executable/library and C/C++ compilation caching. GitHub Actions stores the cache; no Kache account or external cache service is configured. Dependency source archives are shared, while compiler snapshots are separated by OS, architecture, debug/release profile and toolchain/dependency versions. Each checked-out source commit gets a new snapshot key, restoring the previous matching snapshot when available. Only trusted `main` jobs save; PRs and upstream-review jobs restore without uploading changes.
+
+Before saving, explicit GC trims registered compiler blobs to a 1.5 GiB budget per architecture/profile, including entries retained by the build's output files. Whole Cargo target directories are not archived. Snapshot metadata, dependency sources and overlapping historical snapshots add storage beyond the four compiler budgets; GitHub's cache quota and eviction still apply. Restore/save operations are best effort with eight-minute limits per step.
+
+The first run must populate the cache. Kache does not skip test execution or guarantee hits after compiler, dependency, feature, configuration or source changes. Check each job's Kache summary and `kache.json` in runtime-report artifacts for actual hit rates and saved compile time. `validation-reports-*` also contain `native-tests.json` with shared compile time and per-suite execution times. Compare a cold run with later warm runs before claiming a CI speedup.

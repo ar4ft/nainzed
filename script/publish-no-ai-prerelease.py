@@ -33,8 +33,11 @@ def completed_build(repository, run_id):
     jobs = json.loads(gh('api', f'repos/{repository}/actions/runs/{run_id}/jobs?per_page=100').stdout)['jobs']
     passed = {job['name'] for job in jobs
               if job['status'] == 'completed' and job['conclusion'] == 'success'}
-    if not {'package (macos-15)', 'package (macos-15-intel)'}.issubset(passed):
-        raise ValueError('Both Mac packaging and runtime-check jobs must have passed')
+    required = {'validate / source-guards', 'validate / mac (macos-15)',
+                'validate / mac (macos-15-intel)', 'package (macos-15)',
+                'package (macos-15-intel)'}
+    if not required.issubset(passed):
+        raise ValueError('Both Mac validation, packaging and runtime-check jobs must have passed')
     return run
 
 

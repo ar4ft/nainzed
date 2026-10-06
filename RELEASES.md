@@ -1,6 +1,6 @@
 # Signed releases and automatic updates
 
-The manually dispatched `Signed nain release` workflow builds Apple Silicon and Intel apps, signs them with your Developer ID Application certificate and the hardened runtime, submits the app and DMG to Apple, staples notarization tickets, and publishes both architectures together in a GitHub Release. It runs AI, telemetry, notebook, and update-selection checks before packaging. A failed architecture or rejected notarization prevents publication. Signed releases cannot fall back to ad-hoc signing.
+The manually dispatched `Signed nain release` workflow builds Apple Silicon and Intel apps, signs them with your Developer ID Application certificate and the hardened runtime, submits the app and DMG to Apple, staples notarization tickets, and publishes both architectures together in a GitHub Release. After initial tag and credential checks, packaging runs concurrently with AI, telemetry, notebook, and update-selection validation. All validation and packaging jobs must pass before publication; a failed architecture or rejected notarization prevents publication. Signed releases cannot fall back to ad-hoc signing.
 
 `nain.app` and `nain-<architecture>.dmg`/`.zip` are the product names. The original fork bundle identity and user-data directories stay unchanged so existing settings, recovery data, and signatures remain compatible.
 
@@ -10,7 +10,7 @@ Branch pushes and local builds produce development packages with ad-hoc signatur
 
 Tag pushes do not sign or publish anything. Existing unsigned builds must be replaced manually with the first signed release. Installation in `/Applications` (or another writable, permanent app folder) is recommended; updating an app running from a mounted DMG will fail. Remote helper downloads retain the existing upstream protocol and are separate from the Mac application release feed.
 
-To publish an older successful development run without rebuilding, manually run **Publish completed development build** on `main` and enter its Actions run ID. It verifies that the run was a successful `main` development build and that both Mac packaging/runtime-check jobs passed, then publishes that run's original installers and source commit. This recovery workflow also uses no Apple credentials.
+To publish an older successful development run without rebuilding, manually run **Publish completed development build** on `main` and enter its Actions run ID. It verifies that the run was a successful `main` development build and that source guards, both Mac validation jobs, and both packaging/runtime-check jobs passed, then publishes that run's original installers and source commit. This recovery workflow also uses no Apple credentials.
 
 GitHub can restrict the Actions token from creating tags for older workflow revisions. If the recovery workflow reports this permission error, create its `dev-BUILD_NUMBER-COMMIT` tag at the run's full source commit using your maintainer account, then retry. Existing tags are checked against the original source commit before publication. Normal builds create their own development tags.
 

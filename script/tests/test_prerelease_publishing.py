@@ -190,6 +190,9 @@ class PrereleasePublishing(unittest.TestCase):
                'event': 'push', 'path': '.github/workflows/no-ai-mac.yml'}
         jobs = {'jobs': [{'name': f'package ({runner})', 'status': 'completed', 'conclusion': 'success'}
                          for runner in ['macos-15', 'macos-15-intel']]}
+        jobs['jobs'].extend({'name': name, 'status': 'completed', 'conclusion': 'success'}
+                            for name in ['validate / source-guards', 'validate / mac (macos-15)',
+                                         'validate / mac (macos-15-intel)'])
         with patch.object(prerelease, 'gh', side_effect=[response(run), response(jobs)]):
             self.assertEqual(prerelease.completed_build(REPO, '123'), run)
         for changes in [{'head_branch': 'upstream-update/v1.0.0'}, {'conclusion': 'failure'},
@@ -201,10 +204,16 @@ class PrereleasePublishing(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     prerelease.completed_build(REPO, '123')
                 gh.assert_called_once()
-        jobs['jobs'].pop()
-        with patch.object(prerelease, 'gh', side_effect=[response(run), response(jobs)]):
-            with self.assertRaisesRegex(ValueError, 'Both Mac'):
-                prerelease.completed_build(REPO, '123')
+        # Even a run reported successful cannot publish with missing/failed validation.
+        for job in jobs['jobs']:
+            for state in ['missing', 'failed']:
+                with self.subTest(job=job['name'], state=state):
+                    changed = [dict(item) for item in jobs['jobs'] if item is not job]
+                    if state == 'failed':
+                        changed.append(dict(job, conclusion='failure'))
+                    with patch.object(prerelease, 'gh', side_effect=[response(run), response({'jobs': changed})]):
+                        with self.assertRaisesRegex(ValueError, 'Both Mac'):
+                            prerelease.completed_build(REPO, '123')
 
 
 if __name__ == '__main__':

@@ -1,0 +1,43 @@
+name: Save nain compiler cache
+description: Trim compiler outputs before saving snapshots; never archive Cargo target directories.
+inputs:
+  compiler-key:
+    description: Compiler snapshot key returned by setup
+    required: true
+  compiler-hit:
+    description: Whether the compiler snapshot already exists
+    required: true
+  sources-key:
+    description: Dependency source key returned by setup
+    required: true
+  sources-hit:
+    description: Whether the dependency source snapshot already exists
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Trim compiler snapshot
+      shell: bash
+      run: |
+        if command -v kache >/dev/null 2>&1; then
+          kache gc
+        fi
+    - name: Save Cargo dependency sources
+      if: inputs.sources-key != '' && inputs.sources-hit != 'true'
+      uses: actions/cache/save@v4
+      timeout-minutes: 8
+      continue-on-error: true
+      with:
+        path: |
+          ~/.cargo/registry/index
+          ~/.cargo/registry/cache
+          ~/.cargo/git/db
+        key: ${{ inputs.sources-key }}
+    - name: Save compiler snapshot
+      if: inputs.compiler-key != '' && inputs.compiler-hit != 'true'
+      uses: actions/cache/save@v4
+      timeout-minutes: 8
+      continue-on-error: true
+      with:
+        path: ${{ runner.temp }}/nain-kache
+        key: ${{ inputs.compiler-key }}

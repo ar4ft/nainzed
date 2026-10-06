@@ -1,0 +1,62 @@
+name: Set up nain compiler cache
+description: Install pinned Kache and restore bounded compiler and Cargo source caches.
+inputs:
+  profile:
+    description: Isolated compiler cache profile (debug or release)
+    required: true
+outputs:
+  compiler-key:
+    description: Compiler snapshot key for this revision
+    value: ${{ steps.compiler.outputs.cache-primary-key }}
+  compiler-hit:
+    description: Whether this revision already has a compiler snapshot
+    value: ${{ steps.compiler.outputs.cache-hit }}
+  sources-key:
+    description: Cargo dependency source cache key
+    value: ${{ steps.sources.outputs.cache-primary-key }}
+  sources-hit:
+    description: Whether dependency sources were restored exactly
+    value: ${{ steps.sources.outputs.cache-hit }}
+runs:
+  using: composite
+  steps:
+    - name: Identify the checked-out source revision
+      id: revision
+      shell: bash
+      run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+    - name: Restore Cargo dependency sources
+      id: sources
+      uses: actions/cache/restore@v4
+      timeout-minutes: 8
+      continue-on-error: true
+      with:
+        path: |
+          ~/.cargo/registry/index
+          ~/.cargo/registry/cache
+          ~/.cargo/git/db
+        key: nain-cargo-v1-${{ hashFiles('Cargo.lock') }}
+        restore-keys: nain-cargo-v1-
+    - name: Restore compiler outputs
+      id: compiler
+      uses: actions/cache/restore@v4
+      timeout-minutes: 8
+      continue-on-error: true
+      with:
+        path: ${{ runner.temp }}/nain-kache
+        key: nain-kache-v1-1.0.0-${{ runner.os }}-${{ runner.arch }}-${{ inputs.profile }}-${{ hashFiles('rust-toolchain.toml', 'Cargo.lock') }}-${{ steps.revision.outputs.sha }}
+        restore-keys: |
+          nain-kache-v1-1.0.0-${{ runner.os }}-${{ runner.arch }}-${{ inputs.profile }}-${{ hashFiles('rust-toolchain.toml', 'Cargo.lock') }}-
+          nain-kache-v1-1.0.0-${{ runner.os }}-${{ runner.arch }}-${{ inputs.profile }}-
+    - name: Install Kache 1.0.0
+      uses: kunobi-ninja/kache-action@ad7317540dcdd71c904f7a60a87b620a0c0e67ed # v1
+      timeout-minutes: 8
+      with:
+        version: '1.0.0'
+        cache-dir: ${{ runner.temp }}/nain-kache
+        max-size: 1536MiB
+        cache-executables: 'true'
+        cache-c-cpp: 'true'
+        github-cache: 'false'
+        save-cache: 'false'
+        pr-comment: 'false'
+        job-summary: 'true'
