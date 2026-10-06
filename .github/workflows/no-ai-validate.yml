@@ -29,7 +29,7 @@ jobs:
     env:
       CARGO_INCREMENTAL: '0'
       KACHE_GC_EVICT_SHARED: '1'
-      KACHE_MAX_SIZE: 1536MiB
+      KACHE_MAX_SIZE: 3GiB
       ZED_RELEASE_CHANNEL: dev
       NO_AI_SIGNED_RELEASE: '0'
       ZED_UPDATE_EXPLANATION: Build updates from the nain fork.

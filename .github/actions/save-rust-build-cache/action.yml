@@ -16,11 +16,14 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Trim compiler snapshot
+    - name: Trim compiler snapshot and stop writers
       shell: bash
       run: |
         if command -v kache >/dev/null 2>&1; then
           kache gc
+          # The daemon writes SQLite/WAL and metadata in this directory. Keep it
+          # stopped while actions/cache archives it to avoid partial snapshots.
+          kache daemon stop
         fi
     - name: Save Cargo dependency sources
       if: inputs.sources-key != '' && inputs.sources-hit != 'true'

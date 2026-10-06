@@ -50,7 +50,7 @@ runs:
       with:
         version: '1.0.0'
         cache-dir: ${{ runner.temp }}/nain-kache
-        max-size: 1536MiB
+        max-size: ${{ inputs.profile == 'release' && '4GiB' || '3GiB' }}
         cache-executables: 'true'
         cache-c-cpp: 'true'
         github-cache: 'false'
