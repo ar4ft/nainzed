@@ -33,7 +33,7 @@
   "crates/extension_host/src/extension_host.rs": "800ac08555c88b0a8a336823c78f8822515e68d565d369c220f419f1092277b2",
   "script/no_ai_policy.py": "6c8a17a8e88f0c428171a0c5c47abf5b9ceee52f2a6f5084d364da9b74a5c1ae",
   "script/audit-no-ai": "b1a938c2274a8224aef217118f92178c7ebff26dd756a45b26286949fd36446d",
-  "script/audit-no-ai-source": "9b01e8ac17d4d058df8e2d6b729229be6746811f288b97dca424e2f7037508ab",
+  "script/audit-no-ai-source": "f849bb91e92af6b46e13430a78eb482eaf6fdbf96e86ae5db66297d97ba837da",
   "script/build-no-ai-mac": "b8ba68491bcf45ef4452c1cd94eff1816cbae1d9ce11ea1ca0a06d820496cb6c",
   "script/test-no-ai-mac.py": "2d295c60c0bb4e167bdcf955e84d7afe44c6f09cd0c63f64112b3ee92eeaccb5",
   ".github/actions/rust-build-cache/action.yml": "317c917506e4f9c5cead06820e5e117f46fb0df3937583cb5eff8cbf32fca121",
@@ -43,7 +43,7 @@
   "script/privacy-no-ai-mac.py": "0a1a63e4b29a73dfa888b87387d8e863e350cc6f7fb28bd1236673555abdf50c",
   "script/no_ai_runtime.py": "20b6784a972975ca3b628ecc4de6df94f305b794a091d8032939a2b472c4596d",
   ".github/workflows/no-ai-release.yml": "3aaeb9760c9b9f7098ada89267e5bc18d901eabad1be5758576bb31a13289796",
-  ".github/workflows/no-ai-mac.yml": "4b52d053c14b88faea4b8121f2ca38a5d1cd4b381112b92a11aaf43ce5570d0d",
+  ".github/workflows/no-ai-mac.yml": "c2e3e747c9580a085f534b8c5905be9e7cd3f57a69fd6eeaa7ec85b877268c7b",
   ".github/workflows/no-ai-prerelease.yml": "77ad600894a8e4ee71bcdc042f1f337617e59e36c6628c11ea45a12d99a49795",
   ".github/workflows/no-ai-validate.yml": "685e9219e8ec3c4bf257aade170f4223c89d1ffdb13f9524b6620d9529476df5",
   "assets/keymaps/default-linux.json": "94f1470a6ef43b9712795c9f31c71c41d4b218fc5d0e8ef3979cc1d68dbf4410",
@@ -56,5 +56,10 @@
   "crates/code_search_provider/src/lib.rs": "cd5379efde67b5d08f5d2de9a4f0b7cc70b2a23bf6511acb42601f0e02d46902",
   "crates/code_search_provider/tests/worker.py": "fe7742eda59849fbbfa5fbe1f4619abe968ef09a758daf590cec749ac2f33172",
   "crates/settings_content/src/code_search.rs": "5a46c3dfe3e0108001042ca757d8e74c83b26f5e0e822a879820a0b059ca5465",
-  "crates/settings_content/src/settings_content.rs": "6f4ec9eb42f0889e8dd813d84eeee4f902c8340345cb478c56275b0ed2afe7a8"
+  "crates/settings_content/src/settings_content.rs": "6f4ec9eb42f0889e8dd813d84eeee4f902c8340345cb478c56275b0ed2afe7a8",
+  "script/upstream-maintenance.py": "600e8a5398c669b9c0c164f292dd0c3698f820f10e76825c37e74e6e04a920b9",
+  "script/upstream-review.py": "cd4300bf8764af214be4fd646cf7ab8634873b8456518353f166c2e9389dab02",
+  ".github/workflows/no-ai-upstream.yml": "77d314452cd47c2b772a759edc36987d2ba0dc1c01b76c36d047274a4d40553f",
+  ".github/workflows/no-ai-upstream-review.yml": "92f075bf7ed880609e593c0c81324da84ba87ffad716a277fd6f7d0b71555f77",
+  ".github/main-review-ruleset.json": "fee57f24a60d8b5445499f302d7a6733770ac419a3cc90eb467c6d6664752160"
 }

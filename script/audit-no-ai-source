@@ -8,6 +8,11 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from no_ai_policy import audit_manifests
 
 PROTECTED = (
+    'script/upstream-maintenance.py',
+    'script/upstream-review.py',
+    '.github/workflows/no-ai-upstream.yml',
+    '.github/workflows/no-ai-upstream-review.yml',
+    '.github/main-review-ruleset.json',
     'crates/code_search/Cargo.toml',
     'crates/code_search/src/lib.rs',
     'crates/code_search/src/code_search_settings.rs',

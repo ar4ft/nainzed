@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Prepare a reviewed upstream stable merge. No automatic merge or release."""
+"""Prepare an unapproved upstream candidate. Every update needs manual review."""
 import argparse
 import json
 import os
@@ -20,11 +20,63 @@ def git(root, *args, check=True):
     return run('git', *args, cwd=root, check=check)
 
 
-def review_report(root, previous, target, tag, conflicts):
-    changes = git(root, 'diff', '--name-only', previous, target).stdout.splitlines()
-    relevant = [p for p in changes if p.startswith(('crates/', 'script/', '.github/', 'assets/settings/')) or p in ('Cargo.toml', 'Cargo.lock')]
+def changed_paths(root, previous, target=None):
+    args = ['diff', '--name-status', '--no-renames', '-z', previous]
+    if target is not None:
+        args.append(target)
+    fields = git(root, *args).stdout.split('\0')
+    return list(zip(fields[::2], fields[1::2]))
+
+
+def impact(path):
+    """Conservative review categories, never a claim of unchanged behavior."""
+    if path == '.github' or path.startswith('.github/'):
+        return 'GitHub automation, permissions, checks or publication'
+    if path.startswith(('script/', '.cargo/')) or path in ('Cargo.toml', 'Cargo.lock', 'rust-toolchain.toml') or path.endswith(('Cargo.toml', 'build.rs')):
+        return 'Dependencies, compilation, packaging or release behavior'
+    if path.startswith(('assets/settings/', 'assets/keymaps/', 'crates/settings')):
+        return 'Defaults, settings, shortcuts or feature availability'
+    if path.startswith(('crates/zed/', 'crates/workspace/', 'crates/title_bar/', 'crates/onboarding/', 'crates/platform_title_bar/')):
+        return 'Startup, UI, menus, window behavior or action registration'
+    if path.startswith(('crates/telemetry/', 'crates/client/', 'crates/auto_update/', 'crates/http_client/', 'crates/remote')):
+        return 'Privacy, networking, background work or updates'
+    if re.search(r'agent|assistant|language_model|copilot|prediction|collab|livekit|webrtc', path):
+        return 'AI or collaboration surface; verify it stays unavailable'
+    if path.startswith(('crates/notebook', 'crates/repl/', 'crates/jupyter')):
+        return 'Notebook data, execution, kernels or completion'
+    if path.startswith(('crates/editor/', 'crates/project/', 'crates/language', 'crates/code_search')):
+        return 'Editing, files, LSP, completion or search behavior'
+    if path.startswith('assets/'):
+        return 'Application assets, themes or branding'
+    return 'Other upstream change; effect on Nain needs manual review'
+
+
+def preserve_fork_automation(root, fork_base):
+    """Do not activate upstream workflows/actions merely because Git merged them."""
+    withheld = [(status, path) for status, path in changed_paths(root, fork_base)
+                if path == '.github' or path.startswith('.github/')]
+    for _, path in withheld:
+        if git(root, 'cat-file', '-e', fork_base+':'+path, check=False).returncode == 0:
+            git(root, 'restore', '--source='+fork_base, '--staged', '--worktree', '--', path)
+        else:
+            git(root, 'rm', '-f', '--', path)
+    return withheld
+
+
+def path_table(changes):
+    names = {'A': 'Added', 'M': 'Modified', 'D': 'Deleted', 'T': 'Type changed'}
+    return ['| Change | Path | Potential effect requiring review |',
+            '| --- | --- | --- |'] + [
+        f'| {names.get(status, status)} | `{path.replace("`", "&#96;").replace("|", "&#124;").replace(chr(10), "&#10;")}` | {impact(path)} |'
+        for status, path in changes]
+
+
+def review_report(root, previous, target, tag, conflicts, fork_base, withheld):
+    incoming = changed_paths(root, previous, target)
+    effective = [(status, path) for status, path in changed_paths(root, fork_base)
+                 if path not in ('UPSTREAM_REVISION', 'UPSTREAM_REVIEW.md')]
     # Candidate additions need human review; matching a word does not prove telemetry or AI.
-    diff = git(root, 'diff', '--unified=0', previous, target, '--', 'crates', 'script', '.github').stdout
+    diff = git(root, 'diff', '--unified=0', previous, target).stdout
     file = ''
     flagged = set()
     added_urls = set()
@@ -39,16 +91,27 @@ def review_report(root, previous, target, tag, conflicts):
     lines = [f'# Upstream review: {tag}', '', f'Previous upstream reference: `{previous}`',
              f'Incoming stable release: [`{tag}`](https://github.com/{UPSTREAM}/releases/tag/{tag}) (`{target}`)',
              f'[Upstream comparison](https://github.com/{UPSTREAM}/compare/{previous}...{target})', '',
-             'This report identifies changes for review; automated checks do not establish that every new AI or telemetry path is absent.', '',
+             '**Manual approval required for this exact candidate, including a clean merge.**', '',
+             'A clean merge only means Git found no textual conflicts. It can introduce new workflows, defaults, startup hooks or other behavior. '
+             'Every path below needs review; passing checks or an empty keyword scan never grants approval.', '',
+             f'Fork baseline for the actual changes: `{fork_base}`.', '',
+             f'**Behavior preservation: unverified.** {len(effective)} actual changed paths require review; '
+             f'{len(withheld)} incoming automation paths were withheld. A maintainer must explicitly accept or remove the changes before approving.', '',
              '## Merge state', '']
     if conflicts:
         lines += ['The merge was aborted. This draft PR contains only this report; no upstream source has been integrated.', '', 'Conflicting paths:', ''] + [f'- `{p}`' for p in conflicts]
     else:
-        lines += ['The branch contains the upstream merge. Review the diff and all checks before marking this draft ready.']
+        lines += ['The branch contains an **unapproved** source merge. Incoming `.github/` changes are withheld so new or changed upstream automation cannot become active automatically. '
+                  'The PR stays in draft; candidate validation waits for the manual review workflow.']
+    lines += ['', '## Incoming automation held out of the candidate', '']
+    lines += path_table(withheld) if withheld else ['No automation was imported into the candidate. Review the incoming automation paths below even if the merge conflicted.']
+    lines += ['', '## Actual changes to Nain requiring approval', '']
+    lines += path_table(effective) if effective else ['No application changes were integrated; approval is still required once a candidate is resolved.']
+    lines += ['', '## All incoming upstream changes and potential behavior impact', '']
+    lines += path_table(incoming) if incoming else ['No changed paths in the incoming comparison; manual approval is still required.']
     for heading, paths in [('AI, telemetry, startup and background-task candidates', sorted(flagged)),
-                           ('Network-related additions', sorted(added_urls)),
-                           ('Changed source, settings, build and workflow paths', relevant)]:
-        lines += ['', '## '+heading, ''] + ([f'- `{p}`' for p in paths] or ['None detected.'])
+                           ('Network-related additions', sorted(added_urls))]:
+        lines += ['', '## '+heading, ''] + ([f'- `{p}`' for p in paths] or ['No keyword matches. Behavior impact remains unverified; manual review is mandatory.'])
     lines += ['', '## Required human review', '',
               '- [ ] Review new startup hooks, background tasks, network endpoints, menus and command registrations.',
               '- [ ] Confirm AI providers, agents and telemetry collectors remain disabled; review guard changes before refreshing hashes.',
@@ -57,7 +120,9 @@ def review_report(root, previous, target, tag, conflicts):
               '- [ ] Review proxy-recorded startup traffic and benchmark artifacts; investigate unknown hosts or missing graphical checks.',
               '- [ ] Confirm editor and remote-helper dependency trees still exclude call/audio, LiveKit and WebRTC implementations.',
               '- [ ] Confirm signing remains manual and no upstream workflow can replace the fork with upstream binaries.',
-              '- [ ] Merge this PR manually only after resolving failures. No signed release is triggered by merging.', '']
+              '- [ ] Explicitly accept or remove every behavior change and document the decision in this PR; port any wanted upstream automation separately.',
+              '- [ ] After reviewing, manually run **Approve upstream candidate** on `main` with this PR number and its current full head SHA. Confirm the review checkbox. Approval expires on any new commit.',
+              '- [ ] Review the resulting Mac checks, then mark this draft ready and merge manually using a merge commit. No signed release is triggered by merging.', '']
     return '\n'.join(lines)
 
 
@@ -82,6 +147,7 @@ def prepare(root, tag, upstream_url, apply=False):
         print(f'Update available: {tag} ({target}); recorded upstream {previous}.')
         return {'target': target, 'tag': tag}
     branch = 'upstream-update/'+tag
+    fork_base = git(root, 'rev-parse', 'HEAD').stdout.strip()
     # Refuse to overwrite an existing branch, including a maintainer's conflict fixes.
     git(root, 'checkout', '-b', branch)
     # The initial GitHub import may contain Zed's files without its parent history.
@@ -94,13 +160,15 @@ def prepare(root, tag, upstream_url, apply=False):
             raise RuntimeError('Recording baseline ancestry unexpectedly changed the fork tree')
     merge = git(root, 'merge', '--no-commit', '--no-ff', target, check=False)
     conflicts = git(root, 'diff', '--name-only', '--diff-filter=U').stdout.splitlines()
+    withheld = []
     if merge.returncode:
         git(root, 'merge', '--abort', check=False)
         if not conflicts:
             raise RuntimeError('Upstream merge failed without conflicts: '+merge.stderr)
     else:
+        withheld = preserve_fork_automation(root, fork_base)
         (root / 'UPSTREAM_REVISION').write_text(target+'\n')
-    report = review_report(root, previous, target, tag, conflicts)
+    report = review_report(root, previous, target, tag, conflicts, fork_base, withheld)
     (root / 'UPSTREAM_REVIEW.md').write_text(report)
     git(root, 'add', 'UPSTREAM_REVIEW.md')
     if not conflicts:
@@ -139,15 +207,21 @@ def main():
         validation = ''
         if os.environ.get('GITHUB_RUN_ID'):
             validation = '\n\n[Maintenance and Mac validation run](https://github.com/'+FORK+'/actions/runs/'+os.environ['GITHUB_RUN_ID']+').'
-        body.write_text(result['report']+validation)
+        report = result['report']
+        if len(report.encode()) > 55000:
+            report = (report[:6000]+'\n\n[Full path-by-path impact report](https://github.com/'+FORK+'/blob/'+result['head']+'/UPSTREAM_REVIEW.md).\n\n'
+                      +report[report.index('## Required human review'):])
+        body.write_text(report+validation)
         pr = run('gh', 'pr', 'create', '--repo', FORK, '--base', 'main', '--head', result['branch'],
                  '--draft', '--title', f'Update from upstream Zed {result["tag"]}', '--body-file', str(body), check=False)
     if pr.returncode:
         raise RuntimeError(pr.stderr+'\nThe update branch was preserved. If GitHub blocks bot PR creation, enable Settings → Actions → General → Allow GitHub Actions to create and approve pull requests, then create a draft PR from '+result['branch']+'.')
     print(pr.stdout.strip())
-    if not result['conflicts'] and os.environ.get('GITHUB_OUTPUT'):
-        with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
-            output.write('check_ref='+result['head']+'\n')
+    run('gh', 'api', '--method', 'POST', f'repos/{FORK}/statuses/{result["head"]}',
+        '-f', 'state=pending', '-f', 'context=upstream/manual-review',
+        '-f', 'description=Manual review and explicit approval required, even for clean merges',
+        '-f', 'target_url='+pr.stdout.strip())
+    print('Candidate remains unapproved. No validation, merge or release is authorized by a clean merge.')
 
 
 if __name__ == '__main__':

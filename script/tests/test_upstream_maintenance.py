@@ -27,7 +27,7 @@ def git(root, *args):
 
 
 class MaintenanceTests(unittest.TestCase):
-    def fixture(self, conflict=False):
+    def fixture(self, conflict=False, files=None):
         temp = tempfile.TemporaryDirectory()
         self.addCleanup(temp.cleanup)
         base = Path(temp.name)
@@ -37,6 +37,10 @@ class MaintenanceTests(unittest.TestCase):
         git(upstream, 'config', 'user.name', 'Test')
         git(upstream, 'config', 'user.email', 'test@example.com')
         (upstream/'source.txt').write_text('original\n')
+        for name, content in (files or {}).items():
+            path = upstream/name
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(content)
         git(upstream, 'add', '.')
         git(upstream, 'commit', '-m', 'Baseline')
         previous = git(upstream, 'rev-parse', 'HEAD')
@@ -106,6 +110,62 @@ class MaintenanceTests(unittest.TestCase):
         self.assertIn(previous, git(fork, 'show', '-s', '--format=%P', ancestry).split())
         self.assertEqual((fork/'fork.txt').read_text(), 'AI and telemetry disabled\n')
         self.assertTrue((fork/'fix.txt').exists())
+
+    def advance(self, upstream, files):
+        for name, content in files.items():
+            path = upstream/name
+            if content is None:
+                path.unlink()
+            else:
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text(content)
+        git(upstream, 'add', '-A')
+        git(upstream, 'commit', '-m', 'Incoming behavior changes')
+        git(upstream, 'tag', '-f', 'v1.0.1')
+
+    def test_clean_merge_withholds_new_workflows_and_actions_and_reports_defaults(self):
+        fork, upstream, _ = self.fixture()
+        self.advance(upstream, {
+            '.github/workflows/publish.yml': 'on: push\njobs: {}\n',
+            '.github/actions/build/action.yml': 'runs:\n  using: composite\n',
+            'assets/settings/default.json': '{"new_mode": true}\n',
+        })
+        result = maintenance.prepare(fork, 'v1.0.1', str(upstream), True)
+        self.assertEqual(result['conflicts'], [])
+        self.assertFalse((fork/'.github/workflows/publish.yml').exists())
+        self.assertFalse((fork/'.github/actions/build/action.yml').exists())
+        self.assertTrue((fork/'assets/settings/default.json').exists())
+        report = result['report']
+        self.assertIn('Manual approval required for this exact candidate, including a clean merge', report)
+        self.assertIn('Incoming automation held out', report)
+        self.assertIn('`.github/workflows/publish.yml`', report)
+        self.assertIn('Defaults, settings, shortcuts or feature availability', report)
+        self.assertIn('No keyword matches. Behavior impact remains unverified', report)
+        self.assertIn('Actual changes to Nain requiring approval', report)
+        self.assertEqual(git(fork, 'status', '--porcelain'), '')
+
+    def test_clean_automation_modification_and_deletion_preserve_fork_workflows(self):
+        initial = {'.github/workflows/ci.yml': 'original CI\n',
+                   '.github/workflows/release.yml': 'manual releases\n'}
+        fork, upstream, _ = self.fixture(files=initial)
+        self.advance(upstream, {'.github/workflows/ci.yml': 'different CI\n',
+                                '.github/workflows/release.yml': None})
+        result = maintenance.prepare(fork, 'v1.0.1', str(upstream), True)
+        self.assertEqual(result['conflicts'], [])
+        for name, content in initial.items():
+            self.assertEqual((fork/name).read_text(), content)
+        self.assertIn('| Modified | `.github/workflows/ci.yml`', result['report'])
+        self.assertIn('| Deleted | `.github/workflows/release.yml`', result['report'])
+
+    def test_keyword_free_edit_and_removed_source_still_require_behavior_review(self):
+        fork, upstream, _ = self.fixture(files={'crates/editor/src/editor.rs': 'old option\n'})
+        self.advance(upstream, {'crates/editor/src/editor.rs': None,
+                                'crates/workspace/src/menu.rs': 'new command\n'})
+        result = maintenance.prepare(fork, 'v1.0.1', str(upstream), True)
+        self.assertIn('| Deleted | `crates/editor/src/editor.rs`', result['report'])
+        self.assertIn('Startup, UI, menus, window behavior or action registration', result['report'])
+        self.assertIn('Editing, files, LSP, completion or search behavior', result['report'])
+        self.assertIn('Approval expires on any new commit', result['report'])
 
 
 class GuardTests(unittest.TestCase):

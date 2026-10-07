@@ -78,6 +78,8 @@ A weekly stable-update workflow opens draft PRs, reports conflicts and sensitive
 
 The fork is published at [ar4ft/nainzed](https://github.com/ar4ft/nainzed). `main` is the default and maintained branch. The original source snapshot is upstream `decbf641b18f1982b3475c037e7c5c554471574f`; `UPSTREAM_REVISION` records the most recently reviewed upstream stable release.
 
+Upstream updates always remain draft candidates until a human reviews their impact report and manually approves the exact commit, including clean merges. New upstream GitHub automation is held out, and behavior changes need explicit acceptance or removal. See [UPSTREAM_MAINTENANCE.md](UPSTREAM_MAINTENANCE.md) for the approval workflow and the repository rules needed to enforce the merge gate.
+
 ```sh
 git clone https://github.com/ar4ft/nainzed.git
 cd nainzed

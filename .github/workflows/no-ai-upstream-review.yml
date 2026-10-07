@@ -1,0 +1,76 @@
+name: Approve upstream candidate
+on:
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: Reviewed upstream-update PR number
+        required: true
+        type: string
+      head_sha:
+        description: Full current PR head SHA (approval expires on new commits)
+        required: true
+        type: string
+      reviewed:
+        description: I reviewed the impact report and explicitly accept the candidate's behavior changes
+        required: true
+        default: false
+        type: boolean
+concurrency:
+  group: upstream-review-${{ inputs.pr_number }}
+  cancel-in-progress: false
+permissions:
+  contents: read
+jobs:
+  approve:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+      actions: read
+      statuses: write
+    outputs:
+      check_ref: ${{ steps.review.outputs.check_ref }}
+    steps:
+      # Only trusted main scripts run with approval-write permission.
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - name: Record explicit human approval of the current candidate
+        id: review
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ inputs.pr_number }}
+          CANDIDATE_SHA: ${{ inputs.head_sha }}
+          REVIEW_CONFIRMED: ${{ inputs.reviewed }}
+        run: python3 script/upstream-review.py --approve --pr "$PR_NUMBER" --head-sha "$CANDIDATE_SHA"
+  validate-mac:
+    needs: approve
+    if: needs.approve.outputs.check_ref != ''
+    permissions:
+      contents: read
+      actions: read
+      statuses: read
+    uses: ./.github/workflows/no-ai-mac.yml
+    with:
+      checkout_ref: ${{ needs.approve.outputs.check_ref }}
+  report-validation:
+    needs: [approve, validate-mac]
+    if: always() && needs.approve.outputs.check_ref != ''
+    runs-on: ubuntu-latest
+    permissions:
+      statuses: write
+    steps:
+      - name: Report candidate validation on the approved commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+          UPDATE_COMMIT: ${{ needs.approve.outputs.check_ref }}
+          VALIDATION_RESULT: ${{ needs.validate-mac.result }}
+          VALIDATION_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          state=failure
+          if [[ "$VALIDATION_RESULT" == success ]]; then state=success; fi
+          gh api --method POST "repos/ar4ft/nainzed/statuses/$UPDATE_COMMIT" \
+            -f state="$state" -f context='upstream/mac-validation' \
+            -f description="Reviewed candidate Mac checks: $VALIDATION_RESULT" \
+            -f target_url="$VALIDATION_URL" >/dev/null

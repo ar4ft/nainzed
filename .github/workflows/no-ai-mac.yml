@@ -3,6 +3,7 @@ on:
   workflow_dispatch:
   pull_request:
     branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
   workflow_call:
     inputs:
       checkout_ref:
@@ -16,12 +17,30 @@ concurrency:
   cancel-in-progress: true
 permissions:
   contents: read
+  actions: read
+  statuses: read
 jobs:
+  upstream-review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        if: inputs.checkout_ref != '' || startsWith(github.head_ref, 'upstream-update/')
+        with:
+          # Never execute candidate code to decide whether it is approved.
+          ref: ${{ github.event.pull_request.base.sha || github.sha }}
+      - name: Require manual approval for the exact upstream candidate
+        if: inputs.checkout_ref != '' || startsWith(github.head_ref, 'upstream-update/')
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CANDIDATE_SHA: ${{ inputs.checkout_ref || github.event.pull_request.head.sha }}
+        run: python3 script/upstream-review.py --head-sha "$CANDIDATE_SHA"
   validate:
+    needs: upstream-review
     uses: ./.github/workflows/no-ai-validate.yml
     with:
       checkout_ref: ${{ inputs.checkout_ref || github.sha }}
   package:
+    needs: upstream-review
     # PRs get validation without waiting for release compilation and packaging.
     if: github.event_name != 'pull_request'
     strategy:
