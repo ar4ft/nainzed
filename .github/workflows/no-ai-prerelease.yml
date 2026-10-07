@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       run_id:
-        description: Successful main run ID from Build nain for Mac
+        description: Successful main run ID from Build Nain for Mac
         required: true
         type: string
 concurrency:

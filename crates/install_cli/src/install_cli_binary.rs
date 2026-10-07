@@ -12,7 +12,7 @@ use workspace::{Toast, Workspace};
 actions!(
     cli,
     [
-        /// Installs the nain CLI tool to the system PATH.
+        /// Installs the Nain CLI tool to the system PATH.
         InstallCliBinary,
     ]
 );
@@ -98,7 +98,7 @@ pub fn install_cli_binary(window: &mut Window, cx: &mut Context<Workspace>) {
             // The user dismissed the administrator prompt; nothing to do.
             Ok(None) => return Ok(()),
             Err(error) => {
-                log::error!("failed to install nain CLI: {error:#}");
+                log::error!("failed to install Nain CLI: {error:#}");
                 workspace.update(cx, |workspace, cx| {
                     struct CliInstallFailed;
 
@@ -111,7 +111,7 @@ pub fn install_cli_binary(window: &mut Window, cx: &mut Context<Workspace>) {
                                     "You can add `nain` to your PATH manually.",
                                     cx,
                                 )
-                                .with_title("Couldn't install the nain CLI")
+                                .with_title("Couldn't install the Nain CLI")
                                 .more_info_message("Show me how")
                                 .more_info_url(CANT_INSTALL_DOCS_URL)
                             })
@@ -140,5 +140,5 @@ pub fn install_cli_binary(window: &mut Window, cx: &mut Context<Workspace>) {
         register_zed_scheme(cx).await.log_err();
         Ok(())
     })
-    .detach_and_prompt_err("Cannot install the nain CLI", window, cx, |_, _, _| None);
+    .detach_and_prompt_err("Cannot install the Nain CLI", window, cx, |_, _, _| None);
 }

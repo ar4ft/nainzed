@@ -1,4 +1,4 @@
-name: Build nain for Mac
+name: Build Nain for Mac
 on:
   workflow_dispatch:
   pull_request:
@@ -61,10 +61,10 @@ jobs:
         id: build
         run: script/build-no-ai-mac
       - name: Check fresh startup network attempts
-        run: python3 script/privacy-no-ai-mac.py --app 'target/release/bundle/osx/nain.app' --output target/runtime-reports/privacy.json
+        run: python3 script/privacy-no-ai-mac.py --app 'target/release/bundle/osx/Nain.app' --output target/runtime-reports/privacy.json
       - name: Measure startup, memory, large files and notebooks
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
-        run: python3 script/benchmark-no-ai-mac.py --app 'target/release/bundle/osx/nain.app' --output target/runtime-reports/mac-benchmark.json
+        run: python3 script/benchmark-no-ai-mac.py --app 'target/release/bundle/osx/Nain.app' --output target/runtime-reports/mac-benchmark.json
       - name: Measure notebook serialization and recovery
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: cargo run --locked --release -p notebook_safety --example benchmark > target/runtime-reports/notebook-benchmark.json

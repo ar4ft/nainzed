@@ -1,4 +1,4 @@
-name: Signed nain release
+name: Signed Nain release
 on:
   workflow_dispatch:
     inputs:
@@ -128,7 +128,7 @@ jobs:
       - name: Build, sign, notarize and staple installers
         run: |
           script/build-no-ai-mac
-          app='target/release/bundle/osx/nain.app'
+          app='target/release/bundle/osx/Nain.app'
           requirement="anchor apple generic and certificate leaf[subject.OU] = \"$ZED_NO_AI_TEAM_ID\" and identifier \"io.github.ar4ft.ZedNoAI\""
           codesign --verify --deep --strict -R "$requirement" "$app"
           xcrun stapler validate "$app"
@@ -138,7 +138,7 @@ jobs:
           cd "target/nain-$(uname -m)"
           shasum -a 256 *.zip *.dmg > "SHA256SUMS-$(uname -m).txt"
       - name: Check signed application startup network attempts
-        run: python3 script/privacy-no-ai-mac.py --app 'target/release/bundle/osx/nain.app' --output target/runtime-reports/privacy.json
+        run: python3 script/privacy-no-ai-mac.py --app 'target/release/bundle/osx/Nain.app' --output target/runtime-reports/privacy.json
       - name: Record compiler cache statistics
         if: always()
         continue-on-error: true
@@ -197,11 +197,11 @@ jobs:
           test -f nain-x86_64.dmg
           cat SHA256SUMS-*.txt > SHA256SUMS.txt
           sha256sum -c SHA256SUMS.txt
-          printf 'Signed and notarized Apple Silicon and Intel builds of nain.\n\nSource: `%s`\n\nAI and telemetry are disabled. Automatic updates use this fork and verify Apple signatures before installation.\n' "$RELEASE_COMMIT" > release-notes.txt
+          printf 'Signed and notarized Apple Silicon and Intel builds of Nain.\n\nSource: `%s`\n\nAI and telemetry are disabled. Automatic updates use this fork and verify Apple signatures before installation.\n' "$RELEASE_COMMIT" > release-notes.txt
           if gh release view "$RELEASE_TAG" --repo ar4ft/nainzed --json isDraft > existing.json 2>/dev/null; then
             python3 -c 'import json; assert json.load(open("existing.json"))["isDraft"], "Refusing to overwrite a published release"'
           else
-            gh release create "$RELEASE_TAG" --repo ar4ft/nainzed --verify-tag --draft --title "nain $RELEASE_TAG" --notes-file release-notes.txt
+            gh release create "$RELEASE_TAG" --repo ar4ft/nainzed --verify-tag --draft --title "Nain $RELEASE_TAG" --notes-file release-notes.txt
           fi
           gh release upload "$RELEASE_TAG" --repo ar4ft/nainzed --clobber *.dmg *.zip SHA256SUMS.txt
           gh release edit "$RELEASE_TAG" --repo ar4ft/nainzed --draft=false --latest --notes-file release-notes.txt

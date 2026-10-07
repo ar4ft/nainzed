@@ -1194,7 +1194,7 @@ impl TitleBar {
                         )
                         .separator()
                         .action("Editor Setup…", zed_actions::OpenOnboarding.boxed_clone())
-                        .action("About nain", zed_actions::About.boxed_clone())
+                        .action("About Nain", zed_actions::About.boxed_clone())
                 }))
             })
             .trigger(

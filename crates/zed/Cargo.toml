@@ -283,7 +283,7 @@ repl = { workspace = true, features = ["test-support"] }
 [package.metadata.bundle-dev]
 icon = ["resources/app-icon-dev@2x.png", "resources/app-icon-dev.png"]
 identifier = "io.github.ar4ft.ZedNoAI"
-name = "nain"
+name = "Nain"
 osx_minimum_system_version = "10.15.7"
 osx_info_plist_exts = ["resources/info/*"]
 osx_url_schemes = ["nain", "zednoai", "zed-cli"]
@@ -291,7 +291,7 @@ osx_url_schemes = ["nain", "zednoai", "zed-cli"]
 [package.metadata.bundle-nightly]
 icon = ["resources/app-icon-nightly@2x.png", "resources/app-icon-nightly.png"]
 identifier = "io.github.ar4ft.ZedNoAI"
-name = "nain"
+name = "Nain"
 osx_minimum_system_version = "10.15.7"
 osx_info_plist_exts = ["resources/info/*"]
 osx_url_schemes = ["nain", "zednoai", "zed-cli"]
@@ -299,7 +299,7 @@ osx_url_schemes = ["nain", "zednoai", "zed-cli"]
 [package.metadata.bundle-preview]
 icon = ["resources/app-icon-preview@2x.png", "resources/app-icon-preview.png"]
 identifier = "io.github.ar4ft.ZedNoAI"
-name = "nain"
+name = "Nain"
 osx_minimum_system_version = "10.15.7"
 osx_info_plist_exts = ["resources/info/*"]
 osx_url_schemes = ["nain", "zednoai", "zed-cli"]
@@ -307,7 +307,7 @@ osx_url_schemes = ["nain", "zednoai", "zed-cli"]
 [package.metadata.bundle-stable]
 icon = ["resources/app-icon@2x.png", "resources/app-icon.png"]
 identifier = "io.github.ar4ft.ZedNoAI"
-name = "nain"
+name = "Nain"
 osx_minimum_system_version = "10.15.7"
 osx_info_plist_exts = ["resources/info/*"]
 osx_url_schemes = ["nain", "zednoai", "zed-cli"]
@@ -318,7 +318,7 @@ ignored = ["profiling", "tracing"]
 [package.metadata.bundle]
 icon = ["resources/app-icon-dev@2x.png", "resources/app-icon-dev.png"]
 identifier = "io.github.ar4ft.ZedNoAI"
-name = "nain"
+name = "Nain"
 osx_minimum_system_version = "10.15.7"
 osx_info_plist_exts = ["resources/info/DocumentTypes.plist", "resources/info/Permissions.plist", "resources/info/SupportedPlatforms.plist"]
 osx_url_schemes = ["nain", "zednoai", "zed-cli"]

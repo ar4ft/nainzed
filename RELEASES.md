@@ -1,8 +1,8 @@
 # Signed releases and automatic updates
 
-The manually dispatched `Signed nain release` workflow builds Apple Silicon and Intel apps, signs them with your Developer ID Application certificate and the hardened runtime, submits the app and DMG to Apple, staples notarization tickets, and publishes both architectures together in a GitHub Release. After initial tag and credential checks, packaging runs concurrently with AI, telemetry, notebook, and update-selection validation. All validation and packaging jobs must pass before publication; a failed architecture or rejected notarization prevents publication. Signed releases cannot fall back to ad-hoc signing.
+The manually dispatched `Signed Nain release` workflow builds Apple Silicon and Intel apps, signs them with your Developer ID Application certificate and the hardened runtime, submits the app and DMG to Apple, staples notarization tickets, and publishes both architectures together in a GitHub Release. After initial tag and credential checks, packaging runs concurrently with AI, telemetry, notebook, and update-selection validation. All validation and packaging jobs must pass before publication; a failed architecture or rejected notarization prevents publication. Signed releases cannot fall back to ad-hoc signing.
 
-`nain.app` and `nain-<architecture>.dmg`/`.zip` are the product names. The original fork bundle identity and user-data directories stay unchanged so existing settings, recovery data, and signatures remain compatible.
+`Nain.app` and `nain-<architecture>.dmg`/`.zip` are the product names. The original fork bundle identity and user-data directories stay unchanged so existing settings, recovery data, and signatures remain compatible.
 
 Automatic updates are enabled only in signed release builds. The app checks `https://api.github.com/repos/ar4ft/nainzed/releases/latest` at startup and hourly, downloads its matching DMG from this repository, verifies the Apple signature against the team ID embedded at build time and the retained bundle identity `io.github.ar4ft.ZedNoAI`, checks Apple's notarization assessment and the installer version, and stages the app beside the installed copy before replacing it. A replacement failure restores the old app; if restoration also fails, the error reports the retained recovery copy. Restart the editor to use an installed update. Users can disable automatic downloads with `"auto_update": false` and still check manually. Requests contain no telemetry IDs; update checks and downloads require network access to GitHub and Apple assessment may contact Apple.
 
@@ -54,11 +54,11 @@ After the secrets are configured, tag a commit containing this pipeline on `main
 git checkout main
 git pull --ff-only
 # The fork's release version is independent of upstream Zed's version.
-git tag -a v1.0.0 -m 'nain 1.0.0'
+git tag -a v1.0.0 -m 'Nain 1.0.0'
 git push origin v1.0.0
 ```
 
-Open [Signed nain release](https://github.com/ar4ft/nainzed/actions/workflows/no-ai-release.yml). Click **Run workflow**, choose the `main` branch, enter the existing tag (for example `v1.0.0`), and run it. This explicit manual action starts signing and notarization. Both Mac jobs must pass before the draft becomes public and the release becomes the latest update. A partial failure can leave a draft, which is invisible to the update feed. Re-run failed jobs, or manually dispatch the workflow with that existing tag. Published releases are not overwritten by retries. Fixes after a published release require a new, increasing version such as `v1.0.1`; never move an existing release tag.
+Open [Signed Nain release](https://github.com/ar4ft/nainzed/actions/workflows/no-ai-release.yml). Click **Run workflow**, choose the `main` branch, enter the existing tag (for example `v1.0.0`), and run it. This explicit manual action starts signing and notarization. Both Mac jobs must pass before the draft becomes public and the release becomes the latest update. A partial failure can leave a draft, which is invisible to the update feed. Re-run failed jobs, or manually dispatch the workflow with that existing tag. Published releases are not overwritten by retries. Fixes after a published release require a new, increasing version such as `v1.0.1`; never move an existing release tag.
 
 Download the architecture's signed DMG or ZIP from [Releases](https://github.com/ar4ft/nainzed/releases) and replace the existing unsigned app. Subsequent signed versions use automatic updates. Release assets include `SHA256SUMS.txt` for manual verification. Keep the Developer ID certificate valid and renew it before expiry; the signing identity and Apple team must match the updater's embedded team.
 

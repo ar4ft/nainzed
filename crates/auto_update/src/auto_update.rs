@@ -1234,7 +1234,7 @@ async fn install_release_macos(
         .with_context(|| format!("invalid running app path {running_app_path:?}"))?;
 
     let mount_path = temp_dir.path().join("mounted-update");
-    let mounted_app_path = mount_path.join("nain.app");
+    let mounted_app_path = mount_path.join("Nain.app");
     let mut cmd = new_command("/usr/bin/hdiutil");
     cmd.args(["attach", "-nobrowse"])
         .arg(&downloaded_dmg)

@@ -52,16 +52,16 @@ trait InstalledApp {
 #[command(
     name = "nain",
     disable_version_flag = true,
-    before_help = "The nain CLI binary.
-This CLI is a separate binary that invokes nain.
+    before_help = "The Nain CLI binary.
+This CLI is a separate binary that invokes Nain.
 
 Examples:
     `nain`
-          Simply opens nain
+          Simply opens Nain
     `nain --foreground`
           Runs in foreground (shows all logs)
     `nain path-to-your-project`
-          Open your project in nain
+          Open your project in Nain
     `nain -n path-to-file `
           Open file/folder in a new window",
     after_help = "To read from stdin, append '-', e.g. 'ps axf | nain -'"
@@ -81,7 +81,7 @@ struct Args {
     /// Reuse an existing window, replacing its workspace
     #[arg(short, long, overrides_with_all = ["add", "new", "existing", "classic"], hide = true)]
     reuse: bool,
-    /// Open in existing nain window
+    /// Open in existing Nain window
     #[arg(short = 'e', long = "existing", overrides_with_all = ["add", "new", "reuse", "classic"])]
     existing: bool,
     /// Use the classic open behavior: new window for directories, reuse for files
@@ -97,18 +97,18 @@ struct Args {
     )]
     #[arg(long, value_name = "DIR", value_hint = clap::ValueHint::DirPath)]
     user_data_dir: Option<String>,
-    /// The paths to open in nain (space-separated).
+    /// The paths to open in Nain (space-separated).
     ///
     /// Use `path:line:column` syntax to open a file at the given line and column.
     #[arg(trailing_var_arg = true, value_hint = clap::ValueHint::AnyPath)]
     paths_with_position: Vec<String>,
-    /// Print nain's version and the app path.
+    /// Print Nain's version and the app path.
     #[arg(short, long)]
     version: bool,
     /// Run zed in the foreground (useful for debugging)
     #[arg(long)]
     foreground: bool,
-    /// Custom path to nain.app or the zed binary
+    /// Custom path to Nain.app or the zed binary
     #[arg(long)]
     zed: Option<PathBuf>,
     /// Run zed in dev-server mode
@@ -853,7 +853,7 @@ fn prompt_open_behavior() -> Option<cli::CliBehaviorSetting> {
     let blue = console::Style::new().blue();
     let items = [
         format!(
-            "Add to existing nain window ({})",
+            "Add to existing Nain window ({})",
             blue.apply_to("zed --existing")
         ),
         format!("Open a new window ({})", blue.apply_to("zed --classic")),
@@ -862,7 +862,7 @@ fn prompt_open_behavior() -> Option<cli::CliBehaviorSetting> {
     let prompt = format!(
         "Configure default behavior for {}\n{}",
         blue.apply_to("zed <path>"),
-        console::style("You can change this later in nain settings"),
+        console::style("You can change this later in Nain settings"),
     );
 
     let selection = dialoguer::Select::new()
@@ -927,7 +927,7 @@ mod linux {
     impl InstalledApp for App {
         fn zed_version_string(&self) -> String {
             format!(
-                "nain {}{}{} – {}",
+                "Nain {}{}{} – {}",
                 if *release_channel::RELEASE_CHANNEL_NAME == "stable" {
                     "".to_string()
                 } else {
@@ -1204,7 +1204,7 @@ mod windows {
     impl InstalledApp for App {
         fn zed_version_string(&self) -> String {
             format!(
-                "nain {}{}{} – {}",
+                "Nain {}{}{} – {}",
                 if *release_channel::RELEASE_CHANNEL_NAME == "stable" {
                     "".to_string()
                 } else {
@@ -1377,7 +1377,7 @@ mod mac_os {
 
     impl InstalledApp for Bundle {
         fn zed_version_string(&self) -> String {
-            format!("nain {} – {}", self.version(), self.path().display(),)
+            format!("Nain {} – {}", self.version(), self.path().display(),)
         }
 
         fn launch(&self, url: String, user_data_dir: Option<&str>) -> anyhow::Result<()> {

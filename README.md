@@ -1,4 +1,4 @@
-# nain
+# Nain
 
 A macOS-focused fork of [Zed](https://github.com/zed-industries/zed) for text editing, folder/file browsing, Python, and Jupyter notebooks. No AI services are started by the application. Application telemetry collection and sending are removed. AI cannot be re-enabled with a user or project setting.
 
@@ -22,7 +22,7 @@ A macOS-focused fork of [Zed](https://github.com/zed-industries/zed) for text ed
 - Runs validation and installer compilation in parallel, consolidates native test compilation, and uses bounded Kache compiler snapshots. Publication waits for all checks.
 - Enables the upstream experimental `.ipynb` editor without an account or remote feature flag. Python `# %%` script cells also remain available.
 - Offers theme, keymap, settings import, and Vim setup on first launch without agent or telemetry controls and rejects AI agent/skill deep links.
-- Uses separate app data (`ZedNoAI`) and configuration (`~/.config/zednoai`) so the fork can coexist with upstream Zed. These storage paths are retained after the nain rename to preserve settings and recovered drafts.
+- Uses separate app data (`ZedNoAI`) and configuration (`~/.config/zednoai`) so the fork can coexist with upstream Zed. These storage paths are retained after the Nain rename to preserve settings and recovered drafts.
 - Signed releases automatically update from this fork's GitHub releases, verify the Apple team, bundle identity, notarization assessment, and version before replacing the app, and allow automatic updates to be disabled. Ad-hoc builds keep updates disabled.
 
 Folder browsing, tabs, file outline, search, language-server completion, syntax highlighting, terminal, Git, debugging, and Vim mode are inherited from Zed. Language-server completion is ordinary code completion and does not use an AI model.
@@ -38,11 +38,11 @@ brew install cmake pkg-config
 ./script/build-no-ai-mac
 ```
 
-For signed, notarized releases and automatic updates, follow [RELEASES.md](RELEASES.md). Signing runs only when **Signed nain release** is manually dispatched; branch builds produce development packages without Apple credentials, and tag pushes do not start signing. Apple Developer enrollment and repository signing/notarization secrets are required; the release pipeline is implemented but a signed release has not yet been produced.
+For signed, notarized releases and automatic updates, follow [RELEASES.md](RELEASES.md). Signing runs only when **Signed Nain release** is manually dispatched; branch builds produce development packages without Apple credentials, and tag pushes do not start signing. Apple Developer enrollment and repository signing/notarization secrets are required; the release pipeline is implemented but a signed release has not yet been produced.
 
-The script creates `target/release/bundle/osx/nain.app`, plus ZIP and DMG packages in `target/nain-arm64/` or `target/nain-x86_64/`. It builds for the current Mac architecture. It uses ad-hoc signing; downloaded builds are not Apple-notarized. Use Finder's Open action or macOS Privacy & Security to approve a build you trust.
+The script creates `target/release/bundle/osx/Nain.app`, plus ZIP and DMG packages in `target/nain-arm64/` or `target/nain-x86_64/`. It builds for the current Mac architecture. It uses ad-hoc signing; downloaded builds are not Apple-notarized. Use Finder's Open action or macOS Privacy & Security to approve a build you trust.
 
-The **Build nain for Mac** workflow runs Linux source/privacy guards and Apple Silicon/Intel regression checks through **Validate nain for Mac**. PRs stop after validation; branch pushes and manual development builds create packages concurrently with validation, then run actual-application startup privacy and performance checks. After validation and packaging pass on both architectures, `main` builds publish a [development prerelease](https://github.com/ar4ft/nainzed/releases) with DMG and ZIP installers for Apple Silicon and Intel, plus SHA-256 checksums. PRs and upstream review builds do not publish releases. Development prereleases are not Apple-notarized and do not enter the stable automatic-update feed. Cache restore/save are best effort and limited to eight minutes each. Kache compiler statistics and shared-test timings accompany runtime reports in the repository’s Actions tab; see [PERFORMANCE.md](PERFORMANCE.md) for cache limits and cold/warm build comparisons. No Apple credentials are needed for development builds.
+The **Build Nain for Mac** workflow runs Linux source/privacy guards and Apple Silicon/Intel regression checks through **Validate Nain for Mac**. PRs stop after validation; branch pushes and manual development builds create packages concurrently with validation, then run actual-application startup privacy and performance checks. After validation and packaging pass on both architectures, `main` builds publish a [development prerelease](https://github.com/ar4ft/nainzed/releases) with DMG and ZIP installers for Apple Silicon and Intel, plus SHA-256 checksums. PRs and upstream review builds do not publish releases. Development prereleases are not Apple-notarized and do not enter the stable automatic-update feed. Cache restore/save are best effort and limited to eight minutes each. Kache compiler statistics and shared-test timings accompany runtime reports in the repository’s Actions tab; see [PERFORMANCE.md](PERFORMANCE.md) for cache limits and cold/warm build comparisons. No Apple credentials are needed for development builds.
 
 The [validated Mac build](https://github.com/ar4ft/nainzed/actions/runs/36767803640) passed the AI/telemetry checks and notebook tests and produced packages for both Apple Silicon and Intel. It predates the notebook search, output collapsing, and status improvements; use a successful later run for those changes. Nine standalone notebook preservation/recovery tests pass locally. Native runtime checks for the latest changes must pass in the new package run before treating those packages as validated.
 
@@ -55,7 +55,7 @@ You can also create a Python kernel manually:
 ```sh
 python3 -m venv ~/.venvs/nain
 ~/.venvs/nain/bin/python -m pip install ipykernel
-~/.venvs/nain/bin/python -m ipykernel install --user --name nain --display-name 'Python (nain)'
+~/.venvs/nain/bin/python -m ipykernel install --user --name nain --display-name 'Python (Nain)'
 ```
 
 Open `examples/python.ipynb`, select **Python (.venv)** (or your manually installed kernel) in the kernel picker, and run a cell with **Shift+Enter**. **Cmd+Enter** runs a cell; **Cmd+Shift+Enter** runs all cells. The notebook editor supports code and Markdown cells, outputs, kernel interrupt/restart, and saving. These capabilities are inherited from upstream and require Mac runtime validation; preserve a copy of valuable notebooks while evaluating the experimental editor.

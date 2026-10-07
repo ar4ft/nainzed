@@ -126,7 +126,7 @@ def publish(directory, repository, commit, run_number, run_url):
         target = ('--verify-tag',) if tagged_commit is not None else ('--target', commit)
         try:
             gh('release', 'create', tag, '--repo', repository, *target,
-               '--draft', '--prerelease', '--latest=false', '--title', f'nain development build {run_number}',
+               '--draft', '--prerelease', '--latest=false', '--title', f'Nain development build {run_number}',
                '--notes-file', str(notes))
         except RuntimeError as error:
             if tagged_commit is None and '403' in str(error):

@@ -1,4 +1,4 @@
-name: Validate nain for Mac
+name: Validate Nain for Mac
 on:
   workflow_call:
     inputs:
@@ -32,7 +32,7 @@ jobs:
       KACHE_MAX_SIZE: 3GiB
       ZED_RELEASE_CHANNEL: dev
       NO_AI_SIGNED_RELEASE: '0'
-      ZED_UPDATE_EXPLANATION: Build updates from the nain fork.
+      ZED_UPDATE_EXPLANATION: Build updates from the Nain fork.
     steps:
       - uses: actions/checkout@v4
         with:

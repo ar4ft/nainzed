@@ -158,7 +158,7 @@ impl OpenRequest {
                     extension_id: extension_id.to_string(),
                 });
             } else if url.starts_with("zed://skill") || url.starts_with("zed://agent") {
-                anyhow::bail!("AI links are unavailable in nain");
+                anyhow::bail!("AI links are unavailable in Nain");
             } else if url == "zed://" || url == "zed://open" || url == "zed://open/" {
                 this.kind = Some(OpenRequestKind::FocusApp);
             } else if let Some(schema_path) = url.strip_prefix("zed://schemas/") {

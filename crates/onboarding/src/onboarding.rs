@@ -286,7 +286,7 @@ impl Render for Onboarding {
                                             .child(
                                                 v_flex()
                                                     .child(
-                                                        Headline::new("Welcome to nain")
+                                                        Headline::new("Welcome to Nain")
                                                             .size(HeadlineSize::Small),
                                                     )
                                                     .child(

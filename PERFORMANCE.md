@@ -26,8 +26,8 @@ To compare two applications on the same Mac:
 
 ```sh
 python3 script/benchmark-no-ai-mac.py \
-  --app '/Applications/nain.app' \
-  --baseline '/path/to/previous/nain.app' \
+  --app '/Applications/Nain.app' \
+  --baseline '/path/to/previous/Nain.app' \
   --repeat 3 --output benchmark.json
 ```
 
