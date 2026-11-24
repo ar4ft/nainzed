@@ -1,4 +1,4 @@
-use agent_client_protocol::schema::v1 as acp;
+use agent_client_protocol::{schema::MaybeUndefined, v1::schema as acp_v1, v2::schema as acp_v2};
 use anyhow::{Result, bail};
 use collections::HashMap;
 use futures::{FutureExt as _, future::Shared};
@@ -25,7 +25,7 @@ use util::get_default_system_shell_preferring_bash;
 ///
 /// Passed to [`super::AcpThread::create_terminal`]. The actual sandboxing
 /// mechanism is platform-specific (macOS Seatbelt; Linux Bubblewrap; Windows
-/// via Bubblewrap inside WSL), so callers describe the *intent* with plain data
+/// Process Security Environment), so callers describe the *intent* with plain data
 /// here rather than constructing platform-specific types directly.
 ///
 /// Default is the fully-sandboxed run (no network, project-only writes).
@@ -57,17 +57,6 @@ pub struct SandboxWrap {
     /// Allow unrestricted filesystem writes except for protected paths (ignores
     /// ordinary writable paths).
     pub allow_fs_write: bool,
-    /// Whether the project (and therefore this terminal) is local. The
-    /// enforcing proxy binds a loopback port on this host, so it can only
-    /// confine local commands; a remote terminal can't reach it.
-    pub is_local: bool,
-    /// Windows/WSL only: `(release channel, version)` of the Linux `zed` to
-    /// provision inside WSL as the sandbox helper (version `latest` for dev
-    /// builds). Resolved by the agent (which can read the running app's release
-    /// info) and forwarded to the sandbox. `None` on other platforms, or when
-    /// the release can't be determined, in which case the WSL backend falls back
-    /// to running bwrap without in-sandbox bind validation.
-    pub wsl_zed_release: Option<(String, String)>,
 }
 
 #[derive(Clone, Debug, Default)]
@@ -84,11 +73,12 @@ pub enum SandboxNetworkAccess {
 }
 
 /// A structured, serializable reason the OS sandbox could not be created for a
-/// command. Mirrors the Linux/WSL Bubblewrap failure modes; surfaced to the user
+/// command. Mirrors the Linux Bubblewrap failure modes (plus an `Other` catch-all,
+/// which Windows uses); surfaced to the user
 /// (and persisted in tool-call metadata) so the UI can
 /// explain what went wrong.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
-pub enum LinuxWslSandboxError {
+pub enum SandboxCreationError {
     /// No usable `bwrap` binary was found on `PATH`.
     BwrapNotFound,
     /// The only `bwrap` found is setuid-root, which Zed refuses to run.
@@ -100,7 +90,7 @@ pub enum LinuxWslSandboxError {
     Other(String),
 }
 
-impl From<sandbox::SandboxError> for LinuxWslSandboxError {
+impl From<sandbox::SandboxError> for SandboxCreationError {
     fn from(error: sandbox::SandboxError) -> Self {
         match error {
             sandbox::SandboxError::BwrapNotFound => Self::BwrapNotFound,
@@ -111,27 +101,27 @@ impl From<sandbox::SandboxError> for LinuxWslSandboxError {
     }
 }
 
-impl LinuxWslSandboxError {
+impl SandboxCreationError {
     /// A short, user-facing explanation of why the sandbox couldn't be created,
     /// suitable for display in the agent panel.
     pub fn user_facing_message(&self) -> String {
         match self {
-            LinuxWslSandboxError::BwrapNotFound => {
+            SandboxCreationError::BwrapNotFound => {
                 "No usable `bwrap` binary was found on your PATH. Install Bubblewrap to let \
                  the agent sandbox terminal commands."
                     .to_string()
             }
-            LinuxWslSandboxError::SetuidRejected => {
+            SandboxCreationError::SetuidRejected => {
                 "The only `bwrap` available is setuid-root, which Zed refuses to run. Install \
                  a non-setuid Bubblewrap to let the agent sandbox terminal commands."
                     .to_string()
             }
-            LinuxWslSandboxError::SandboxProbeFailed => {
+            SandboxCreationError::SandboxProbeFailed => {
                 "`bwrap` is installed but couldn't create a sandbox, likely because \
                  unprivileged user namespaces are disabled on this system."
                     .to_string()
             }
-            LinuxWslSandboxError::Other(message) => message.clone(),
+            SandboxCreationError::Other(message) => message.clone(),
         }
     }
 
@@ -142,15 +132,15 @@ impl LinuxWslSandboxError {
         match self {
             // Both "no bwrap" and "only a setuid-root bwrap" are resolved by
             // installing a non-setuid Bubblewrap.
-            LinuxWslSandboxError::BwrapNotFound | LinuxWslSandboxError::SetuidRejected => {
+            SandboxCreationError::BwrapNotFound | SandboxCreationError::SetuidRejected => {
                 "installing-bubblewrap"
             }
             // A failed probe on Linux is almost always disabled unprivileged
             // user namespaces, which the Ubuntu-specific section covers.
-            LinuxWslSandboxError::SandboxProbeFailed => "installing-bubblewrap-ubuntu",
-            // Catch-all (includes WSL/Windows messages): point at the platform
+            SandboxCreationError::SandboxProbeFailed => "installing-bubblewrap-ubuntu",
+            // Catch-all (includes Windows messages): point at the platform
             // overview for the current OS.
-            LinuxWslSandboxError::Other(_) => {
+            SandboxCreationError::Other(_) => {
                 if cfg!(target_os = "windows") {
                     "windows"
                 } else {
@@ -208,7 +198,7 @@ pub fn granted_write_path_to_location_or_log(
 
 impl SandboxWrap {
     /// Whether the OS sandbox for this request can actually be created right now,
-    /// returning a structured [`LinuxWslSandboxError`] when it can't.
+    /// returning a structured [`SandboxCreationError`] when it can't.
     ///
     /// The sandbox implementation never runs a command unsandboxed on its own —
     /// it aborts if it can't create the sandbox. This lets a caller decide, up
@@ -216,11 +206,11 @@ impl SandboxWrap {
     /// (fail-open), or refuse (fail-closed). It runs a brief probe subprocess on
     /// Linux, so call it off the main thread. On platforms whose sandbox can't
     /// fail to set up this way it always returns `Ok`.
-    pub fn can_create_sandbox(&self) -> Result<(), LinuxWslSandboxError> {
+    pub fn can_create_sandbox(&self) -> Result<(), SandboxCreationError> {
         let policy = self
             .to_policy()
-            .map_err(|error| LinuxWslSandboxError::Other(format!("{error:#}")))?;
-        sandbox::Sandbox::can_create(&policy).map_err(LinuxWslSandboxError::from)
+            .map_err(|error| SandboxCreationError::Other(format!("{error:#}")))?;
+        sandbox::Sandbox::can_create(&policy).map_err(SandboxCreationError::from)
     }
 
     /// Translate this request into the cross-platform [`sandbox::SandboxPolicy`].
@@ -267,7 +257,12 @@ impl SandboxWrap {
             .filter_map(|path| sandbox::HostFilesystemLocation::capture(path).ok())
             .collect::<Vec<_>>();
         let fs = if self.allow_fs_write {
-            sandbox::SandboxFsPolicy::Unrestricted { protected_paths }
+            sandbox::SandboxFsPolicy::Unrestricted {
+                protected_paths,
+                protected_file_names: Vec::new(),
+                paths_disallowing_reads: Vec::new(),
+                paths_allowing_reads: Vec::new(),
+            }
         } else {
             // Project worktree paths are captured fresh; user-approved grants are
             // rebuilt via the verifying reopen (or captured when legacy bare
@@ -302,6 +297,9 @@ impl SandboxWrap {
             sandbox::SandboxFsPolicy::Restricted {
                 writable_paths,
                 protected_paths,
+                protected_file_names: Vec::new(),
+                paths_disallowing_reads: Vec::new(),
+                paths_allowing_reads: Vec::new(),
             }
         };
         let network = match &self.network {
@@ -313,9 +311,14 @@ impl SandboxWrap {
                     .iter()
                     .map(|pattern| pattern.to_string())
                     .collect(),
+                allowed_tcp_ports: Vec::new(),
             },
         };
-        Ok(sandbox::SandboxPolicy { fs, network })
+        Ok(sandbox::SandboxPolicy {
+            fs,
+            network,
+            allowed_unix_sockets: Vec::new(),
+        })
     }
 }
 
@@ -325,9 +328,9 @@ impl SandboxWrap {
 ///
 /// This is deliberately platform-agnostic — every variant exists on every
 /// platform — so the serialized form stored in the thread database never
-/// depends on which OS wrote it. Today only Linux/WSL can fail to create a
-/// sandbox (`ErrorLinuxWsl`), but the variant is named so macOS/Windows can
-/// grow their own failure cases later without a migration.
+/// depends on which OS wrote it. Linux and Windows can fail to create a
+/// sandbox (`CreationFailed`), and macOS can grow its own failure cases later
+/// without a migration.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub enum SandboxNotAppliedReason {
     /// The user disabled the sandbox for the rest of this thread, so the command
@@ -335,22 +338,17 @@ pub enum SandboxNotAppliedReason {
     /// model-requested `unsandboxed: true` escape "for this thread", or when
     /// they chose to run unsandboxed for the thread after a sandbox-creation
     /// failure (in which case a preceding tool call's reason is
-    /// [`SandboxNotAppliedReason::ErrorLinuxWsl`]).
+    /// [`SandboxNotAppliedReason::CreationFailed`]).
     DisabledForThisThread,
-    /// The Linux/WSL (Bubblewrap) sandbox could not be created for this command.
-    ErrorLinuxWsl(LinuxWslSandboxError),
+    /// The Linux or Windows sandbox could not be created for this command.
+    // Serialized under its original name so existing thread metadata still loads.
+    #[serde(rename = "ErrorLinuxWsl")]
+    CreationFailed(SandboxCreationError),
 }
 
 /// The live sandbox kept alive for its per-command resources (the network proxy
 /// and, on macOS, the Seatbelt policy file) until the terminal exits.
 type SandboxConfigHandle = sandbox::Sandbox;
-
-/// Upper bound on preparing a WSL-sandboxed command. Deliberately generous:
-/// the first invocation after the WSL utility VM has shut down (or after boot)
-/// has to start the VM and the distro, which routinely takes 10-30 seconds on
-/// slow disks or under antivirus scanning.
-#[cfg(target_os = "windows")]
-pub(crate) const WSL_SANDBOX_WRAP_TIMEOUT: std::time::Duration = std::time::Duration::from_secs(60);
 
 /// Wrap `(program, args)` for sandboxed execution, returning the wrapped
 /// invocation (program, argv, env) plus the live [`sandbox::Sandbox`] that must
@@ -378,12 +376,6 @@ pub(crate) async fn prepare_sandbox_wrap(
 
     let mut sandbox =
         sandbox::Sandbox::new(sandbox_wrap.to_policy()?).map_err(anyhow::Error::new)?;
-    // Windows/WSL only: tell the sandbox which Linux `zed` to provision inside
-    // WSL as its `--wsl-sandbox-helper`. A no-op (and a no-op setter) elsewhere.
-    #[cfg(target_os = "windows")]
-    if let Some((channel, version)) = sandbox_wrap.wsl_zed_release.clone() {
-        sandbox.set_wsl_zed_release(channel, version);
-    }
     let command = sandbox::CommandAndArgs {
         program,
         args,
@@ -400,7 +392,7 @@ pub(crate) async fn prepare_sandbox_wrap(
 }
 
 pub struct Terminal {
-    id: acp::TerminalId,
+    id: acp_v2::TerminalId,
     command: Entity<Markdown>,
     working_dir: Option<PathBuf>,
     terminal: Entity<terminal::Terminal>,
@@ -420,13 +412,83 @@ pub struct Terminal {
 }
 
 enum TerminalExecution {
-    Process(Shared<Task<acp::TerminalExitStatus>>),
-    Display,
+    Process(Shared<Task<acp_v2::TerminalExitStatus>>),
+    Display(DisplayTerminalState),
+}
+
+#[derive(Debug, Default)]
+pub struct DisplayTerminalState {
+    command: DisplayCommand,
+    pub meta: Option<acp_v2::Meta>,
+    pub output_meta: Option<acp_v2::Meta>,
+    /// Whether the agent accepts `terminal/cancel` for this terminal.
+    can_cancel: bool,
+    legacy_created: bool,
+    legacy_exited: bool,
+}
+
+#[derive(Debug, Default)]
+enum DisplayCommand {
+    #[default]
+    Unknown,
+    LegacyCaption(String),
+    Reported(Option<String>),
+}
+
+impl DisplayTerminalState {
+    pub fn command(&self) -> Option<&str> {
+        match &self.command {
+            DisplayCommand::LegacyCaption(command) | DisplayCommand::Reported(Some(command)) => {
+                Some(command)
+            }
+            DisplayCommand::Unknown | DisplayCommand::Reported(None) => None,
+        }
+    }
+}
+
+/// Terminal patches use decoded bytes; decoding and validating wire data belongs to the adapter.
+#[derive(Debug, Default)]
+pub struct DisplayTerminalPatch {
+    pub command: MaybeUndefined<String>,
+    pub cwd: MaybeUndefined<acp_v2::AbsolutePath>,
+    pub output: MaybeUndefined<DisplayTerminalOutput>,
+    pub exit_status: MaybeUndefined<acp_v2::TerminalExitStatus>,
+    pub capabilities: MaybeUndefined<acp_v2::TerminalCapabilities>,
+    pub meta: MaybeUndefined<acp_v2::Meta>,
+}
+
+#[derive(Debug)]
+pub struct DisplayTerminalOutput {
+    pub data: Vec<u8>,
+    pub meta: Option<acp_v2::Meta>,
+}
+
+/// Process snapshots are separate from agent-reported display output and wire response envelopes.
+#[derive(Clone, Debug, PartialEq)]
+pub struct ProcessOutput {
+    pub output: String,
+    pub truncated: bool,
+    pub exit_status: Option<acp_v2::TerminalExitStatus>,
+}
+
+impl ProcessOutput {
+    pub fn new(output: impl Into<String>, truncated: bool) -> Self {
+        Self {
+            output: output.into(),
+            truncated,
+            exit_status: None,
+        }
+    }
+
+    pub fn exit_status(mut self, status: acp_v2::TerminalExitStatus) -> Self {
+        self.exit_status = Some(status);
+        self
+    }
 }
 
 pub struct TerminalOutput {
     pub ended_at: Instant,
-    pub exit_status: acp::TerminalExitStatus,
+    pub exit_status: acp_v2::TerminalExitStatus,
     pub content: String,
     pub original_content_len: usize,
     pub content_line_count: usize,
@@ -434,7 +496,7 @@ pub struct TerminalOutput {
 
 impl Terminal {
     pub fn new(
-        id: acp::TerminalId,
+        id: acp_v2::TerminalId,
         command_label: &str,
         working_dir: Option<PathBuf>,
         output_byte_limit: Option<usize>,
@@ -477,7 +539,7 @@ impl Terminal {
             execution: TerminalExecution::Process(
                 cx.spawn(async move |this, cx| {
                     let exit_status = command_task.await.map(Self::transform_exit_status);
-                    let exit_status = acp::TerminalExitStatus::new()
+                    let exit_status = acp_v2::TerminalExitStatus::new()
                         .exit_code(exit_status.as_ref().map(|status| status.0))
                         .signal(exit_status.and_then(|status| status.1));
 
@@ -507,8 +569,8 @@ impl Terminal {
     }
 
     pub fn new_display(
-        id: acp::TerminalId,
-        command_label: &str,
+        id: acp_v2::TerminalId,
+        command_label: Option<&str>,
         working_dir: Option<PathBuf>,
         output_byte_limit: Option<usize>,
         terminal: Entity<terminal::Terminal>,
@@ -519,7 +581,7 @@ impl Terminal {
             id,
             command: cx.new(|cx| {
                 Markdown::new(
-                    format!("```\n{}\n```", command_label).into(),
+                    format!("```\n{}\n```", command_label.unwrap_or("Terminal")).into(),
                     Some(language_registry),
                     None,
                     cx,
@@ -530,13 +592,18 @@ impl Terminal {
             started_at: Instant::now(),
             output: None,
             output_byte_limit,
-            execution: TerminalExecution::Display,
+            execution: TerminalExecution::Display(DisplayTerminalState {
+                command: command_label
+                    .map(|command| DisplayCommand::LegacyCaption(command.to_owned()))
+                    .unwrap_or_default(),
+                ..Default::default()
+            }),
             user_stopped: Arc::new(AtomicBool::new(false)),
             _sandbox: None,
         }
     }
 
-    pub fn id(&self) -> &acp::TerminalId {
+    pub fn id(&self) -> &acp_v2::TerminalId {
         &self.id
     }
 
@@ -545,10 +612,10 @@ impl Terminal {
         matches!(self.execution, TerminalExecution::Process(_))
     }
 
-    pub fn wait_for_exit(&self) -> Result<Shared<Task<acp::TerminalExitStatus>>> {
+    pub fn wait_for_exit(&self) -> Result<Shared<Task<acp_v2::TerminalExitStatus>>> {
         match &self.execution {
             TerminalExecution::Process(task) => Ok(task.clone()),
-            TerminalExecution::Display => {
+            TerminalExecution::Display(_) => {
                 bail!("Agent-provided terminals have no client-owned process to wait for")
             }
         }
@@ -578,9 +645,9 @@ impl Terminal {
         self.user_stopped.load(Ordering::SeqCst)
     }
 
-    pub fn current_output(&self, cx: &App) -> acp::TerminalOutputResponse {
+    pub fn current_output(&self, cx: &App) -> ProcessOutput {
         if let Some(output) = self.output.as_ref() {
-            acp::TerminalOutputResponse::new(
+            ProcessOutput::new(
                 output.content.clone(),
                 output.original_content_len > output.content.len(),
             )
@@ -588,7 +655,7 @@ impl Terminal {
         } else {
             let (current_content, original_len) = self.truncated_output(cx);
             let truncated = current_content.len() < original_len;
-            acp::TerminalOutputResponse::new(current_content, truncated)
+            ProcessOutput::new(current_content, truncated)
         }
     }
 
@@ -598,6 +665,10 @@ impl Terminal {
         }
         self.terminal
             .update(cx, |terminal, cx| terminal.write_output(data, cx));
+        self.refresh_output(cx);
+    }
+
+    fn refresh_output(&mut self, cx: &mut Context<Self>) {
         if let Some(output) = &self.output {
             // A process may exit before its final output arrives. Refresh the
             // cached content without changing its completion time or status.
@@ -607,20 +678,157 @@ impl Terminal {
 
     pub(crate) fn finish_display(
         &mut self,
-        exit_status: acp::TerminalExitStatus,
+        exit_status: acp_v1::TerminalExitStatus,
         cx: &mut Context<Self>,
     ) {
-        if self.is_process_backed() || self.output.is_some() {
+        let TerminalExecution::Display(state) = &mut self.execution else {
+            return;
+        };
+        if std::mem::replace(&mut state.legacy_exited, true) || self.output.is_some() {
             return;
         }
         self.terminal
             .update(cx, |terminal, _| terminal.shrink_to_used());
-        self.cache_output(exit_status, Instant::now(), cx);
+        self.cache_output(Self::exit_status_from_v1(exit_status), Instant::now(), cx);
+    }
+
+    fn exit_status_from_v1(status: acp_v1::TerminalExitStatus) -> acp_v2::TerminalExitStatus {
+        acp_v2::TerminalExitStatus::new()
+            .exit_code(status.exit_code.map(i64::from))
+            .signal(status.signal)
+            .meta(status.meta)
+    }
+
+    pub fn display_state(&self) -> Option<&DisplayTerminalState> {
+        match &self.execution {
+            TerminalExecution::Display(state) => Some(state),
+            TerminalExecution::Process(_) => None,
+        }
+    }
+
+    /// Whether Zed may stop this agent-run terminal with `terminal/cancel`: the agent
+    /// advertises it and hasn't reported an exit status.
+    pub fn can_cancel(&self) -> bool {
+        self.output.is_none() && self.display_state().is_some_and(|state| state.can_cancel)
+    }
+
+    pub(crate) fn initialize_legacy_display(
+        &mut self,
+        command: &str,
+        cwd: Option<PathBuf>,
+        output_byte_limit: Option<usize>,
+        cx: &mut Context<Self>,
+    ) {
+        let TerminalExecution::Display(state) = &mut self.execution else {
+            return;
+        };
+        if std::mem::replace(&mut state.legacy_created, true) {
+            return;
+        }
+        self.update_command_label(command, cx);
+        self.working_dir = cwd;
+        if self.output_byte_limit != output_byte_limit {
+            self.output_byte_limit = output_byte_limit;
+            self.refresh_output(cx);
+        }
+        cx.notify();
+    }
+
+    pub(crate) fn append_display_bytes(
+        &mut self,
+        data: &[u8],
+        cx: &mut Context<Self>,
+    ) -> Result<()> {
+        anyhow::ensure!(
+            !self.is_process_backed(),
+            "Cannot patch a client-owned terminal"
+        );
+        self.terminal
+            .update(cx, |terminal, cx| terminal.write_output(data, cx));
+        self.refresh_output(cx);
+        cx.notify();
+        Ok(())
+    }
+
+    pub(crate) fn apply_display_patch(
+        &mut self,
+        patch: DisplayTerminalPatch,
+        cx: &mut Context<Self>,
+    ) -> Result<()> {
+        anyhow::ensure!(
+            !self.is_process_backed(),
+            "Cannot patch a client-owned terminal"
+        );
+        let DisplayTerminalPatch {
+            command,
+            cwd,
+            output,
+            exit_status,
+            capabilities,
+            meta,
+        } = patch;
+        let output_changed = !output.is_undefined();
+        let output_meta = match output {
+            MaybeUndefined::Undefined => None,
+            MaybeUndefined::Null => {
+                self.terminal
+                    .update(cx, |terminal, cx| terminal.replace_display_output(&[], cx))?;
+                Some(None)
+            }
+            MaybeUndefined::Value(output) => {
+                self.terminal.update(cx, |terminal, cx| {
+                    terminal.replace_display_output(&output.data, cx)
+                })?;
+                Some(output.meta)
+            }
+        };
+
+        if let TerminalExecution::Display(state) = &mut self.execution {
+            if !command.is_undefined() {
+                state.command = DisplayCommand::Reported(command.take());
+                self.command.update(cx, |markdown, cx| {
+                    markdown.replace(
+                        format!("```\n{}\n```", state.command().unwrap_or("Terminal")),
+                        cx,
+                    );
+                });
+            }
+            crate::MetadataUpdate::V2(meta).apply(&mut state.meta);
+            if let Some(meta) = output_meta {
+                state.output_meta = meta;
+            }
+            if let Some(capabilities) = capabilities.as_opt_ref() {
+                state.can_cancel =
+                    capabilities.is_some_and(|capabilities| capabilities.cancel.is_some());
+            }
+        }
+        if !cwd.is_undefined() {
+            self.working_dir = cwd.take().map(|path| path.0);
+        }
+        match exit_status {
+            MaybeUndefined::Undefined => {
+                if output_changed {
+                    self.refresh_output(cx);
+                }
+            }
+            MaybeUndefined::Null => self.output = None,
+            MaybeUndefined::Value(status) => {
+                let ended_at = self
+                    .output
+                    .as_ref()
+                    .map_or_else(Instant::now, |output| output.ended_at);
+                self.terminal
+                    .update(cx, |terminal, _| terminal.shrink_to_used());
+                self.cache_output(status, ended_at, cx);
+            }
+        }
+        cx.notify();
+        Ok(())
     }
 
     fn cache_output(
         &mut self,
-        exit_status: acp::TerminalExitStatus,
+        exit_status: acp_v2::TerminalExitStatus,
         ended_at: Instant,
         cx: &mut Context<Self>,
     ) {
@@ -661,7 +869,15 @@ impl Terminal {
         &self.command
     }
 
-    pub fn update_command_label(&self, label: &str, cx: &mut App) {
+    pub fn update_command_label(&mut self, label: &str, cx: &mut App) {
+        if let TerminalExecution::Display(state) = &mut self.execution {
+            if matches!(state.command, DisplayCommand::Reported(_))
+                || state.command() == Some(label)
+            {
+                return;
+            }
+            state.command = DisplayCommand::LegacyCaption(label.to_owned());
+        }
         self.command.update(cx, |command, cx| {
             command.replace(format!("```\n{}\n```", label), cx);
         });
@@ -691,7 +907,7 @@ impl Terminal {
     }
 
     // This method is adapted from `portable_pty::ExitStatus::from`, version 0.9.0
-    fn transform_exit_status(exit_status: ExitStatus) -> (u32, Option<String>) {
+    fn transform_exit_status(exit_status: ExitStatus) -> (i64, Option<String>) {
         #[cfg(unix)]
         {
             use std::os::unix::process::ExitStatusExt;
@@ -705,16 +921,13 @@ impl Terminal {
                     signame.to_string_lossy().to_string()
                 };
 
-                return (
-                    exit_status.code().map(|c| c as u32).unwrap_or(1),
-                    Some(signal),
-                );
+                return (exit_status.code().map(i64::from).unwrap_or(1), Some(signal));
             }
         }
 
         let code = exit_status
             .code()
-            .map(|c| c as u32)
+            .map(i64::from)
             .unwrap_or_else(|| if exit_status.success() { 0 } else { 1 });
 
         (code, None)

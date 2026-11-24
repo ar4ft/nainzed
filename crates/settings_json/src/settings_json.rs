@@ -8,8 +8,6 @@ use serde_json::Value;
 use std::{ops::Range, sync::LazyLock};
 #[cfg(feature = "editing")]
 use tree_sitter::{Query, StreamingIterator as _};
-#[cfg(feature = "editing")]
-use util::RangeExt;
 
 #[cfg(feature = "editing")]
 pub fn update_value_in_json_text<'a>(
@@ -135,16 +133,16 @@ pub fn replace_value_in_json_text<T: AsRef<str>>(
 
     let mut matches = cursor.matches(&PAIR_QUERY, syntax_tree.root_node(), text.as_bytes());
     while let Some(mat) = matches.next() {
-        if mat.captures.len() != 2 {
+        if mat.captures().len() != 2 {
             continue;
         }
 
-        let key_range = mat.captures[0].node.byte_range();
-        let value_range = mat.captures[1].node.byte_range();
+        let key_range = mat.captures()[0].node.byte_range();
+        let value_range = mat.captures()[1].node.byte_range();
 
         // Don't enter sub objects until we find an exact
         // match for the current keypath
-        if last_value_range.contains_inclusive(&value_range) {
+        if last_value_range.start <= value_range.start && value_range.end <= last_value_range.end {
             continue;
         }
 
@@ -178,8 +176,8 @@ pub fn replace_value_in_json_text<T: AsRef<str>>(
             }
 
             if let Some(array_replacement) = handle_possible_array_value(
-                &mat.captures[0].node,
-                &mat.captures[1].node,
+                &mat.captures()[0].node,
+                &mat.captures()[1].node,
                 text,
                 &key_path[depth..],
                 new_value,
@@ -619,7 +617,7 @@ pub fn append_top_level_array_value_in_json_text(
             let increased_indent = format!("\n{space:width$}", width = indent_width);
             replace_value = replace_value.replace('\n', &increased_indent);
             replace_value.push('\n');
-            replace_value.insert_str(0, &format!("\n{space:width$}", width = indent_width));
+            replace_value.insert_str(0, &increased_indent);
         } else {
             while let Some(idx) = replace_value.find("\n ") {
                 replace_value.remove(idx + 1);

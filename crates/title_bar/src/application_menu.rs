@@ -9,7 +9,7 @@ use serde::Deserialize;
 use smallvec::SmallVec;
 use ui::{ContextMenu, PopoverMenu, PopoverMenuHandle, Tooltip, prelude::*};
 
-use crate::title_bar_settings::TitleBarSettings;
+use platform_title_bar::TitleBarSettings;
 
 actions!(
     app_menu,
@@ -452,11 +452,11 @@ mod tests {
     }
 
     #[gpui::test]
-    fn test_entries_refresh_on_settings_change(cx: &mut TestAppContext) {
+    fn no_ai_fork_menu_keeps_agent_items_hidden(cx: &mut TestAppContext) {
         init_test(cx);
 
         cx.update(|cx| {
-            cx.set_menus(vec![view_menu(true)]);
+            cx.set_menus(vec![view_menu(false)]);
         });
 
         let (app_menu, cx) = cx.add_window_view(|window, cx| ApplicationMenu::new(window, cx));
@@ -472,21 +472,14 @@ mod tests {
         assert!(app_menu.read_with(cx, |app_menu, _| has_item(
             &app_menu.entries,
             "View",
-            "Agent Panel"
-        )));
-
-        assert!(app_menu.read_with(cx, |app_menu, _| has_item(
-            &app_menu.entries,
-            "View",
             "Diagnostics"
         )));
 
         cx.update(|_, cx| {
-            cx.set_menus(vec![view_menu(false)]);
             DisableAiSettings::override_global(DisableAiSettings { disable_ai: true }, cx);
         });
 
-        assert!(!view_handle.is_deployed());
+        assert!(view_handle.is_deployed());
         assert!(
             !app_menu.read_with(cx, |app_menu, _| has_item(
                 &app_menu.entries,
@@ -496,22 +489,6 @@ mod tests {
             "expected Agent Panel is not in the View menu"
         );
 
-        assert!(app_menu.read_with(cx, |app_menu, _| has_item(
-            &app_menu.entries,
-            "View",
-            "Diagnostics"
-        )));
-
-        cx.update(|_, cx| {
-            cx.set_menus(vec![view_menu(true)]);
-            DisableAiSettings::override_global(DisableAiSettings { disable_ai: false }, cx);
-        });
-
-        assert!(app_menu.read_with(cx, |app_menu, _| has_item(
-            &app_menu.entries,
-            "View",
-            "Agent Panel"
-        )));
         assert!(app_menu.read_with(cx, |app_menu, _| has_item(
             &app_menu.entries,
             "View",

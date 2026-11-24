@@ -41,8 +41,8 @@ use crate::kernels::{
 use crate::notebook::MovementDirection;
 use crate::repl_store::ReplStore;
 
+use jupyter_protocol::{ExecuteRequest, JupyterMessage, JupyterMessageContent};
 use picker::Picker;
-use runtimelib::{ExecuteRequest, JupyterMessage, JupyterMessageContent};
 use ui::PopoverMenuHandle;
 use zed_actions::editor::{MoveDown, MoveUp};
 use zed_actions::notebook::{
@@ -64,10 +64,7 @@ enum SelectionMode {
     SelectAndMove,
 }
 
-pub(crate) const MAX_TEXT_BLOCK_WIDTH: f32 = 9999.0;
-pub(crate) const SMALL_SPACING_SIZE: f32 = 8.0;
 pub(crate) const MEDIUM_SPACING_SIZE: f32 = 12.0;
-pub(crate) const LARGE_SPACING_SIZE: f32 = 16.0;
 pub(crate) const GUTTER_WIDTH: f32 = 19.0;
 pub(crate) const CODE_BLOCK_INSET: f32 = MEDIUM_SPACING_SIZE;
 pub(crate) const CONTROL_SIZE: f32 = 20.0;
@@ -1105,7 +1102,7 @@ impl NotebookEditor {
         cx: &mut Context<Self>,
     ) {
         if let Kernel::RunningKernel(kernel) = &self.kernel {
-            let interrupt_request = runtimelib::InterruptRequest {};
+            let interrupt_request = jupyter_protocol::InterruptRequest {};
             let message: JupyterMessage = interrupt_request.into();
             kernel.request_tx().try_send(message).ok();
             cx.notify();
@@ -1467,6 +1464,7 @@ impl NotebookEditor {
 
     fn add_code_block(&mut self, window: &mut Window, cx: &mut Context<Self>) {
         let new_cell_id: CellId = Uuid::new_v4().into();
+        let languages = self.languages.clone();
         let notebook_language = self.notebook_language.clone();
         let metadata: nbformat::v4::CellMetadata =
             serde_json::from_str("{}").expect("empty object should parse");
@@ -1477,6 +1475,7 @@ impl NotebookEditor {
                 new_cell_id.clone(),
                 metadata,
                 String::new(),
+                languages,
                 notebook_language,
                 window,
                 cx,
@@ -2041,7 +2040,7 @@ impl NotebookEditor {
 
 impl Render for NotebookEditor {
     fn render(&mut self, window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
-        let mut key_context = KeyContext::new_with_defaults();
+        let mut key_context = KeyContext::new_with_defaults(cx.platform_info().os);
         key_context.add("NotebookEditor");
         key_context.set(
             "notebook_mode",
@@ -2301,19 +2300,7 @@ impl project::ProjectItem for NotebookItem {
                         }
                     };
 
-                    match notebook {
-                        nbformat::Notebook::V4(notebook) => notebook,
-                        // 4.1 - 4.4 are converted to 4.5
-                        nbformat::Notebook::Legacy(legacy_notebook) => {
-                            // TODO: Decide if we want to mutate the notebook by including Cell IDs
-                            // and any other conversions
-
-                            nbformat::upgrade_legacy_notebook(legacy_notebook)?
-                        }
-                        nbformat::Notebook::V3(v3_notebook) => {
-                            nbformat::upgrade_v3_notebook(v3_notebook)?
-                        }
-                    }
+                    upgrade_notebook(notebook)?
                 };
 
                 let id = project
@@ -2780,19 +2767,9 @@ impl Item for NotebookEditor {
             }
             let file_content = serde_json::to_string(&json)?;
 
-            let notebook = nbformat::parse_notebook(&file_content);
-            let notebook = match notebook {
-                Ok(nbformat::Notebook::V4(notebook)) => notebook,
-                Ok(nbformat::Notebook::Legacy(legacy_notebook)) => {
-                    nbformat::upgrade_legacy_notebook(legacy_notebook)?
-                }
-                Ok(nbformat::Notebook::V3(v3_notebook)) => {
-                    nbformat::upgrade_v3_notebook(v3_notebook)?
-                }
-                Err(e) => {
-                    anyhow::bail!("Failed to parse notebook: {:?}", e);
-                }
-            };
+            let notebook = nbformat::parse_notebook(&file_content)
+                .context("Failed to parse notebook")
+                .and_then(upgrade_notebook)?;
 
             let original_json = document_with_ids(&file_content, &notebook)?;
             this.update_in(cx, |this, window, cx| {
@@ -2895,6 +2872,19 @@ impl KernelSession for NotebookEditor {
     fn kernel_errored(&mut self, error_message: String, cx: &mut Context<Self>) {
         self.kernel = Kernel::ErroredLaunch(error_message);
         cx.notify();
+    }
+}
+
+fn upgrade_notebook(notebook: nbformat::Notebook) -> anyhow::Result<nbformat::v4::Notebook> {
+    match notebook {
+        nbformat::Notebook::V4(notebook) => Ok(notebook),
+        nbformat::Notebook::V4QuirksMode(notebook) => {
+            log::warn!("Repairing notebook cell IDs: {:?}", notebook.quirks());
+            Ok(notebook.repair())
+        }
+        nbformat::Notebook::Legacy(notebook) => nbformat::upgrade_legacy_notebook(notebook),
+        nbformat::Notebook::V3(notebook) => nbformat::upgrade_v3_notebook(notebook),
+        _ => anyhow::bail!("Unsupported notebook format"),
     }
 }
 
@@ -3323,6 +3313,39 @@ mod tests {
             original,
             "recovery does not overwrite disk before Save"
         );
+    }
+
+    #[test]
+    fn test_upgrade_notebook_repairs_missing_cell_ids() -> anyhow::Result<()> {
+        let mut value: serde_json::Value = serde_json::from_str(NOTEBOOK_WITH_ONE_CODE_CELL)?;
+        value["cells"][0]
+            .as_object_mut()
+            .context("cell is not an object")?
+            .remove("id");
+        let notebook = nbformat::parse_notebook(&serde_json::to_string(&value)?)?;
+        assert!(matches!(notebook, nbformat::Notebook::V4QuirksMode(_)));
+        let repaired = upgrade_notebook(notebook)?;
+        let serialized = nbformat::serialize_notebook(&nbformat::Notebook::V4(repaired))?;
+        assert!(matches!(
+            nbformat::parse_notebook(&serialized)?,
+            nbformat::Notebook::V4(_)
+        ));
+        let saved: serde_json::Value = serde_json::from_str(&serialized)?;
+        assert_eq!(saved["cells"][0]["source"], value["cells"][0]["source"]);
+        assert!(
+            saved["cells"][0]["id"]
+                .as_str()
+                .is_some_and(|id| !id.is_empty())
+        );
+        Ok(())
+    }
+
+    #[test]
+    fn test_upgrade_notebook_preserves_cell_ids() -> anyhow::Result<()> {
+        let notebook = upgrade_notebook(nbformat::parse_notebook(NOTEBOOK_WITH_ONE_CODE_CELL)?)?;
+        let value = serde_json::to_value(notebook)?;
+        assert_eq!(value["cells"][0]["id"], "cell-one");
+        Ok(())
     }
 
     /// When the configured interpreter doesn't exist (e.g. Python isn't installed),
