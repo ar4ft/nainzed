@@ -48,7 +48,9 @@ jobs:
     needs: approve
     if: needs.approve.outputs.check_ref != ''
     permissions:
-      contents: read
+      # The called workflow validates at read-only job scopes, but GitHub
+      # validates every nested permission before evaluating skip conditions.
+      contents: write
       actions: read
       statuses: read
     uses: ./.github/workflows/no-ai-mac.yml

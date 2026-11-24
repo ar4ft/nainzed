@@ -1,5 +1,6 @@
 import importlib.util
 from pathlib import Path
+import re
 import unittest
 from unittest.mock import patch
 
@@ -7,6 +8,19 @@ spec = importlib.util.spec_from_file_location('upstream_review', Path(__file__).
 review = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(review)
 SHA = 'a'*40
+ROOT = Path(__file__).resolve().parents[2]
+
+
+def workflow_job(path, name):
+    text = (ROOT / path).read_text()
+    match = re.search(
+        rf'^  {re.escape(name)}:\n(.*?)(?=^  [\w-]+:\n|\Z)',
+        text,
+        flags=re.MULTILINE | re.DOTALL,
+    )
+    if match is None:
+        raise AssertionError(f'missing workflow job {name} in {path}')
+    return match.group(1)
 
 
 class ReviewTests(unittest.TestCase):
@@ -123,6 +137,20 @@ class ReviewTests(unittest.TestCase):
         with patch.object(review, 'api', side_effect=racing_api), self.assertRaises(ValueError):
             review.approve('7', SHA, '123', True)
         self.assertEqual(self.posts, [])
+
+    def test_approval_call_keeps_candidate_jobs_read_only(self):
+        approval_call = workflow_job(
+            '.github/workflows/no-ai-upstream-review.yml', 'validate-mac'
+        )
+        self.assertIn('contents: write', approval_call)
+
+        for name in ['upstream-review', 'validate', 'package']:
+            job = workflow_job('.github/workflows/no-ai-mac.yml', name)
+            self.assertIn('contents: read', job)
+
+        publisher = workflow_job('.github/workflows/no-ai-mac.yml', 'publish-prerelease')
+        self.assertIn('contents: write', publisher)
+        self.assertIn("inputs.checkout_ref == ''", publisher)
 
 
 if __name__ == '__main__':

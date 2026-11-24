@@ -22,6 +22,10 @@ permissions:
 jobs:
   upstream-review:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+      statuses: read
     steps:
       - uses: actions/checkout@v4
         if: inputs.checkout_ref != '' || startsWith(github.head_ref, 'upstream-update/')
@@ -36,11 +40,19 @@ jobs:
         run: python3 script/upstream-review.py --head-sha "$CANDIDATE_SHA"
   validate:
     needs: upstream-review
+    permissions:
+      contents: read
+      actions: read
+      statuses: read
     uses: ./.github/workflows/no-ai-validate.yml
     with:
       checkout_ref: ${{ inputs.checkout_ref || github.sha }}
   package:
     needs: upstream-review
+    permissions:
+      contents: read
+      actions: read
+      statuses: read
     # PRs get validation without waiting for release compilation and packaging.
     if: github.event_name != 'pull_request'
     strategy:
