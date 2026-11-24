@@ -1020,7 +1020,7 @@ mod tests {
         panel.update_in(&mut cx, |panel, window, cx| {
             assert!(!panel.enabled(cx));
             assert!(panel.icon(window, cx).is_none());
-            assert!(!panel.is_agent_panel());
+            assert_eq!(CodeSearchPanel::panel_key(), "code_search");
             assert!(panel.cancel.is_none());
             assert!(panel.rows.is_empty());
         });
