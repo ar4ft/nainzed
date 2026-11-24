@@ -2,6 +2,7 @@ use crate::tools::edit_file_tool::*;
 use crate::{
     AgentTool, ContextServerRegistry, EditFileTool, GrepTool, GrepToolInput, ReadFileTool,
     ReadFileToolInput, Template, Templates, Thread, ToolCallEventStream, ToolInput,
+    default_context_lines, default_max_ancestor_lines,
 };
 use Role::*;
 use anyhow::{Context as _, Result};
@@ -367,6 +368,11 @@ impl EditToolTest {
                 sandboxing: false,
                 is_linux: cfg!(target_os = "linux"),
                 is_windows: cfg!(target_os = "windows"),
+                shell: util::shell::ShellKind::new(
+                    &util::get_default_system_shell_preferring_bash(),
+                    cfg!(windows),
+                )
+                .to_string(),
             };
             let templates = Templates::new();
             template.render(&templates)?
@@ -954,6 +960,8 @@ fn eval_disable_cursor_blinking() {
                             include_pattern: None,
                             offset: 0,
                             case_sensitive: false,
+                            max_ancestor_lines: default_max_ancestor_lines(),
+                            context_lines: default_context_lines(),
                         },
                     )],
                 ),
@@ -1037,6 +1045,8 @@ fn eval_from_pixels_constructor() {
                             include_pattern: Some("font-kit/src/canvas.rs".into()),
                             offset: 0,
                             case_sensitive: false,
+                            max_ancestor_lines: default_max_ancestor_lines(),
+                            context_lines: default_context_lines(),
                         },
                     )],
                 ),
@@ -1054,6 +1064,8 @@ fn eval_from_pixels_constructor() {
                             include_pattern: Some("font-kit/src/**/*.rs".into()),
                             offset: 0,
                             case_sensitive: false,
+                            max_ancestor_lines: default_max_ancestor_lines(),
+                            context_lines: default_context_lines(),
                         },
                     )],
                 ),
@@ -1071,6 +1083,8 @@ fn eval_from_pixels_constructor() {
                             include_pattern: Some("font-kit/src/**/*.rs".into()),
                             offset: 0,
                             case_sensitive: false,
+                            max_ancestor_lines: default_max_ancestor_lines(),
+                            context_lines: default_context_lines(),
                         },
                     )],
                 ),

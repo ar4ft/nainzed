@@ -10,9 +10,9 @@ use util::rel_path::RelPath;
 use ztracing::instrument;
 
 use crate::{
-    Anchor, BufferState, BufferStateSnapshot, DiffChangeKind, Event, Excerpt, ExcerptOffset,
-    ExcerptRange, ExcerptSummary, ExpandExcerptDirection, MultiBuffer, MultiBufferOffset,
-    PathKeyIndex, build_excerpt_ranges, remove_diff_state,
+    Anchor, BufferState, BufferStateSnapshot, BufferStatus, DiffChangeKind, Event, Excerpt,
+    ExcerptOffset, ExcerptRange, ExcerptSummary, ExpandExcerptDirection, MultiBuffer,
+    MultiBufferOffset, PathKeyIndex, build_excerpt_ranges, remove_diff_state,
 };
 
 #[derive(PartialEq, Eq, Ord, PartialOrd, Clone, Hash, Debug)]
@@ -340,8 +340,9 @@ impl MultiBuffer {
                     ..buffer_snapshot.anchor_after(r.primary.end),
             })
             .collect::<Vec<_>>();
+        let buffer_snapshot = buffer.read(cx).snapshot();
         let inserted =
-            self.update_path_excerpts(path.clone(), buffer, buffer_snapshot, &anchor_ranges, cx);
+            self.update_path_excerpts(path.clone(), buffer, &buffer_snapshot, &anchor_ranges, cx);
         let path_key_index = self.get_or_create_path_key_index(&path);
         (inserted, path_key_index)
     }
@@ -621,13 +622,14 @@ impl MultiBuffer {
                 path_key: path_key.clone(),
                 path_key_index,
                 buffer_snapshot: buffer_snapshot.clone(),
+                status: BufferStatus::new(buffer.read(cx)),
             },
         );
 
         self.buffers.entry(buffer_id).or_insert_with(|| {
-            self.buffer_changed_since_sync.replace(true);
+            self.changed_buffers.borrow_mut().insert(buffer_id);
             buffer.update(cx, |buffer, _| {
-                buffer.record_changes(Rc::downgrade(&self.buffer_changed_since_sync));
+                buffer.record_changes(Rc::downgrade(&self.changed_buffers));
             });
             BufferState {
                 _subscriptions: [

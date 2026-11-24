@@ -1,15 +1,44 @@
 use super::debug_log::{AcpDebugLog, AcpDebugMessageDirection};
-use anyhow::{Context as _, Result};
+use super::runtime::ProcessStatus;
+use anyhow::{Context as _, Result, anyhow};
 use futures::{
     AsyncBufReadExt as _, AsyncWriteExt as _, FutureExt as _, Sink, StreamExt as _,
     future::BoxFuture, io::BufReader, stream::BoxStream,
 };
 use gpui::{AsyncApp, Entity};
-use project::{Project, agent_server_store::AgentServerCommand};
-use remote::remote_client::Interactive;
+use project::{
+    Project,
+    agent_server_store::{AgentInstallationLease, AgentServerCommand},
+};
+use remote::command::RemoteCommand;
 use std::{io, pin::Pin, process::Stdio};
 use task::{Shell, ShellBuilder};
 use util::{ResultExt as _, process::Child};
+
+pub(super) struct OwnedChild(pub Child);
+
+impl Drop for OwnedChild {
+    fn drop(&mut self) {
+        self.0.kill().log_err();
+    }
+}
+
+impl OwnedChild {
+    pub(super) fn exit_status(
+        &mut self,
+        installation_lease: Option<AgentInstallationLease>,
+    ) -> ProcessStatus {
+        self.0
+            .status()
+            .map(move |status| {
+                // Threads can keep a connection alive long after its agent has exited,
+                // so the lease is released here rather than with the connection.
+                drop(installation_lease);
+                status.map_err(|error| anyhow!("failed to wait for agent server exit: {error}"))
+            })
+            .boxed_local()
+    }
+}
 
 pub(super) struct StdioProcess {
     pub child: Child,
@@ -32,32 +61,32 @@ pub(super) fn spawn_stdio(
             .next()
             .cloned()
     });
-    let (path, arguments, environment) = project
-        .read_with(cx, |project, cx| {
-            project.remote_client().and_then(|client| {
-                let template = client
-                    .read(cx)
-                    .build_command(
-                        Some(command.path.display().to_string()),
-                        &command.args,
-                        &command.env.clone().into_iter().flatten().collect(),
-                        root_dir.as_ref().map(|path| path.display().to_string()),
-                        None,
-                        Interactive::No,
-                    )
-                    .log_err()?;
-                Some((template.program, template.args, template.env))
+    let remote_command = project.read_with(cx, |project, cx| {
+        project
+            .remote_client()
+            .map(|client| {
+                client.read(cx).build_stdio_command(RemoteCommand {
+                    program: command.path.display().to_string(),
+                    args: command.args.clone(),
+                    env: command.env.clone().unwrap_or_default(),
+                    working_dir: root_dir.as_ref().map(|path| path.display().to_string()),
+                })
             })
-        })
-        .unwrap_or_else(|| {
-            (
-                command.path.display().to_string(),
-                command.args,
-                command.env.unwrap_or_default(),
-            )
-        });
+            .transpose()
+    })?;
+    let (path, arguments, environment, command_input) = match remote_command {
+        Some((template, input)) => (template.program, template.args, template.env, Some(input)),
+        None => (
+            command.path.display().to_string(),
+            command.args,
+            command.env.unwrap_or_default(),
+            None,
+        ),
+    };
 
-    let builder = ShellBuilder::new(&Shell::System, cfg!(windows)).non_interactive();
+    let builder = ShellBuilder::new(&Shell::System, cfg!(windows))
+        .non_interactive()
+        .literal_args();
     let mut child = builder.build_std_command(Some(path.clone()), &arguments);
     child.envs(environment);
     if let Some(cwd) = project.read_with(cx, |project, _cx| {
@@ -96,13 +125,16 @@ pub(super) fn spawn_stdio(
         .boxed();
 
     let outgoing = Box::pin(futures::sink::unfold(
-        (Box::pin(stdin), debug_log.clone()),
-        async move |(mut writer, debug_log), line: String| {
+        (Box::pin(stdin), debug_log.clone(), command_input),
+        async move |(mut writer, debug_log, mut command_input), line: String| {
+            if let Some(input) = command_input.take() {
+                writer.write_all(&input).await?;
+            }
             debug_log.record_line(AcpDebugMessageDirection::Outgoing, &line);
             let mut bytes = line.into_bytes();
             bytes.push(b'\n');
             writer.write_all(&bytes).await?;
-            Ok::<_, io::Error>((writer, debug_log))
+            Ok::<_, io::Error>((writer, debug_log, command_input))
         },
     ));
 
@@ -140,6 +172,44 @@ mod tests {
     use collections::HashMap;
     use futures::SinkExt as _;
     use gpui::TestAppContext;
+
+    #[gpui::test]
+    async fn installation_lease_is_released_when_the_agent_exits(cx: &mut TestAppContext) {
+        cx.executor().allow_parking();
+        let fs = fs::RealFs::new(None, cx.executor());
+        let directory = tempfile::tempdir().expect("create installation directory");
+        let version_dir = directory.path().join("v_1");
+        std::fs::create_dir(&version_dir).expect("create version directory");
+        let installation_lease = AgentInstallationLease::acquire(fs.as_ref(), &version_dir)
+            .await
+            .expect("acquire installation lease");
+
+        let mut command = std::process::Command::new("/bin/sh");
+        command.args(["-c", "read -r line"]);
+        let mut child = OwnedChild(
+            Child::spawn(command, Stdio::piped(), Stdio::piped(), Stdio::piped())
+                .expect("spawn agent"),
+        );
+        let stdin = child.0.stdin.take().expect("take stdin");
+        let exit_status = child.exit_status(Some(installation_lease));
+        assert!(
+            AgentInstallationLease::is_held_for(fs.as_ref(), &version_dir)
+                .await
+                .expect("check lease"),
+            "the lease must be held while the agent is running"
+        );
+
+        drop(stdin);
+        exit_status.await.expect("wait for agent exit");
+
+        assert!(
+            !AgentInstallationLease::is_held_for(fs.as_ref(), &version_dir)
+                .await
+                .expect("check lease"),
+            "the lease must be released once the agent exits, even though its owner is alive"
+        );
+        drop(child);
+    }
 
     #[gpui::test]
     async fn repeated_spawns_preserve_command_and_stdio(cx: &mut TestAppContext) {

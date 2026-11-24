@@ -201,9 +201,11 @@ pub struct SettingsContent {
     pub call_hierarchy: Option<CallHierarchySettingsContent>,
 
     pub git_panel: Option<GitPanelSettingsContent>,
+    pub git_graph: Option<GitGraphSettingsContent>,
 
     pub tabs: Option<ItemSettingsContent>,
     pub tab_bar: Option<TabBarSettingsContent>,
+    pub tab_switcher: Option<TabSwitcherSettingsContent>,
     pub status_bar: Option<StatusBarSettingsContent>,
 
     pub preview_tabs: Option<PreviewTabsSettingsContent>,
@@ -220,10 +222,10 @@ pub struct SettingsContent {
     pub auto_update: Option<bool>,
 
     /// This base keymap settings adjusts the default keybindings in Zed to be similar
-    /// to other common code editors. By default, Zed's keymap closely follows VSCode's
-    /// keymap, with minor adjustments, this corresponds to the "VSCode" setting.
+    /// to other common code editors. By default, Zed uses its own keymap, which
+    /// corresponds to the "Zed" setting.
     ///
-    /// Default: VSCode
+    /// Default: Zed
     pub base_keymap: Option<BaseKeymapContent>,
 
     /// Configuration for the collab panel visual settings.
@@ -407,7 +409,7 @@ impl SettingsContent {
 fallible_options::flattened_deserialize!(SettingsContent {
     sections: { project, theme, extension, workspace, editor, remote },
     options: {
-        call_hierarchy, command_palette, file_finder, git_panel, tabs, tab_bar, status_bar, preview_tabs, agent,
+        call_hierarchy, command_palette, file_finder, git_panel, git_graph, tabs, tab_bar, tab_switcher, status_bar, preview_tabs, agent,
         agent_servers, audio, auto_update, base_keymap, collaboration_panel, debugger, diagnostics,
         git,
         global_lsp_settings, image_viewer, markdown_preview, repl, helix_mode, hide_mouse,
@@ -636,7 +638,7 @@ impl Default for TelemetrySettingsContent {
 }
 
 #[with_fallible_options]
-#[derive(Default, Debug, PartialEq, Eq, Serialize, Deserialize, JsonSchema, Clone, MergeFrom)]
+#[derive(Default, Debug, PartialEq, Serialize, Deserialize, JsonSchema, Clone, MergeFrom)]
 pub struct DebuggerSettingsContent {
     /// Determines the stepping granularity.
     ///
@@ -666,6 +668,14 @@ pub struct DebuggerSettingsContent {
     ///
     /// Default: Bottom
     pub dock: Option<DockPosition>,
+    /// Default width of the debug panel in pixels when docked to the left or right.
+    ///
+    /// Default: 300
+    pub default_width: Option<PixelSetting>,
+    /// Default height of the debug panel in pixels when docked to the bottom.
+    ///
+    /// Default: 300
+    pub default_height: Option<PixelSetting>,
 }
 
 /// The granularity of one 'step' in the stepping requests `next`, `stepIn`, `stepOut`, and `stepBack`.
@@ -733,6 +743,10 @@ pub struct CallSettingsContent {
 #[with_fallible_options]
 #[derive(Clone, PartialEq, Default, Serialize, Deserialize, JsonSchema, MergeFrom, Debug)]
 pub struct GitPanelSettingsContent {
+    /// Whether to show relative or absolute dates in commit history.
+    ///
+    /// Default: relative
+    pub date_style: Option<GitDateStyle>,
     /// Whether to show the panel button in the status bar.
     ///
     /// Default: true
@@ -816,6 +830,43 @@ pub struct GitPanelSettingsContent {
     ///
     /// Default: project_diff
     pub entry_primary_click_action: Option<GitPanelClickBehavior>,
+
+    /// Whether the commit message editor is shown in the Git panel by default.
+    ///
+    /// Default: expanded
+    pub commit_editor: Option<GitPanelCommitEditor>,
+}
+
+#[with_fallible_options]
+#[derive(Clone, PartialEq, Default, Serialize, Deserialize, JsonSchema, MergeFrom, Debug)]
+pub struct GitGraphSettingsContent {
+    /// Whether to show relative or absolute dates in graph rows.
+    ///
+    /// Default: absolute
+    pub date_style: Option<GitDateStyle>,
+}
+
+#[derive(
+    Copy,
+    Clone,
+    Debug,
+    Default,
+    Serialize,
+    Deserialize,
+    JsonSchema,
+    MergeFrom,
+    PartialEq,
+    Eq,
+    strum::VariantArray,
+    strum::VariantNames,
+)]
+#[serde(rename_all = "snake_case")]
+pub enum GitPanelCommitEditor {
+    /// Show the commit message editor.
+    #[default]
+    Expanded,
+    /// Hide the commit message editor, leaving only the commit button row.
+    Collapsed,
 }
 
 #[derive(
@@ -965,6 +1016,11 @@ pub struct FileFinderSettingsContent {
     ///
     /// Default: false
     pub include_channels: Option<bool>,
+    /// Whether to pre-fill the file finder's query with the text selected in the
+    /// focused item (e.g. an editor or a terminal) when it is opened.
+    ///
+    /// Default: false
+    pub prefill_query_from_selection: Option<bool>,
 }
 
 #[derive(
@@ -1307,6 +1363,12 @@ pub struct MarkdownPreviewSettingsContent {
     /// The theme to use for the markdown preview.
     /// Falls back to the main editor theme if unset.
     pub theme: Option<ThemeSelection>,
+    /// The weight of headings (H1 through H6) in the markdown preview, in CSS
+    /// units from 100 to 900. Also applies to rendered Markdown cells in
+    /// notebooks, which share the preview typography.
+    ///
+    /// Default: 600
+    pub heading_font_weight: Option<FontWeightContent>,
     /// Whether to automatically open Markdown files in the preview.
     ///
     /// Default: false
@@ -1467,6 +1529,17 @@ pub struct ReplSettingsContent {
     ///
     /// Default: 0
     pub output_max_height_lines: Option<usize>,
+}
+
+/// Settings for configuring the tab switcher behaviour.
+#[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize, JsonSchema, MergeFrom)]
+pub struct TabSwitcherSettingsContent {
+    /// When false, files are not shown while cycling through the tab switcher.
+    /// Only the confirmed file (when the modifier key is released) is shown and
+    /// recorded in the MRU history.
+    ///
+    /// Default: true
+    pub show_file_preview: Option<bool>,
 }
 
 /// Settings for configuring the which-key popup behaviour.
@@ -1634,8 +1707,7 @@ impl std::str::FromStr for DelayMs {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         s.trim()
-            .strip_suffix("ms")
-            .unwrap_or(s.trim())
+            .trim_suffix("ms")
             .parse::<u64>()
             .map(DelayMs)
             .with_context(|| format!("failed to parse delay duration: {s}"))

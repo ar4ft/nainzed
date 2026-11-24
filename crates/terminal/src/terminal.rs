@@ -15,7 +15,6 @@ use futures::{
     channel::mpsc::{UnboundedReceiver, unbounded},
 };
 
-use alacritty_terminal::grid::Dimensions as _;
 use itertools::Itertools as _;
 use mappings::mouse::{
     alt_scroll, grid_point, grid_point_and_side, mouse_button_report, mouse_moved_report,
@@ -31,7 +30,6 @@ use settings::Settings;
 use task::{HideStrategy, Shell, ShellKind, SpawnInTerminal};
 use terminal_settings::{AlternateScroll, CursorShape as SettingsCursorShape, TerminalSettings};
 use theme::{ActiveTheme, Theme};
-use urlencoding;
 use util::{ResultExt as _, paths::PathStyle, truncate_and_trailoff};
 
 #[cfg(unix)]
@@ -56,17 +54,18 @@ pub use vte::ansi::{Color, NamedColor, Rgb};
 use gpui::{
     App, AppContext as _, BackgroundExecutor, Bounds, ClipboardItem, Context, EventEmitter, Hsla,
     Keystroke, Modifiers, MouseButton, MouseDownEvent, MouseMoveEvent, MouseUpEvent, Pixels,
-    Point as GpuiPoint, Rgba, ScrollWheelEvent, Size, Task, TouchPhase, Window, actions, black, px,
+    Point as GpuiPoint, Rgba, ScrollEvent, Size, Task, TouchPhase, Window, actions, black, px,
 };
 
 #[cfg(not(windows))]
 use crate::alacritty::current_child_signal_mask;
 use crate::alacritty::{
     AlacrittyCell, AlacrittyGridIterator, AlacrittyHyperlink, AlacrittySearch, AlacrittyTerm,
-    AlacrittyTermConfig, AlacrittyTermLock, HyperlinkMatch, PtySender, RegexSearches,
-    append_text_to_term, apply_config, clear_saved_screen, content_text, display_offset,
-    display_only_term_config, find_from_terminal_point, full_content_range, last_non_empty_lines,
-    make_content, new_term, open_pty, pty_options, pty_term_config, resize, screen_lines,
+    AlacrittyTermConfig, AlacrittyTermLock, HyperlinkMatch, OutputParser, PtySender, RegexSearches,
+    append_text_to_term, apply_config, clear_saved_screen, content_text, cursor_blinking,
+    cursor_line, display_offset, display_only_term_config, find_from_terminal_point,
+    full_content_range, history_size, last_non_empty_lines, make_content, new_term, open_pty,
+    palette_color, pty_options, pty_term_config, renderable_cells, resize, screen_lines,
     scroll_display, scroll_to_point, search_matches, selection_text, set_default_cursor_style,
     set_selection as set_term_selection, shrink_to_used, spawn_event_loop,
     toggle_vi_mode as toggle_term_vi_mode, total_lines, update_selection as update_term_selection,
@@ -621,8 +620,6 @@ actions!(
         PasteText,
         /// Shows the character palette for special characters.
         ShowCharacterPalette,
-        /// Searches for text in the terminal.
-        SearchTest,
         /// Scrolls up by one line.
         ScrollLineUp,
         /// Scrolls down by one line.
@@ -631,10 +628,6 @@ actions!(
         ScrollPageUp,
         /// Scrolls down by one page.
         ScrollPageDown,
-        /// Scrolls up by half a page.
-        ScrollHalfPageUp,
-        /// Scrolls down by half a page.
-        ScrollHalfPageDown,
         /// Scrolls to the top of the terminal buffer.
         ScrollToTop,
         /// Scrolls to the bottom of the terminal buffer.
@@ -669,6 +662,7 @@ pub fn insert_zed_terminal_env(
 pub enum Event {
     TitleChanged,
     BreadcrumbsChanged,
+    OutputReplaced,
     CloseTerminal,
     Bell,
     Wakeup,
@@ -758,7 +752,7 @@ impl fmt::Debug for TerminalBackendEvent {
 }
 
 enum PtyEvent {
-    Event(TerminalBackendEvent),
+    Event(TerminalBackendEvent, u64),
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -1016,7 +1010,13 @@ impl TerminalBuilder {
         let config = display_only_term_config(scrolling_history, cursor_shape);
 
         let (events_tx, events_rx) = unbounded();
-        let term = new_term(&config, terminal_bounds, events_tx, alternate_scroll);
+        let term = new_term(
+            &config,
+            terminal_bounds,
+            events_tx.clone(),
+            alternate_scroll,
+            0,
+        );
 
         let terminal = Terminal {
             task: None,
@@ -1026,6 +1026,8 @@ impl TerminalBuilder {
             term,
             term_config: config,
             output_processor: None,
+            output_events_tx: Some(events_tx),
+            output_generation: 0,
             title_override: None,
             events: VecDeque::with_capacity(10),
             last_content: Content {
@@ -1220,6 +1222,7 @@ impl TerminalBuilder {
                 TerminalBounds::default(),
                 events_tx.clone(),
                 alternate_scroll,
+                0,
             );
 
             // When `no_pty` is set (headless hosts), run the task as a plain
@@ -1313,6 +1316,8 @@ impl TerminalBuilder {
                 term,
                 term_config: config,
                 output_processor: None,
+                output_events_tx: None,
+                output_generation: 0,
                 title_override: terminal_title_override,
                 events: VecDeque::with_capacity(10), //Should never get this high.
                 last_content: Default::default(),
@@ -1425,17 +1430,17 @@ impl TerminalBuilder {
                         .timer(std::time::Duration::from_millis(4))
                         .fuse();
 
-                    let mut wakeup = false;
+                    let mut wakeup = None;
                     loop {
                         futures::select_biased! {
                             _ = timer => break,
                             event = self.events_rx.next() => {
                                 if let Some(event) = event {
-                                    if matches!(event, PtyEvent::Event(TerminalBackendEvent::Wakeup))
-                                    {
-                                        wakeup = true;
-                                    } else {
-                                        events.push(event);
+                                    match event {
+                                        PtyEvent::Event(TerminalBackendEvent::Wakeup, generation) => {
+                                            wakeup = Some(generation);
+                                        }
+                                        event => events.push(event),
                                     }
 
                                     if events.len() > 100 {
@@ -1448,14 +1453,17 @@ impl TerminalBuilder {
                         }
                     }
 
-                    if events.is_empty() && !wakeup {
+                    if events.is_empty() && wakeup.is_none() {
                         yield_now().await;
                         break 'outer;
                     }
 
                     terminal.update(cx, |this, cx| {
-                        if wakeup {
-                            this.process_event(TerminalBackendEvent::Wakeup, cx);
+                        if let Some(generation) = wakeup {
+                            this.process_pty_event(
+                                PtyEvent::Event(TerminalBackendEvent::Wakeup, generation),
+                                cx,
+                            );
                         }
 
                         for event in events {
@@ -1512,7 +1520,9 @@ pub struct Terminal {
     completion_tx: Option<Sender<Option<ExitStatus>>>,
     term: Arc<AlacrittyTermLock>,
     term_config: AlacrittyTermConfig,
-    output_processor: Option<Processor<StdSyncHandler>>,
+    output_processor: Option<OutputParser>,
+    output_events_tx: Option<futures::channel::mpsc::UnboundedSender<PtyEvent>>,
+    output_generation: u64,
     events: VecDeque<InternalEvent>,
     /// This is only used for mouse mode cell change detection
     last_mouse: Option<(Point, SelectionSide)>,
@@ -1622,7 +1632,11 @@ const SELECTION_DRAG_THRESHOLD: f64 = 2.0;
 impl Terminal {
     fn process_pty_event(&mut self, event: PtyEvent, cx: &mut Context<Self>) {
         match event {
-            PtyEvent::Event(event) => self.process_event(event, cx),
+            PtyEvent::Event(event, generation) => {
+                if self.output_events_tx.is_none() || generation == self.output_generation {
+                    self.process_event(event, cx);
+                }
+            }
         }
     }
 
@@ -1666,8 +1680,7 @@ impl Terminal {
                 self.write_to_pty(format(self.last_content.terminal_bounds).into_bytes())
             }
             TerminalBackendEvent::CursorBlinkingChange => {
-                let terminal = self.term.lock();
-                let blinking = terminal.cursor_style().blinking;
+                let blinking = cursor_blinking(&self.term.lock());
                 cx.emit(Event::BlinkChanged(blinking));
             }
             TerminalBackendEvent::Bell => {
@@ -1695,7 +1708,7 @@ impl Terminal {
                 // we might respond with out of date value if a "set color" sequence is immediately
                 // followed by a color request sequence.
 
-                let color = self.term.lock().colors()[index]
+                let color = palette_color(&self.term.lock(), index)
                     .unwrap_or_else(|| to_vte_rgb(get_color_at_index(index, cx.theme().as_ref())));
                 self.write_to_pty(format(color).into_bytes());
             }
@@ -1848,7 +1861,7 @@ impl Terminal {
                     self.path_style,
                 ) {
                     Some(hyperlink) => {
-                        let history_size = term.history_size();
+                        let history_size = history_size(term);
                         self.process_hyperlink(hyperlink, *open, history_size, cx);
                     }
                     None => {
@@ -1859,7 +1872,7 @@ impl Terminal {
             InternalEvent::ProcessHyperlink(hyperlink, open) => {
                 // history_size must be read here since process_hyperlink cannot lock term
                 // (sync() already holds the lock when dispatching events)
-                let history_size = term.history_size();
+                let history_size = history_size(term);
                 self.process_hyperlink(hyperlink.clone(), *open, history_size, cx);
             }
         }
@@ -1965,21 +1978,71 @@ impl Terminal {
     }
 
     /// Normalizes line endings so text captured outside a PTY starts each line at column zero.
+    ///
+    /// Safe for chunked streams: a CRLF split across calls gains a second CR, which has no effect.
     pub fn write_output(&mut self, bytes: &[u8], cx: &mut Context<Self>) {
         let mut previous_byte_was_cr = false;
         let converted = convert_lf_to_crlf(bytes, &mut previous_byte_was_cr);
-        self.write_raw_output(&converted, cx);
-    }
-
-    /// Terminal byte streams already contain their control sequences and must not be normalized.
-    fn write_raw_output(&mut self, bytes: &[u8], cx: &mut Context<Self>) {
         let mut term = self.term.lock();
         self.output_processor
-            .get_or_insert_with(Processor::<StdSyncHandler>::new)
-            .advance(&mut *term, bytes);
+            .get_or_insert_with(OutputParser::new)
+            .advance(&mut term, &converted);
         drop(term);
         self.detect_init_command_startup_marker();
         cx.emit(Event::Wakeup);
+    }
+
+    /// Replaces all display-only output while retaining the terminal entity and its dimensions.
+    pub fn replace_display_output(&mut self, bytes: &[u8], cx: &mut Context<Self>) -> Result<()> {
+        if !matches!(self.terminal_type, TerminalType::DisplayOnly) || self.subprocess.is_some() {
+            bail!("cannot replace output of a process-backed terminal");
+        }
+        let Some(events_tx) = &self.output_events_tx else {
+            bail!("display-only terminal has no output event channel");
+        };
+        let Some(generation) = self.output_generation.checked_add(1) else {
+            bail!("display output generation exhausted");
+        };
+        let bounds = self.last_content.terminal_bounds;
+        let term = new_term(
+            &self.term_config,
+            bounds,
+            events_tx.clone(),
+            self.template.alternate_scroll,
+            generation,
+        );
+        self.output_generation = generation;
+        self.term = term;
+        self.output_processor = None;
+        // The new emulator already has the latest requested size; older resizes can truncate it.
+        self.events.clear();
+        self.last_content = Content {
+            terminal_bounds: bounds,
+            ..Default::default()
+        };
+        self.last_mouse = None;
+        self.mouse_down_position = None;
+        self.matches.clear();
+        self.selection_head = None;
+        self.breadcrumb_text.clear();
+        self.scroll_px = px(0.);
+        self.next_link_id = 0;
+        self.selection_phase = SelectionPhase::Ended;
+        self.hyperlink_regex_searches = RegexSearches::new(
+            &self.template.path_hyperlink_regexes,
+            self.template.path_hyperlink_timeout,
+        );
+        self.vi_mode_enabled = false;
+        self.last_hyperlink_search_position = None;
+        self.mouse_down_hyperlink = None;
+        self.cwd_history.clear();
+        self.pending_cwd_boundary = None;
+        self.write_output(bytes, cx);
+        cx.emit(Event::BlinkChanged(cursor_blinking(&self.term.lock())));
+        cx.emit(Event::BreadcrumbsChanged);
+        cx.emit(Event::NewNavigationTarget(None));
+        cx.emit(Event::OutputReplaced);
+        Ok(())
     }
 
     pub fn total_lines(&self) -> usize {
@@ -2249,8 +2312,8 @@ impl Terminal {
         if !self.is_remote_terminal && input.contains(&b'\r') {
             let term = self.term.lock_unfair();
             self.pending_cwd_boundary = Some(Self::scrollback_position(
-                term.grid().cursor.point.line.0,
-                term.history_size(),
+                cursor_line(&term),
+                history_size(&term),
             ));
         }
 
@@ -2442,8 +2505,7 @@ impl Terminal {
 
     pub fn with_renderable_cells<R>(&self, f: impl for<'a> FnOnce(RenderableCells<'a>) -> R) -> R {
         let term = self.term.lock_unfair();
-        let content = term.renderable_content();
-        f(RenderableCells::new(content.display_iter))
+        f(renderable_cells(&term))
     }
 
     pub fn get_content(&self) -> String {
@@ -2533,7 +2595,7 @@ impl Terminal {
         cx: &mut Context<Self>,
     ) {
         if self.selection_phase == SelectionPhase::Selecting
-            || !modifiers.secondary()
+            || !modifiers.secondary(cx)
             || !self.last_content.terminal_bounds.bounds.contains(&position)
         {
             self.clear_hyperlink(cx);
@@ -2667,7 +2729,7 @@ impl Terminal {
         );
 
         if e.button == MouseButton::Left
-            && e.modifiers.secondary()
+            && e.modifiers.secondary(cx)
             && (TerminalSettings::get_global(cx).open_links_in_mouse_mode
                 || !self.mouse_mode(e.modifiers.shift, mode))
         {
@@ -2801,7 +2863,7 @@ impl Terminal {
                     .and_then(|cell| cell.hyperlink())
                 {
                     cx.open_url(link.uri());
-                } else if e.modifiers.secondary() {
+                } else if e.modifiers.secondary(cx) {
                     self.events
                         .push_back(InternalEvent::FindHyperlink(position, true));
                 }
@@ -2814,12 +2876,7 @@ impl Terminal {
     }
 
     ///Scroll the terminal
-    pub fn scroll_wheel(
-        &mut self,
-        e: &ScrollWheelEvent,
-        scroll_multiplier: f32,
-        mode: MouseInputMode,
-    ) {
+    pub fn scroll_wheel(&mut self, e: &ScrollEvent, scroll_multiplier: f32, mode: MouseInputMode) {
         let mouse_mode = self.mouse_mode(e.shift, mode);
         let scroll_multiplier = if mouse_mode { 1. } else { scroll_multiplier };
 
@@ -2858,11 +2915,7 @@ impl Terminal {
         self.schedule_find_hyperlink(window.modifiers(), window.mouse_position(), cx);
     }
 
-    fn determine_scroll_lines(
-        &mut self,
-        e: &ScrollWheelEvent,
-        scroll_multiplier: f32,
-    ) -> Option<i32> {
+    fn determine_scroll_lines(&mut self, e: &ScrollEvent, scroll_multiplier: f32) -> Option<i32> {
         let line_height = self.last_content.terminal_bounds.line_height;
         match e.touch_phase {
             /* Reset scroll state on started */
@@ -2944,7 +2997,7 @@ impl Terminal {
 
         let scrollback_position = self.pending_cwd_boundary.take().unwrap_or_else(|| {
             let term = self.term.lock_unfair();
-            Self::scrollback_position(term.grid().cursor.point.line.0, term.history_size())
+            Self::scrollback_position(cursor_line(&term), history_size(&term))
         });
         self.cwd_history.push(CwdHistoryEntry {
             scrollback_position,
@@ -3347,7 +3400,7 @@ fn spawn_task_subprocess(
                 let events_tx = events_tx.clone();
                 async move {
                     let Some(mut reader) = reader else { return };
-                    let mut processor = Processor::<StdSyncHandler>::new();
+                    let mut processor = OutputParser::new();
                     let mut buffer = [0u8; 8192];
                     let mut previous_byte_was_cr = false;
                     loop {
@@ -3362,10 +3415,13 @@ fn spawn_task_subprocess(
                                     convert_lf_to_crlf(&buffer[..count], &mut previous_byte_was_cr);
                                 {
                                     let mut term = term.lock();
-                                    processor.advance(&mut *term, &converted);
+                                    processor.advance(&mut term, &converted);
                                 }
                                 events_tx
-                                    .unbounded_send(PtyEvent::Event(TerminalBackendEvent::Wakeup))
+                                    .unbounded_send(PtyEvent::Event(
+                                        TerminalBackendEvent::Wakeup,
+                                        0,
+                                    ))
                                     .ok();
                             }
                         }
@@ -3399,7 +3455,7 @@ fn spawn_task_subprocess(
                 Some(status) => TerminalBackendEvent::ChildExit(status),
                 None => TerminalBackendEvent::Exit,
             };
-            events_tx.unbounded_send(PtyEvent::Event(event)).ok();
+            events_tx.unbounded_send(PtyEvent::Event(event, 0)).ok();
         }
     });
 
@@ -3487,7 +3543,7 @@ fn normalize_script_command_name(argument: &str) -> Option<String> {
         .and_then(|parent| parent.parent())
         .and_then(|package_path| package_path.file_name())
         .and_then(|package_name| package_name.to_str())
-        .and_then(|package_name| package_name.strip_suffix("-cli").or(Some(package_name)))
+        .map(|package_name| package_name.trim_suffix("-cli"))
         .and_then(normalize_path_command_name)
 }
 
@@ -3861,6 +3917,10 @@ mod tests {
             terminal.read_with(cx, |terminal, cx| terminal.wait_for_completed_task(cx));
         assert_eq!(exit_status.await, Some(ExitStatus::default()));
         assert_content_eventually(&terminal, "hello-from-subprocess", cx).await;
+        terminal.update(cx, |terminal, cx| {
+            assert!(terminal.replace_display_output(b"replacement", cx).is_err());
+            assert!(terminal.get_content().contains("hello-from-subprocess"));
+        });
     }
 
     fn init_terminal_test(cx: &mut TestAppContext, output: &[u8]) -> Entity<Terminal> {
@@ -4071,7 +4131,7 @@ mod tests {
             assert!(terminal.last_content.mode.intersects(Modes::MOUSE_MODE));
             assert_eq!(display_offset(&terminal.term.lock()), 0);
 
-            let scroll_event = ScrollWheelEvent {
+            let scroll_event = ScrollEvent {
                 position: point(px(50.0), px(10.0)),
                 delta: ScrollDelta::Lines(point(0.0, 1.0)),
                 ..Default::default()
@@ -4100,7 +4160,7 @@ mod tests {
             );
             assert_eq!(display_offset(&terminal.term.lock()), 0);
 
-            let scroll_event = ScrollWheelEvent {
+            let scroll_event = ScrollEvent {
                 position: point(px(50.0), px(10.0)),
                 delta: ScrollDelta::Lines(point(0.0, 1.0)),
                 ..Default::default()
@@ -4892,10 +4952,10 @@ mod tests {
         })
     }
 
-    fn raw_content(chunks: &[&[u8]], cx: &mut TestAppContext) -> Content {
+    fn written_content(chunks: &[&[u8]], cx: &mut TestAppContext) -> Content {
         let terminal = display_only_terminal(cx);
         for chunk in chunks {
-            terminal.update(cx, |terminal, cx| terminal.write_raw_output(chunk, cx));
+            terminal.update(cx, |terminal, cx| terminal.write_output(chunk, cx));
         }
         terminal.read_with(cx, |terminal, _| {
             let term = terminal.term.lock_unfair();
@@ -4904,43 +4964,131 @@ mod tests {
     }
 
     #[gpui::test]
-    async fn test_write_raw_output_preserves_line_control_semantics(cx: &mut TestAppContext) {
-        let bytes = b"a\nb\rc\r\nd";
-        let raw = raw_content(&[bytes], cx);
-
-        let normalized_terminal = display_only_terminal(cx);
-        normalized_terminal.update(cx, |terminal, cx| terminal.write_output(bytes, cx));
-        let normalized = normalized_terminal.read_with(cx, |terminal, _| {
-            let term = terminal.term.lock_unfair();
-            make_content(&term, &terminal.last_content)
+    async fn test_replace_display_output_rebuilds_screen_and_accepts_appends(
+        cx: &mut TestAppContext,
+    ) {
+        let bounds = TerminalBounds::new(
+            px(20.),
+            px(10.),
+            bounds(point(px(0.), px(0.)), size(px(300.), px(160.))),
+        );
+        let terminal = cx.new(|cx| {
+            TerminalBuilder::new_display_only_with_bounds(
+                SettingsCursorShape::default(),
+                AlternateScroll::On,
+                None,
+                0,
+                cx.background_executor(),
+                PathStyle::local(),
+                bounds,
+            )
+            .subscribe(cx)
         });
-
-        let raw_cells = raw
-            .cells
-            .iter()
-            .map(|cell| (cell.point.line, cell.point.column, cell.character()))
-            .collect::<Vec<_>>();
-        let normalized_cells = normalized
-            .cells
-            .iter()
-            .map(|cell| (cell.point.line, cell.point.column, cell.character()))
-            .collect::<Vec<_>>();
-
-        assert!(raw_cells.contains(&(0, 0, 'a')));
-        assert!(raw_cells.contains(&(1, 0, 'c')));
-        assert!(raw_cells.contains(&(1, 1, 'b')));
-        assert!(raw_cells.contains(&(2, 0, 'd')));
-        assert!(!normalized_cells.contains(&(1, 1, 'b')));
-        assert!(normalized_cells.contains(&(1, 0, 'c')));
-        assert!(normalized_cells.contains(&(2, 0, 'd')));
-        assert_eq!(raw.cursor.point, Point::new(2, 1));
-        assert_eq!(normalized.cursor.point, Point::new(2, 1));
+        let entity_id = terminal.entity_id();
+        terminal.update(cx, |terminal, cx| {
+            terminal.write_output(b"old history\r\n\x1b[?1049h\x1b[Hold alternate", cx);
+            {
+                let mut term = terminal.term.lock();
+                alacritty::set_selection(
+                    &mut term,
+                    Some(&Selection::simple_range(Range::new(
+                        Point::new(0, 0),
+                        Point::new(0, 2),
+                    ))),
+                );
+                terminal.last_content = make_content(&term, &terminal.last_content);
+            }
+            assert_eq!(terminal.last_content.selection_text.as_deref(), Some("old"));
+            terminal.events.push_back(InternalEvent::Copy(None));
+            terminal
+                .events
+                .push_back(InternalEvent::ScrollToPoint(Point::new(0, 0)));
+            terminal
+                .matches
+                .push(Range::new(Point::new(0, 0), Point::new(0, 3)));
+            terminal
+                .replace_display_output(b"new", cx)
+                .expect("replace");
+            terminal.write_output(b" content", cx);
+        });
+        terminal.read_with(cx, |terminal, _| {
+            assert_eq!(terminal.get_content().trim(), "new content");
+            assert_eq!(terminal.last_content.terminal_bounds, bounds);
+            assert_eq!(terminal.viewport_lines(), bounds.num_lines());
+            assert!(terminal.matches.is_empty());
+            assert!(terminal.last_content.selection_text.is_none());
+            assert!(terminal.events.is_empty());
+            assert!(
+                !terminal
+                    .term
+                    .lock_unfair()
+                    .mode()
+                    .contains(alacritty_terminal::term::TermMode::ALT_SCREEN)
+            );
+        });
+        assert_eq!(terminal.entity_id(), entity_id);
     }
 
     #[gpui::test]
-    async fn test_write_raw_output_is_independent_of_chunk_boundaries(cx: &mut TestAppContext) {
+    async fn test_replace_display_output_discards_superseded_resizes(cx: &mut TestAppContext) {
+        let (terminal, cx) = init_terminal_test_with_window(cx, b"");
+        terminal.update_in(cx, |terminal, window, cx| {
+            let wide = TerminalBounds::new(
+                px(20.),
+                px(10.),
+                bounds(point(px(0.), px(0.)), size(px(400.), px(160.))),
+            );
+            let narrow = TerminalBounds::new(
+                px(20.),
+                px(10.),
+                bounds(point(px(0.), px(0.)), size(px(50.), px(160.))),
+            );
+            terminal.set_size(wide);
+            terminal.sync(window, cx);
+            terminal.set_size(narrow);
+            terminal.scroll_up_by(1);
+            terminal.set_size(wide);
+            terminal
+                .replace_display_output(b"\x1b[?1049habcdefghijklmnop", cx)
+                .expect("snapshot at latest dimensions");
+            assert_eq!(terminal.get_content().trim(), "abcdefghijklmnop");
+            terminal.sync(window, cx);
+            assert_eq!(terminal.get_content().trim(), "abcdefghijklmnop");
+            assert_eq!(terminal.last_content.terminal_bounds, wide);
+        });
+    }
+
+    #[gpui::test]
+    async fn test_replace_display_output_resets_parser_and_queued_title(cx: &mut TestAppContext) {
+        let terminal = display_only_terminal(cx);
+        terminal.update(cx, |terminal, cx| {
+            terminal.write_output(b"\x1b]0;stale\x07\x1b[", cx);
+            terminal
+                .replace_display_output(b"fresh", cx)
+                .expect("replace");
+            terminal.write_output(b"!", cx);
+        });
+        cx.run_until_parked();
+        terminal.read_with(cx, |terminal, _| {
+            assert_eq!(terminal.get_content().trim(), "fresh!");
+            assert!(terminal.breadcrumb_text.is_empty());
+        });
+        terminal.update(cx, |terminal, cx| {
+            terminal.write_output(b"\xc3", cx);
+            terminal.replace_display_output(b"", cx).expect("clear");
+            terminal.write_output(b"\x1b]0;current\x07ok", cx);
+        });
+        cx.run_until_parked();
+        terminal.read_with(cx, |terminal, _| {
+            assert_eq!(terminal.get_content().trim(), "ok");
+            assert_eq!(terminal.breadcrumb_text, "current");
+        });
+    }
+
+    #[gpui::test]
+    async fn test_write_output_is_independent_of_chunk_boundaries(cx: &mut TestAppContext) {
         let bytes = b"A\nB\rC\r\n\x1b[31mR\xc3\xa9\x1b[0m\x1b[2;6HX";
-        let whole = raw_content(&[bytes], cx);
+        let whole = written_content(&[bytes], cx);
         let cells = |content: &Content| {
             content
                 .cells
@@ -4955,14 +5103,14 @@ mod tests {
             .cells
             .iter()
             .find(|cell| cell.character() == 'R')
-            .expect("raw output should contain the styled R");
+            .expect("output should contain the styled R");
         assert_eq!(red_r.point, Point::new(2, 0));
         assert_eq!(red_r.foreground(), Color::Named(NamedColor::Red));
         let accented = whole
             .cells
             .iter()
             .find(|cell| cell.character() == 'é')
-            .expect("raw output should contain the complete UTF-8 character");
+            .expect("output should contain the complete UTF-8 character");
         assert_eq!(accented.point, Point::new(2, 1));
         assert_eq!(accented.foreground(), Color::Named(NamedColor::Red));
         let positioned = whole
@@ -4983,7 +5131,7 @@ mod tests {
 
         for split in 0..=bytes.len() {
             let (first, second) = bytes.split_at(split);
-            let split_content = raw_content(&[b"", first, b"", second, b""], cx);
+            let split_content = written_content(&[b"", first, b"", second, b""], cx);
             assert_eq!(
                 cells(&split_content),
                 whole_cells,
@@ -5000,7 +5148,7 @@ mod tests {
             .map(std::slice::from_ref)
             .chain(std::iter::once(&[][..]))
             .collect::<Vec<_>>();
-        let bytewise = raw_content(&byte_chunks, cx);
+        let bytewise = written_content(&byte_chunks, cx);
         assert_eq!(cells(&bytewise), whole_cells);
         assert_eq!(bytewise.cursor.point, whole_cursor);
     }
@@ -5025,16 +5173,13 @@ mod tests {
             .subscribe(cx)
         });
 
-        for write_output in [Terminal::write_output, Terminal::write_raw_output] {
-            terminal.update(cx, |terminal, cx| {
-                write_output(terminal, b"\x1b]52;c;b3ZlcndyaXR0ZW4=\x07", cx);
-            });
-            cx.run_until_parked();
+        terminal.update(cx, |terminal, cx| {
+            terminal.write_output(b"\x1b]52;c;b3ZlcndyaXR0ZW4=\x07", cx);
+        });
+        cx.run_until_parked();
 
-            let clipboard_text =
-                cx.update(|cx| cx.read_from_clipboard().and_then(|item| item.text()));
-            assert_eq!(clipboard_text.as_deref(), Some("original"));
-        }
+        let clipboard_text = cx.update(|cx| cx.read_from_clipboard().and_then(|item| item.text()));
+        assert_eq!(clipboard_text.as_deref(), Some("original"));
     }
 
     mod hyperlinks {
@@ -5058,7 +5203,7 @@ mod tests {
             let mouse_down = MouseDownEvent {
                 button: MouseButton::Left,
                 position,
-                modifiers: Modifiers::secondary_key(),
+                modifiers: Modifiers::secondary_key(cx),
                 click_count: 1,
                 first_mouse: true,
             };
@@ -5074,7 +5219,7 @@ mod tests {
             let drag_event = MouseMoveEvent {
                 position,
                 pressed_button: Some(MouseButton::Left),
-                modifiers: Modifiers::secondary_key(),
+                modifiers: Modifiers::secondary_key(cx),
             };
             terminal.mouse_drag(
                 &drag_event,
@@ -5092,7 +5237,7 @@ mod tests {
             let mouse_up = MouseUpEvent {
                 button: MouseButton::Left,
                 position,
-                modifiers: Modifiers::secondary_key(),
+                modifiers: Modifiers::secondary_key(cx),
                 click_count: 1,
             };
             terminal.mouse_up(&mouse_up, MouseInputMode::ReportToTerminal, cx);
@@ -5152,14 +5297,14 @@ mod tests {
                 let mouse_down = MouseDownEvent {
                     button: MouseButton::Left,
                     position,
-                    modifiers: Modifiers::secondary_key(),
+                    modifiers: Modifiers::secondary_key(cx),
                     click_count: 1,
                     first_mouse: true,
                 };
                 let mouse_up = MouseUpEvent {
                     button: MouseButton::Left,
                     position,
-                    modifiers: Modifiers::secondary_key(),
+                    modifiers: Modifiers::secondary_key(cx),
                     click_count: 1,
                 };
 
@@ -5195,7 +5340,7 @@ mod tests {
                 &MouseMoveEvent {
                     position: up_position,
                     pressed_button: Some(MouseButton::Left),
-                    modifiers: Modifiers::secondary_key(),
+                    modifiers: Modifiers::secondary_key(cx),
                 },
                 MouseInputMode::ReportToTerminal,
                 cx,
@@ -5415,7 +5560,7 @@ mod tests {
                     terminal.with_renderable_cells(|cells| {
                         let mut text_lines = Vec::new();
                         let linegroups = cells.into_iter().chunk_by(|cell| cell.point.line);
-                        for (_, (_, line)) in linegroups.into_iter().enumerate() {
+                        for (_, line) in linegroups.into_iter() {
                             let mut previous_cell_had_extras = false;
                             let mut text = String::new();
                             for IndexedCell { cell, .. } in line {
@@ -5475,7 +5620,7 @@ mod tests {
             }
 
             fn ctrl_mouse_move_to(&mut self, position: GpuiPoint<Pixels>) {
-                let modifiers = Modifiers::secondary_key();
+                let modifiers = Modifiers::secondary_key(self.cx);
                 let move_event = MouseMoveEvent {
                     position,
                     modifiers,
@@ -5522,7 +5667,7 @@ mod tests {
             }
 
             fn set_window_secondary_key(&mut self) {
-                self.window.set_modifiers(Modifiers::secondary_key());
+                self.window.set_modifiers(Modifiers::secondary_key(self.cx));
             }
 
             fn clear_window_secondary_key(&mut self) {
@@ -5829,7 +5974,8 @@ mod tests {
                     // Existing hovered_word cleared when secondary not held
                     cx.assert_hovered_word(None);
 
-                    cx.try_modifiers_change(Modifiers::secondary_key());
+                    let modifiers = Modifiers::secondary_key(cx.cx);
+                    cx.try_modifiers_change(modifiers);
                     Some(Expected(Wakeups(0), Notifies(2)))
                 });
                 update_test_entities(&test_entities, cx, |cx: &mut HyperlinkVisualTestContext| {
@@ -5985,7 +6131,7 @@ mod tests {
 
         terminal.update(cx, |terminal, cx| {
             terminal.write_output(b"injected_before_release\n", cx);
-            terminal.write_raw_output(b"\x1b[", cx);
+            terminal.write_output(b"\x1b[", cx);
         });
         assert!(
             terminal.read_with(cx, |terminal, _| terminal.output_processor.is_some()),
@@ -6011,7 +6157,7 @@ mod tests {
 
     mod perf {
         use super::{super::*, init_terminal_test_with_window};
-        use gpui::{ScrollDelta, ScrollWheelEvent, TestAppContext, VisualContext, point};
+        use gpui::{ScrollDelta, ScrollEvent, TestAppContext, VisualContext, point};
         use util::default;
         use util_macros::perf;
 
@@ -6037,7 +6183,7 @@ mod tests {
                     );
 
                     terminal.scroll_wheel(
-                        &ScrollWheelEvent {
+                        &ScrollEvent {
                             position,
                             delta: ScrollDelta::Lines(GpuiPoint::new(0.0, lines as f32)),
                             ..default()

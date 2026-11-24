@@ -9,12 +9,12 @@ use std::sync::Arc;
 use std::{cell::Cell, cell::RefCell, rc::Rc};
 
 use gpui::{
-    AnyWindowHandle, Bounds, Capslock, Decorations, DevicePixels, DispatchEventResult, GpuSpecs,
-    Modifiers, MouseButton, Pixels, PlatformAtlas, PlatformDisplay, PlatformInput,
-    PlatformInputHandler, PlatformWindow, Point, PromptButton, PromptLevel, RequestFrameOptions,
-    ResizeEdge, Scene, Size, TextInputConfiguration, TextInputStateChange, WindowAppearance,
-    WindowBackgroundAppearance, WindowBounds, WindowControlArea, WindowControls, WindowDecorations,
-    WindowInsets, WindowParams, WindowVisibility, px,
+    AnyWindowHandle, Bounds, Capslock, Decorations, DevicePixels, DispatchEventResult,
+    FrameRequestSource, GpuSpecs, Modifiers, MouseButton, Pixels, PlatformAtlas, PlatformDisplay,
+    PlatformInput, PlatformInputHandler, PlatformWindow, Point, PromptButton, PromptLevel,
+    RequestFrameOptions, ResizeEdge, Scene, Size, TextInputConfiguration, TextInputStateChange,
+    WindowAppearance, WindowBackgroundAppearance, WindowBounds, WindowControlArea, WindowControls,
+    WindowDecorations, WindowInsets, WindowParams, WindowVisibility, px,
 };
 use gpui_wgpu::{WgpuContext, WgpuRenderer, WgpuSurfaceConfig, wgpu};
 use wasm_bindgen::prelude::*;
@@ -67,8 +67,8 @@ pub(crate) struct WebWindowInner {
     pub(crate) last_physical_size: Cell<(u32, u32)>,
     pub(crate) notify_scale: Cell<bool>,
     pub(crate) is_composing: Cell<bool>,
-    /// Set while `show_virtual_keyboard` blur/focus-cycles the hidden input.
-    /// The cycle is a keyboard-visibility hint, not a real activity change;
+    /// Set while the hidden input is refocused to show or hide the keyboard.
+    /// That is a keyboard-visibility hint, not a real activity change;
     /// letting the focus/blur listeners report it would re-enter GPUI
     /// synchronously from inside an input dispatch, and a `RefCell`
     /// double-borrow panic on wasm never unwinds, wedging the app.
@@ -141,7 +141,6 @@ impl WebWindow {
         Ok(canvas)
     }
 
-    #[allow(clippy::too_many_arguments)]
     pub(crate) fn new(
         _handle: AnyWindowHandle,
         _params: WindowParams,
@@ -388,6 +387,8 @@ impl WebWindow {
                     callback(RequestFrameOptions {
                         require_presentation: true,
                         force_render: true,
+                        signal_at: None,
+                        signal_source: FrameRequestSource::NativeCallback,
                     })
                 },
             );
@@ -459,6 +460,8 @@ impl WebWindowInner {
                     callback(RequestFrameOptions {
                         require_presentation: false,
                         force_render: false,
+                        signal_at: None,
+                        signal_source: FrameRequestSource::NativeCallback,
                     })
                 },
             );
@@ -737,9 +740,10 @@ impl PlatformWindow for WebWindow {
         style
             .set_property("width", &format!("{}px", f32::from(size.width)))
             .ok();
-        style
-            .set_property("height", &format!("{}px", f32::from(size.height)))
-            .ok();
+        self.inner
+            .viewport
+            .borrow_mut()
+            .set_canvas_height(&self.inner.canvas, &format!("{}px", f32::from(size.height)));
     }
 
     fn scale_factor(&self) -> f32 {
@@ -786,7 +790,7 @@ impl PlatformWindow for WebWindow {
         if !self.inner.touch_input {
             return;
         }
-        self.inner.ime_mirror.set_virtual_keyboard_enabled(false);
+        self.inner.set_virtual_keyboard_enabled(false);
         // Restart the browser input session without a software keyboard, but
         // keep receiving hardware keys that can move the caret back into an
         // editable region. GPUI focus, not this DOM element, owns their target.
@@ -967,6 +971,9 @@ impl PlatformWindow for WebWindow {
     fn on_moved(&self, callback: Box<dyn FnMut()>) {
         self.inner.callbacks.borrow_mut().moved = Some(callback);
     }
+
+    // The browser is the only display, and it never changes.
+    fn on_display_changed(&self, _callback: Box<dyn FnMut()>) {}
 
     fn on_should_close(&self, callback: Box<dyn FnMut() -> bool>) {
         self.inner.callbacks.borrow_mut().should_close = Some(callback);

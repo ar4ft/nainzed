@@ -29,7 +29,27 @@ pub fn should_install_crash_handler(_: ReleaseChannel) -> bool {
     false
 }
 
-pub fn os_name() -> String {
+pub fn os_name(cx: &App) -> String {
+    #[cfg(target_os = "macos")]
+    {
+        "macOS".to_string()
+    }
+    #[cfg(target_os = "linux")]
+    {
+        format!("Linux {}", cx.compositor_name())
+    }
+    #[cfg(target_os = "freebsd")]
+    {
+        format!("FreeBSD {}", cx.compositor_name())
+    }
+
+    #[cfg(target_os = "windows")]
+    {
+        "Windows".to_string()
+    }
+}
+
+pub fn guessed_os_name() -> String {
     #[cfg(target_os = "macos")]
     {
         "macOS".to_string()

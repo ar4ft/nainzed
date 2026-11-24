@@ -154,10 +154,28 @@ pub fn get_windows_system_shell() -> String {
     get_powershell().unwrap_or_else(|| (*CMD).clone())
 }
 
+#[inline]
+pub const fn is_utf8_char_boundary(u8: u8) -> bool {
+    // This is bit magic equivalent to: b < 128 || b >= 192
+    (u8 as i8) >= -0x40
+}
+
 pub fn post_inc<T: From<u8> + AddAssign<T> + Copy>(value: &mut T) -> T {
     let prev = *value;
     *value += T::from(1);
     prev
+}
+
+/// The bits of `value` with the sign of zero normalised away.
+///
+/// `PartialEq` for `f32` treats `0.0` and `-0.0` as equal, so a hash built on
+/// `to_bits` has to collapse them as well or equal keys land in different buckets.
+pub fn canonical_float_bits(value: f32) -> u32 {
+    if value == 0.0 {
+        0.0f32.to_bits()
+    } else {
+        value.to_bits()
+    }
 }
 
 pub fn measure<R>(label: &str, f: impl FnOnce() -> R) -> R {

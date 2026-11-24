@@ -867,7 +867,7 @@ fn open_settings_editor_with(
                     width: SIDEBAR_WIDTH + CONTENT_MIN_WIDTH,
                     height: px(240.0),
                 }),
-                window_bounds: Some(WindowBounds::centered(scaled_bounds, cx)),
+                window_bounds: Some(WindowBounds::centered(None, scaled_bounds, cx)),
                 ..Default::default()
             },
             |window, cx| {
@@ -2958,7 +2958,7 @@ impl SettingsWindow {
             "Focus Navbar"
         };
 
-        let mut key_context = KeyContext::new_with_defaults();
+        let mut key_context = KeyContext::new_with_defaults(cx.platform_info().os);
         key_context.add("NavigationMenu");
         key_context.add("menu");
         if self.search_bar.focus_handle(cx).is_focused(window) {
