@@ -43,7 +43,7 @@
   "script/privacy-no-ai-mac.py": "0a1a63e4b29a73dfa888b87387d8e863e350cc6f7fb28bd1236673555abdf50c",
   "script/no_ai_runtime.py": "20b6784a972975ca3b628ecc4de6df94f305b794a091d8032939a2b472c4596d",
   ".github/workflows/no-ai-release.yml": "3aaeb9760c9b9f7098ada89267e5bc18d901eabad1be5758576bb31a13289796",
-  ".github/workflows/no-ai-mac.yml": "c2e3e747c9580a085f534b8c5905be9e7cd3f57a69fd6eeaa7ec85b877268c7b",
+  ".github/workflows/no-ai-mac.yml": "6465bb22a0ed85ac5fc2bdab722d4d22c538baf654c6b8e810313761bd2b30f4",
   ".github/workflows/no-ai-prerelease.yml": "77ad600894a8e4ee71bcdc042f1f337617e59e36c6628c11ea45a12d99a49795",
   ".github/workflows/no-ai-validate.yml": "685e9219e8ec3c4bf257aade170f4223c89d1ffdb13f9524b6620d9529476df5",
   "assets/keymaps/default-linux.json": "94f1470a6ef43b9712795c9f31c71c41d4b218fc5d0e8ef3979cc1d68dbf4410",
@@ -60,6 +60,6 @@
   "script/upstream-maintenance.py": "600e8a5398c669b9c0c164f292dd0c3698f820f10e76825c37e74e6e04a920b9",
   "script/upstream-review.py": "cd4300bf8764af214be4fd646cf7ab8634873b8456518353f166c2e9389dab02",
   ".github/workflows/no-ai-upstream.yml": "77d314452cd47c2b772a759edc36987d2ba0dc1c01b76c36d047274a4d40553f",
-  ".github/workflows/no-ai-upstream-review.yml": "92f075bf7ed880609e593c0c81324da84ba87ffad716a277fd6f7d0b71555f77",
+  ".github/workflows/no-ai-upstream-review.yml": "6960af6371bfb34de9046a5759f7c7311d37d3fae27d6ccb0b379efcaead01a6",
   ".github/main-review-ruleset.json": "fee57f24a60d8b5445499f302d7a6733770ac419a3cc90eb467c6d6664752160"
 }
