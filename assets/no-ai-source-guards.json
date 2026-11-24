@@ -45,7 +45,7 @@
   ".github/workflows/no-ai-release.yml": "3aaeb9760c9b9f7098ada89267e5bc18d901eabad1be5758576bb31a13289796",
   ".github/workflows/no-ai-mac.yml": "6465bb22a0ed85ac5fc2bdab722d4d22c538baf654c6b8e810313761bd2b30f4",
   ".github/workflows/no-ai-prerelease.yml": "77ad600894a8e4ee71bcdc042f1f337617e59e36c6628c11ea45a12d99a49795",
-  ".github/workflows/no-ai-validate.yml": "685e9219e8ec3c4bf257aade170f4223c89d1ffdb13f9524b6620d9529476df5",
+  ".github/workflows/no-ai-validate.yml": "438c030f3c0a49167aa391a17bd5970ab0feb7449f033bceb0474015e49d40c8",
   "assets/keymaps/default-linux.json": "976cf69a38a14831a814d76318fd0101461845bb8d6182d05ae733952766bc09",
   "assets/keymaps/default-macos.json": "1db449cbbd886ef6a2cb807ca727cc0b710ec6fa953fa0ce0e0ca7895d1b7c73",
   "assets/settings/default.json": "6a43a45f5ca4494a809317603e18aa3649b7509ce7301543d5fd729b659a4b0a",

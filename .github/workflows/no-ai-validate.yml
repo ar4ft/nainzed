@@ -56,7 +56,7 @@ jobs:
       - name: Compile native safeguard tests once and run every selected suite
         run: python3 script/test-no-ai-mac.py
       - name: Check the production application without test feature unification
-        run: cargo check --locked -p zed --bin zed && cargo check --locked -p remote_server --lib --bin remote_server
+        run: cargo check --locked -p zed --bin zed && cargo check --locked -p remote_server --lib --bin remote-server
       - name: Save bounded compiler caches (best effort)
         if: always() && !cancelled() && github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && inputs.checkout_ref == github.sha
         uses: ./.github/actions/save-rust-build-cache
