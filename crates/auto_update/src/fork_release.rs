@@ -2,7 +2,7 @@ use anyhow::{Context as _, Result, ensure};
 use semver::Version;
 use serde::Deserialize;
 
-pub const REPOSITORY: &str = "ar4ft/nainzed";
+pub const REPOSITORY: &str = "ar4ft/ned";
 pub const BUNDLE_ID: &str = "io.github.ar4ft.ZedNoAI";
 pub const VERSION: Option<&str> = option_env!("ZED_NO_AI_RELEASE_VERSION");
 pub const TEAM_ID: Option<&str> = option_env!("ZED_NO_AI_TEAM_ID");
@@ -44,14 +44,14 @@ pub fn parse(body: &[u8], arch: &str) -> Result<super::ReleaseAsset> {
         "x86_64" => "x86_64",
         _ => anyhow::bail!("Unsupported Mac architecture"),
     };
-    let name = format!("nain-{arch}.dmg");
+    let name = format!("ned-{arch}.dmg");
     // Publish both architectures together so all Macs see the same version.
     for arch in ["arm64", "x86_64"] {
         ensure!(
             release
                 .assets
                 .iter()
-                .any(|a| a.name == format!("nain-{arch}.dmg")),
+                .any(|a| a.name == format!("ned-{arch}.dmg")),
             "Release is missing a Mac architecture"
         );
     }
@@ -79,8 +79,8 @@ mod tests {
     use super::*;
     fn release() -> serde_json::Value {
         serde_json::json!({"tag_name":"v1.0.1","draft":false,"prerelease":false,"assets":[
-            {"name":"nain-arm64.dmg","browser_download_url":"https://github.com/ar4ft/nainzed/releases/download/v1.0.1/nain-arm64.dmg"},
-            {"name":"nain-x86_64.dmg","browser_download_url":"https://github.com/ar4ft/nainzed/releases/download/v1.0.1/nain-x86_64.dmg"}
+            {"name":"ned-arm64.dmg","browser_download_url":"https://github.com/ar4ft/ned/releases/download/v1.0.1/ned-arm64.dmg"},
+            {"name":"ned-x86_64.dmg","browser_download_url":"https://github.com/ar4ft/ned/releases/download/v1.0.1/ned-x86_64.dmg"}
         ]})
     }
     #[test]
@@ -97,7 +97,7 @@ mod tests {
         unsafe_url["assets"][0]["browser_download_url"] = "https://example.com/app.dmg".into();
         let mut old_repository = release();
         old_repository["assets"][0]["browser_download_url"] =
-            "https://github.com/ar4ft/zed-no-ai/releases/download/v1.0.1/nain-arm64.dmg".into();
+            "https://github.com/ar4ft/zed-no-ai/releases/download/v1.0.1/ned-arm64.dmg".into();
         let mut draft = release();
         draft["draft"] = true.into();
         let mut prerelease = release();

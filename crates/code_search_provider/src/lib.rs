@@ -452,7 +452,7 @@ impl Worker {
             messages,
             next: 0,
             session: String::new(),
-            workspace: "nain-code-search".into(),
+            workspace: "ned-code-search".into(),
             overlays: BTreeMap::new(),
             versions: HashMap::new(),
             active,
@@ -483,7 +483,7 @@ impl Worker {
     fn request(&mut self, method: &str, params: Value, cancel: &Cancellation) -> Result<Value> {
         ensure!(!cancel.is_cancelled(), "Search cancelled");
         self.next += 1;
-        let id = format!("nain-{}", self.next);
+        let id = format!("ned-{}", self.next);
         self.write(json!({"id":id,"method":method,"params":params}))?;
         let started = Instant::now();
         let mut cancellation_sent = false;
@@ -865,7 +865,7 @@ mod tests {
     }
     #[test]
     fn installer_location_is_found_without_a_terminal_path() {
-        const CHILD: &str = "NAIN_TEST_AGX_DISCOVERY_CHILD";
+        const CHILD: &str = "NED_TEST_AGX_DISCOVERY_CHILD";
         if let Some(home) = std::env::var_os(CHILD) {
             let expected = PathBuf::from(home)
                 .join(".agx/bin/agx")
@@ -907,7 +907,7 @@ mod tests {
     #[test]
     fn configured_invalid_executable_never_falls_back() {
         assert!(locate_executable(Some(Path::new("agx"))).is_err());
-        assert!(locate_executable(Some(Path::new("/missing-nain-agx"))).is_err());
+        assert!(locate_executable(Some(Path::new("/missing-ned-agx"))).is_err());
     }
     #[test]
     fn paths_are_confined_and_unsaved_new_files_are_allowed() {
@@ -953,12 +953,12 @@ mod tests {
         std::fs::write(directory.path().join(".case"), "normal").unwrap();
         assert!(run(&provider, request).is_ok());
     }
-    /// Run explicitly with NAIN_TEST_AGX pointing to a reviewed real worker.
+    /// Run explicitly with NED_TEST_AGX pointing to a reviewed real worker.
     #[test]
     #[ignore = "requires separately installed agentgrep 0.3+; protocol fixtures run in normal CI"]
     fn real_worker_unsaved_buffers_filters_and_versions() {
-        let executable = std::env::var_os("NAIN_TEST_AGX")
-            .expect("Set NAIN_TEST_AGX to agx")
+        let executable = std::env::var_os("NED_TEST_AGX")
+            .expect("Set NED_TEST_AGX to agx")
             .into();
         let root = tempfile::tempdir().unwrap();
         std::fs::write(

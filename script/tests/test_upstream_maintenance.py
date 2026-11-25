@@ -141,7 +141,7 @@ class MaintenanceTests(unittest.TestCase):
         self.assertIn('`.github/workflows/publish.yml`', report)
         self.assertIn('Defaults, settings, shortcuts or feature availability', report)
         self.assertIn('No keyword matches. Behavior impact remains unverified', report)
-        self.assertIn('Actual changes to Nain requiring approval', report)
+        self.assertIn('Actual changes to Ned requiring approval', report)
         self.assertEqual(git(fork, 'status', '--porcelain'), '')
 
     def test_clean_automation_modification_and_deletion_preserve_fork_workflows(self):

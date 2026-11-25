@@ -1,4 +1,4 @@
-name: Set up nain compiler cache
+name: Set up ned compiler cache
 description: Install pinned Kache and restore bounded compiler and Cargo source caches.
 inputs:
   profile:
@@ -33,23 +33,23 @@ runs:
           ~/.cargo/registry/index
           ~/.cargo/registry/cache
           ~/.cargo/git/db
-        key: nain-cargo-v1-${{ hashFiles('Cargo.lock') }}
-        restore-keys: nain-cargo-v1-
+        key: ned-cargo-v1-${{ hashFiles('Cargo.lock') }}
+        restore-keys: ned-cargo-v1-
     - name: Restore compiler outputs
       id: compiler
       uses: actions/cache/restore@v4
       continue-on-error: true
       with:
-        path: ${{ runner.temp }}/nain-kache
-        key: nain-kache-v1-1.0.0-${{ runner.os }}-${{ runner.arch }}-${{ inputs.profile }}-${{ hashFiles('rust-toolchain.toml', 'Cargo.lock') }}-${{ steps.revision.outputs.sha }}
+        path: ${{ runner.temp }}/ned-kache
+        key: ned-kache-v1-1.0.0-${{ runner.os }}-${{ runner.arch }}-${{ inputs.profile }}-${{ hashFiles('rust-toolchain.toml', 'Cargo.lock') }}-${{ steps.revision.outputs.sha }}
         restore-keys: |
-          nain-kache-v1-1.0.0-${{ runner.os }}-${{ runner.arch }}-${{ inputs.profile }}-${{ hashFiles('rust-toolchain.toml', 'Cargo.lock') }}-
-          nain-kache-v1-1.0.0-${{ runner.os }}-${{ runner.arch }}-${{ inputs.profile }}-
+          ned-kache-v1-1.0.0-${{ runner.os }}-${{ runner.arch }}-${{ inputs.profile }}-${{ hashFiles('rust-toolchain.toml', 'Cargo.lock') }}-
+          ned-kache-v1-1.0.0-${{ runner.os }}-${{ runner.arch }}-${{ inputs.profile }}-
     - name: Install Kache 1.0.0
       uses: kunobi-ninja/kache-action@ad7317540dcdd71c904f7a60a87b620a0c0e67ed # v1
       with:
         version: '1.0.0'
-        cache-dir: ${{ runner.temp }}/nain-kache
+        cache-dir: ${{ runner.temp }}/ned-kache
         max-size: ${{ inputs.profile == 'release' && '4GiB' || '3GiB' }}
         cache-executables: 'true'
         cache-c-cpp: 'true'

@@ -13,7 +13,7 @@ spec = importlib.util.spec_from_file_location('prerelease', SCRIPT / 'publish-no
 prerelease = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(prerelease)
 
-REPO = 'ar4ft/nainzed'
+REPO = 'ar4ft/ned'
 COMMIT = 'a' * 40
 RUN_URL = f'https://github.com/{REPO}/actions/runs/123'
 
@@ -42,7 +42,7 @@ class PrereleasePublishing(unittest.TestCase):
         return dict(release, **changes)
 
     def test_missing_architecture_or_empty_installer_prevents_publication(self):
-        installer = self.packages / 'nain-x86_64.dmg'
+        installer = self.packages / 'ned-x86_64.dmg'
         installer.unlink()
         with patch.object(prerelease, 'gh') as gh:
             with self.assertRaisesRegex(ValueError, 'Missing or empty'):
@@ -91,7 +91,7 @@ class PrereleasePublishing(unittest.TestCase):
         self.assertIn('Zed-No-AI-arm64.dmg', (self.packages / 'SHA256SUMS.txt').read_text())
 
     def test_partial_new_build_cannot_borrow_a_legacy_architecture(self):
-        path = self.packages / 'nain-x86_64.dmg'
+        path = self.packages / 'ned-x86_64.dmg'
         path.rename(self.packages / 'Zed-No-AI-x86_64.dmg')
         with patch.object(prerelease, 'gh') as gh:
             with self.assertRaisesRegex(ValueError, 'Missing or empty'):

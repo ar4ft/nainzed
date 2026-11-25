@@ -135,7 +135,7 @@ impl OpenRequest {
 
         for url in request.urls {
             // Keep the existing parser and safety checks for our branded scheme.
-            let url = if let Some(path) = url.strip_prefix("nain://") {
+            let url = if let Some(path) = url.strip_prefix("ned://") {
                 format!("zed://{path}")
             } else {
                 url
@@ -158,7 +158,7 @@ impl OpenRequest {
                     extension_id: extension_id.to_string(),
                 });
             } else if url.starts_with("zed://skill") || url.starts_with("zed://agent") {
-                anyhow::bail!("AI links are unavailable in Nain");
+                anyhow::bail!("AI links are unavailable in Ned");
             } else if url == "zed://" || url == "zed://open" || url == "zed://open/" {
                 this.kind = Some(OpenRequestKind::FocusApp);
             } else if let Some(schema_path) = url.strip_prefix("zed://schemas/") {
@@ -1567,9 +1567,9 @@ mod tests {
             "zed://",
             "zed://open",
             "zed://open/",
-            "nain://",
-            "nain://open",
-            "nain://open/",
+            "ned://",
+            "ned://open",
+            "ned://open/",
         ] {
             let request = cx.update(|cx| {
                 OpenRequest::parse(

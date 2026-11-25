@@ -15,7 +15,7 @@ Expected network use during normal editing includes:
 - Language-server and extension installation/update downloads, including GitHub and the Zed extension registry. Upstream extension registry domains also host other services; they are not broadly allowlisted by the startup check.
 - User-selected Git remotes, SSH hosts, remote language servers and Jupyter servers.
 - Explicit Python setup and `ipykernel` installation through the selected interpreter's package index.
-- Automatic updates from `github.com/ar4ft/nainzed` in signed releases only, when enabled. Development builds do not update automatically.
+- Automatic updates from `github.com/ar4ft/ned` in signed releases only, when enabled. Development builds do not update automatically.
 
 The optional [Code Search adapter](CODE_SEARCH.md) launches only `agx serve --stdio --restricted`, requires the handshake to disable network/telemetry/models/hybrid search, and sends local queries and unsaved source through bounded in-memory stdio messages. Its API admits only text, symbol, and lexical BM25 modes. It does not install/update agx, invoke a shell, or retain worker stderr. The startup proxy test does not exercise this subprocess; protocol tests, source guards, and review of the separately installed agentgrep worker support this boundary.
 
@@ -25,5 +25,5 @@ On a Mac, run:
 
 ```sh
 python3 script/privacy-no-ai-mac.py \
-  --app '/Applications/nain.app' --output privacy.json
+  --app '/Applications/ned.app' --output privacy.json
 ```

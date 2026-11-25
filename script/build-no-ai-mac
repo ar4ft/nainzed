@@ -18,7 +18,7 @@ if [[ "${NO_AI_SIGNED_RELEASE:-0}" == 1 ]]; then
 else
     # Inherited release metadata must not enable updates in a development build.
     unset ZED_NO_AI_RELEASE_VERSION ZED_NO_AI_TEAM_ID
-    export ZED_UPDATE_EXPLANATION='Install signed releases from github.com/ar4ft/nainzed/releases for automatic updates.'
+    export ZED_UPDATE_EXPLANATION='Install signed releases from github.com/ar4ft/ned/releases for automatic updates.'
 fi
 export CARGO_BUNDLE_SKIP_BUILD=true
 # Generate redistribution notices before embedding assets in the release binary.
@@ -28,7 +28,7 @@ if ! cargo bundle --version 2>/dev/null | grep -q '0.6.1-zed'; then
     cargo install cargo-bundle --git https://github.com/zed-industries/cargo-bundle.git --branch zed-deploy --locked
 fi
 (cd crates/zed && cargo bundle --release --select-workspace-root)
-app='target/release/bundle/osx/Nain.app'
+app='target/release/bundle/osx/Ned.app'
 test -d "$app"
 cp target/release/cli "$app/Contents/MacOS/cli"
 cp crates/zed/resources/Document.icns "$app/Contents/Resources/Document.icns"
@@ -41,17 +41,17 @@ else
     codesign --force --deep --sign - "$app"
 fi
 architecture="$(uname -m)"
-package_dir="target/nain-${architecture}"
+package_dir="target/ned-${architecture}"
 mkdir -p "$package_dir"
 # Preserve app permissions and symlinks in a downloadable archive.
-ditto -c -k --sequesterRsrc --keepParent "$app" "$package_dir/nain-${architecture}.zip"
+ditto -c -k --sequesterRsrc --keepParent "$app" "$package_dir/ned-${architecture}.zip"
 staging="$(mktemp -d)"
 trap 'rm -rf "$staging"' EXIT
-ditto "$app" "$staging/Nain.app"
+ditto "$app" "$staging/Ned.app"
 ln -s /Applications "$staging/Applications"
-hdiutil create -volname 'Nain' -srcfolder "$staging" -ov -format UDZO "$package_dir/nain-${architecture}.dmg"
+hdiutil create -volname 'Ned' -srcfolder "$staging" -ov -format UDZO "$package_dir/ned-${architecture}.dmg"
 if [[ "${NO_AI_SIGNED_RELEASE:-0}" == 1 ]]; then
-    dmg="$package_dir/nain-${architecture}.dmg"
+    dmg="$package_dir/ned-${architecture}.dmg"
     codesign --force --timestamp --sign "$MACOS_SIGNING_IDENTITY" "$dmg"
     xcrun notarytool submit "$dmg" --key "$APPLE_NOTARIZATION_KEY_PATH" --key-id "$APPLE_NOTARIZATION_KEY_ID" --issuer "$APPLE_NOTARIZATION_ISSUER_ID" --wait --output-format json > "$staging/dmg-notary.json"
     python3 - "$staging/dmg-notary.json" <<'VERIFY'

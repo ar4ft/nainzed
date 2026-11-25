@@ -8,10 +8,10 @@ import subprocess
 from pathlib import Path
 
 
-ASSETS = tuple(f'nain-{arch}.{extension}'
+ASSETS = tuple(f'ned-{arch}.{extension}'
                for arch in ('arm64', 'x86_64') for extension in ('dmg', 'zip'))
 
-LEGACY_ASSETS = tuple(name.replace('nain-', 'Zed-No-AI-') for name in ASSETS)
+LEGACY_ASSETS = tuple(name.replace('ned-', 'Zed-No-AI-') for name in ASSETS)
 
 
 def gh(*args, check=True):
@@ -68,7 +68,7 @@ def publish(directory, repository, commit, run_number, run_url):
 
     directory = Path(directory)
     assets = ASSETS
-    if not any(directory.rglob('nain-*.dmg')) and any(directory.rglob('Zed-No-AI-*.dmg')):
+    if not any(directory.rglob('ned-*.dmg')) and any(directory.rglob('Zed-No-AI-*.dmg')):
         assets = LEGACY_ASSETS
     installers = {}
     for name in assets:
@@ -126,7 +126,7 @@ def publish(directory, repository, commit, run_number, run_url):
         target = ('--verify-tag',) if tagged_commit is not None else ('--target', commit)
         try:
             gh('release', 'create', tag, '--repo', repository, *target,
-               '--draft', '--prerelease', '--latest=false', '--title', f'Nain development build {run_number}',
+               '--draft', '--prerelease', '--latest=false', '--title', f'Ned development build {run_number}',
                '--notes-file', str(notes))
         except RuntimeError as error:
             if tagged_commit is None and '403' in str(error):

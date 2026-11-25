@@ -85,7 +85,7 @@ fn build_application() -> Application {
 }
 
 fn files_not_created_on_launch(errors: HashMap<io::ErrorKind, Vec<&Path>>) {
-    let message = "Nain failed to launch";
+    let message = "Ned failed to launch";
     let error_details = errors
         .into_iter()
         .flat_map(|(kind, paths)| {
@@ -167,7 +167,7 @@ fn fail_to_open_window(e: anyhow::Error, _cx: &mut App) {
             proxy
                 .add_notification(
                     notification_id,
-                    Notification::new("Nain failed to launch")
+                    Notification::new("Ned failed to launch")
                         .body(Some(
                             format!(
                                 "{e:?}. See https://zed.dev/docs/linux for troubleshooting steps."
@@ -195,7 +195,7 @@ fn main() {
         unsafe {
             std::env::set_var(
                 "ZED_UPDATE_EXPLANATION",
-                "Install a signed release from github.com/ar4ft/nainzed/releases for automatic updates.",
+                "Install a signed release from github.com/ar4ft/ned/releases for automatic updates.",
             );
         }
     }
@@ -1576,7 +1576,7 @@ fn handle_open_request(request: OpenRequest, app_state: Arc<AppState>, cx: &mut 
     }
 
     if !request.open_channel_notes.is_empty() || request.join_channel.is_some() {
-        log::warn!("Collaboration links are disabled in Nain");
+        log::warn!("Collaboration links are disabled in Ned");
     }
     if let Some(task) = task {
         cx.spawn(async move |cx| {
@@ -1964,7 +1964,7 @@ fn parse_url_arg(arg: &str, cx: &App) -> String {
         Ok(path) => format!("file://{}", path.display()),
         Err(_) => {
             if arg.starts_with("file://")
-                || arg.starts_with("nain://")
+                || arg.starts_with("ned://")
                 || arg.starts_with("zed://")
                 || arg.starts_with("zed-cli://")
                 || arg.starts_with("ssh://")
