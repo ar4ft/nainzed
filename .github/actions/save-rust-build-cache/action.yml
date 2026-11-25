@@ -1,4 +1,4 @@
-name: Save nain compiler cache
+name: Save ned compiler cache
 description: Trim compiler outputs before saving snapshots; never archive Cargo target directories.
 inputs:
   compiler-key:
@@ -40,5 +40,5 @@ runs:
       uses: actions/cache/save@v4
       continue-on-error: true
       with:
-        path: ${{ runner.temp }}/nain-kache
+        path: ${{ runner.temp }}/ned-kache
         key: ${{ inputs.compiler-key }}

@@ -8,7 +8,7 @@ import subprocess
 import tempfile
 from pathlib import Path
 
-FORK = 'ar4ft/nainzed'
+FORK = 'ar4ft/ned'
 UPSTREAM = 'zed-industries/zed'
 
 
@@ -48,7 +48,7 @@ def impact(path):
         return 'Editing, files, LSP, completion or search behavior'
     if path.startswith('assets/'):
         return 'Application assets, themes or branding'
-    return 'Other upstream change; effect on Nain needs manual review'
+    return 'Other upstream change; effect on Ned needs manual review'
 
 
 def preserve_fork_automation(root, fork_base):
@@ -105,7 +105,7 @@ def review_report(root, previous, target, tag, conflicts, fork_base, withheld):
                   'The PR stays in draft; candidate validation waits for the manual review workflow.']
     lines += ['', '## Incoming automation held out of the candidate', '']
     lines += path_table(withheld) if withheld else ['No automation was imported into the candidate. Review the incoming automation paths below even if the merge conflicted.']
-    lines += ['', '## Actual changes to Nain requiring approval', '']
+    lines += ['', '## Actual changes to Ned requiring approval', '']
     lines += path_table(effective) if effective else ['No application changes were integrated; approval is still required once a candidate is resolved.']
     lines += ['', '## All incoming upstream changes and potential behavior impact', '']
     lines += path_table(incoming) if incoming else ['No changed paths in the incoming comparison; manual approval is still required.']

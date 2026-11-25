@@ -1,4 +1,4 @@
-name: Build Nain for Mac
+name: Build Ned for Mac
 on:
   workflow_dispatch:
   pull_request:
@@ -92,10 +92,10 @@ jobs:
         id: build
         run: script/build-no-ai-mac
       - name: Check fresh startup network attempts
-        run: python3 script/privacy-no-ai-mac.py --app 'target/release/bundle/osx/Nain.app' --output target/runtime-reports/privacy.json
+        run: python3 script/privacy-no-ai-mac.py --app 'target/release/bundle/osx/Ned.app' --output target/runtime-reports/privacy.json
       - name: Measure startup, memory, large files and notebooks
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
-        run: python3 script/benchmark-no-ai-mac.py --app 'target/release/bundle/osx/Nain.app' --output target/runtime-reports/mac-benchmark.json
+        run: python3 script/benchmark-no-ai-mac.py --app 'target/release/bundle/osx/Ned.app' --output target/runtime-reports/mac-benchmark.json
       - name: Measure notebook serialization and recovery
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: cargo run --locked --release -p notebook_safety --example benchmark > target/runtime-reports/notebook-benchmark.json
@@ -117,8 +117,8 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         with:
-          name: nain-${{ matrix.runner }}
-          path: target/nain-*/*
+          name: ned-${{ matrix.runner }}
+          path: target/ned-*/*
           if-no-files-found: error
       - name: Save bounded compiler caches (best effort)
         if: always() && !cancelled() && github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && inputs.checkout_ref == ''
@@ -145,7 +145,7 @@ jobs:
           python-version: '3.13'
       - uses: actions/download-artifact@v4
         with:
-          pattern: nain-*
+          pattern: ned-*
           merge-multiple: true
           path: packages
       - name: Publish checked development installers as a prerelease

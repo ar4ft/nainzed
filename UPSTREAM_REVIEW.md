@@ -44,25 +44,25 @@ The branch contains a **resolved, unapproved** merge of PR #3. All 46 merge conf
 | Added | `.github/workflows/welcome_first_contribution.yml` | GitHub automation, permissions, checks or publication |
 | Modified | `.github/workflows/wezel.yml` | GitHub automation, permissions, checks or publication |
 
-## Actual changes to Nain requiring approval
+## Actual changes to Ned requiring approval
 
 | Change | Path | Potential effect requiring review |
 | --- | --- | --- |
 | Modified | `.cargo/bundle-config.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `.cargo/config.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `.config/typos.toml` | Other upstream change; effect on Nain needs manual review |
-| Deleted | `.factory/prompts/crash/fix.md` | Other upstream change; effect on Nain needs manual review |
-| Deleted | `.factory/prompts/crash/investigate.md` | Other upstream change; effect on Nain needs manual review |
-| Deleted | `.factory/prompts/crash/link-issues.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `.gitignore` | Other upstream change; effect on Nain needs manual review |
-| Deleted | `.rules` | Other upstream change; effect on Nain needs manual review |
-| Modified | `.wezel/experiments/binary-size/experiment.toml` | Other upstream change; effect on Nain needs manual review |
-| Type changed | `AGENTS.md` | Other upstream change; effect on Nain needs manual review |
-| Deleted | `CLAUDE.md` | Other upstream change; effect on Nain needs manual review |
+| Modified | `.config/typos.toml` | Other upstream change; effect on Ned needs manual review |
+| Deleted | `.factory/prompts/crash/fix.md` | Other upstream change; effect on Ned needs manual review |
+| Deleted | `.factory/prompts/crash/investigate.md` | Other upstream change; effect on Ned needs manual review |
+| Deleted | `.factory/prompts/crash/link-issues.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `.gitignore` | Other upstream change; effect on Ned needs manual review |
+| Deleted | `.rules` | Other upstream change; effect on Ned needs manual review |
+| Modified | `.wezel/experiments/binary-size/experiment.toml` | Other upstream change; effect on Ned needs manual review |
+| Type changed | `AGENTS.md` | Other upstream change; effect on Ned needs manual review |
+| Deleted | `CLAUDE.md` | Other upstream change; effect on Ned needs manual review |
 | Modified | `Cargo.lock` | Dependencies, compilation, packaging or release behavior |
 | Modified | `Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `Dockerfile-collab` | AI or collaboration surface; verify it stays unavailable |
-| Deleted | `GEMINI.md` | Other upstream change; effect on Nain needs manual review |
+| Deleted | `GEMINI.md` | Other upstream change; effect on Ned needs manual review |
 | Deleted | `assets/icons/attach.svg` | Application assets, themes or branding |
 | Deleted | `assets/icons/book_copy.svg` | Application assets, themes or branding |
 | Deleted | `assets/icons/database_zap.svg` | Application assets, themes or branding |
@@ -82,26 +82,26 @@ The branch contains a **resolved, unapproved** merge of PR #3. All 46 merge conf
 | Modified | `assets/keymaps/vim.json` | Defaults, settings, shortcuts or feature availability |
 | Modified | `assets/no-ai-source-guards.json` | Application assets, themes or branding |
 | Modified | `assets/settings/default.json` | Defaults, settings, shortcuts or feature availability |
-| Modified | `corgi.toml` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/acp_thread/src/acp_thread.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/acp_thread/src/auth_methods.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/acp_thread/src/commands.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/acp_thread/src/compaction.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/acp_thread/src/config_options.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/acp_thread/src/connection.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/acp_thread/src/content.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/acp_thread/src/diff.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/acp_thread/src/diff/patch.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/acp_thread/src/elicitation.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/acp_thread/src/mention.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/acp_thread/src/notices.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/acp_thread/src/prompt_capabilities.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `corgi.toml` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/acp_thread/src/acp_thread.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/acp_thread/src/auth_methods.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/acp_thread/src/commands.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/acp_thread/src/compaction.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/acp_thread/src/config_options.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/acp_thread/src/connection.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/acp_thread/src/content.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/acp_thread/src/diff.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/acp_thread/src/diff/patch.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/acp_thread/src/elicitation.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/acp_thread/src/mention.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/acp_thread/src/notices.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/acp_thread/src/prompt_capabilities.rs` | Other upstream change; effect on Ned needs manual review |
 | Added | `crates/acp_thread/src/subagents.rs` | AI or collaboration surface; verify it stays unavailable |
-| Added | `crates/acp_thread/src/submission.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/acp_thread/src/terminal.rs` | Other upstream change; effect on Nain needs manual review |
+| Added | `crates/acp_thread/src/submission.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/acp_thread/src/terminal.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/acp_tools/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/acp_tools/src/acp_tools.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/action_log/src/action_log.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/acp_tools/src/acp_tools.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/action_log/src/action_log.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/agent/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/agent/src/agent.rs` | AI or collaboration surface; verify it stays unavailable |
 | Modified | `crates/agent/src/db.rs` | AI or collaboration surface; verify it stays unavailable |
@@ -211,34 +211,34 @@ The branch contains a **resolved, unapproved** merge of PR #3. All 46 merge conf
 | Added | `crates/agent_ui_benchmarks/README.md` | AI or collaboration surface; verify it stays unavailable |
 | Added | `crates/agent_ui_benchmarks/benches/model_search.rs` | AI or collaboration surface; verify it stays unavailable |
 | Modified | `crates/ai_onboarding/src/edit_prediction_onboarding_content.rs` | AI or collaboration surface; verify it stays unavailable |
-| Modified | `crates/ai_onboarding/src/plan_definitions.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/ai_onboarding/src/plan_definitions.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/anthropic/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/anthropic/src/anthropic.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/anthropic/src/completion.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/anthropic/src/anthropic.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/anthropic/src/completion.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/askpass/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/askpass/src/askpass.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/askpass/src/askpass.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/audio/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/audio/src/audio.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/audio/src/audio_pipeline.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/audio/src/audio_pipeline/rodio_ext.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/audio/src/audio.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/audio/src/audio_pipeline.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/audio/src/audio_pipeline/rodio_ext.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/auto_update_helper/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/auto_update_helper/build.rs` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/bedrock/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/bedrock/src/bedrock.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/bedrock/src/models.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/bedrock/src/bedrock.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/bedrock/src/models.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/bench_metrics/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/benchmarks/benches/editor_render.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/benchmarks/benches/editor_render.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/breadcrumbs/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/buffer_diff/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/buffer_diff/src/buffer_diff.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/call/src/call_impl/room.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/call_hierarchy/src/call_hierarchy.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/channel/src/channel_buffer.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/channel/src/channel_store.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/buffer_diff/src/buffer_diff.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/call/src/call_impl/room.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/call_hierarchy/src/call_hierarchy.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/channel/src/channel_buffer.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/channel/src/channel_store.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/cli/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/cli/build.rs` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/cli/src/cli.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/cli/src/main.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/cli/src/cli.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/cli/src/main.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/client/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/client/src/client.rs` | Privacy, networking, background work or updates |
 | Modified | `crates/client/src/llm_token.rs` | Privacy, networking, background work or updates |
@@ -246,14 +246,14 @@ The branch contains a **resolved, unapproved** merge of PR #3. All 46 merge conf
 | Modified | `crates/client/src/user.rs` | Privacy, networking, background work or updates |
 | Modified | `crates/client/src/zed_urls.rs` | Privacy, networking, background work or updates |
 | Modified | `crates/clock/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/clock/src/system_clock.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/clock/src/system_clock.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/cloud_api_client/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/cloud_api_types/src/cloud_api_types.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/cloud_api_types/src/websocket_protocol.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/cloud_api_types/src/cloud_api_types.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/cloud_api_types/src/websocket_protocol.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/cloud_llm_client/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/cloud_llm_client/src/cloud_llm_client.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/cloud_llm_client/src/cloud_llm_client.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/codestral/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/codestral/src/codestral.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/codestral/src/codestral.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/collab/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/collab/src/api/events.rs` | AI or collaboration surface; verify it stays unavailable |
 | Modified | `crates/collab/src/api/extensions.rs` | AI or collaboration surface; verify it stays unavailable |
@@ -280,14 +280,14 @@ The branch contains a **resolved, unapproved** merge of PR #3. All 46 merge conf
 | Modified | `crates/collab_ui/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/collab_ui/src/collab_panel.rs` | AI or collaboration surface; verify it stays unavailable |
 | Modified | `crates/collab_ui/src/collab_panel/channel_modal.rs` | AI or collaboration surface; verify it stays unavailable |
-| Modified | `crates/command_palette/src/command_palette.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/component/src/component.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/component/src/component_layout.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/context_server/src/client.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/context_server/src/context_server.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/context_server/src/listener.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/context_server/src/transport/stdio_transport.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/context_server/src/types.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/command_palette/src/command_palette.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/component/src/component.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/component/src/component_layout.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/context_server/src/client.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/context_server/src/context_server.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/context_server/src/listener.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/context_server/src/transport/stdio_transport.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/context_server/src/types.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/copilot/src/copilot.rs` | AI or collaboration surface; verify it stays unavailable |
 | Modified | `crates/copilot/src/copilot_edit_prediction_delegate.rs` | AI or collaboration surface; verify it stays unavailable |
 | Modified | `crates/copilot_chat/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
@@ -295,39 +295,39 @@ The branch contains a **resolved, unapproved** merge of PR #3. All 46 merge conf
 | Modified | `crates/copilot_chat/src/model.rs` | AI or collaboration surface; verify it stays unavailable |
 | Modified | `crates/crashes/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/credentials_provider/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/credentials_provider/src/credentials_provider.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/credentials_provider/src/test_support.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/credentials_provider/src/credentials_provider.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/credentials_provider/src/test_support.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/dap/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/dap/src/adapters.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/dap/src/dap.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/dap/src/debugger_settings.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/dap/src/transport.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/dap_adapters/src/codelldb.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/dap_adapters/src/go.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/dap_adapters/src/javascript.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/dap_adapters/src/python.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/dap/src/adapters.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/dap/src/dap.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/dap/src/debugger_settings.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/dap/src/transport.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/dap_adapters/src/codelldb.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/dap_adapters/src/go.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/dap_adapters/src/javascript.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/dap_adapters/src/python.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/db/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/debugger_ui/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/debugger_ui/src/debugger_panel.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/debugger_ui/src/dropdown_menus.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/debugger_ui/src/new_process_modal.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/debugger_ui/src/session/running.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/debugger_ui/src/session/running/memory_view.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/debugger_ui/src/session/running/stack_frame_list.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/debugger_ui/src/session/running/variable_list.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/debugger_ui/src/tests.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/debugger_ui/src/tests/debugger_panel.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/debugger_ui/src/tests/hover_values.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/debugger_ui/src/tests/inline_values.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/debugger_ui/src/debugger_panel.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/debugger_ui/src/dropdown_menus.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/debugger_ui/src/new_process_modal.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/debugger_ui/src/session/running.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/debugger_ui/src/session/running/memory_view.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/debugger_ui/src/session/running/stack_frame_list.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/debugger_ui/src/session/running/variable_list.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/debugger_ui/src/tests.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/debugger_ui/src/tests/debugger_panel.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/debugger_ui/src/tests/hover_values.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/debugger_ui/src/tests/inline_values.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/deepseek/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/dev_container/src/devcontainer_api.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/dev_container/src/devcontainer_manifest.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/dev_container/src/lib.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/dev_container/src/oci.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/diagnostics/src/diagnostics.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/dev_container/src/devcontainer_api.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/dev_container/src/devcontainer_manifest.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/dev_container/src/lib.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/dev_container/src/oci.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/diagnostics/src/diagnostics.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/docs_preprocessor/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/docs_preprocessor/src/ai_discovery.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/docs_preprocessor/src/main.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/docs_preprocessor/src/ai_discovery.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/docs_preprocessor/src/main.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/edit_prediction/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/edit_prediction/src/edit_prediction.rs` | AI or collaboration surface; verify it stays unavailable |
 | Modified | `crates/edit_prediction/src/edit_prediction_tests.rs` | AI or collaboration surface; verify it stays unavailable |
@@ -418,359 +418,359 @@ The branch contains a **resolved, unapproved** merge of PR #3. All 46 merge conf
 | Modified | `crates/editor/src/test/editor_lsp_test_context.rs` | Editing, files, LSP, completion or search behavior |
 | Modified | `crates/editor/src/test/editor_test_context.rs` | Editing, files, LSP, completion or search behavior |
 | Modified | `crates/editor_benchmarks/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/editor_benchmarks/src/main.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/editor_benchmarks/src/main.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/etw_tracing/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/etw_tracing/etw_tracing.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/eval_cli/Dockerfile` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/eval_cli/src/main.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/eval_cli/zed_eval/source.py` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/etw_tracing/etw_tracing.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/eval_cli/Dockerfile` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/eval_cli/src/main.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/eval_cli/zed_eval/source.py` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/explorer_command_injector/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/extension/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/extension/src/capabilities/download_file_capability.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/extension/src/capabilities/process_exec_capability.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/extension/src/extension.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/extension/src/extension_builder.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/extension/src/extension_host_proxy.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/extension/src/extension_manifest.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/extension/src/extension_resources.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/extension/src/capabilities/download_file_capability.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/extension/src/capabilities/process_exec_capability.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/extension/src/extension.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/extension/src/extension_builder.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/extension/src/extension_host_proxy.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/extension/src/extension_manifest.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/extension/src/extension_resources.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/extension_api/build.rs` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/extension_api/wit/since_v0.8.0/extension.wit` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/extension_api/wit/since_v0.8.0/extension.wit` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/extension_cli/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/extension_cli/src/main.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/extension_cli/src/main.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/extension_host/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/extension_host/src/extension_host.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/extension_host/src/extension_settings.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/extension_host/src/extension_store_test.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/extension_host/src/headless_host.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/extension_host/src/wasm_host.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/extension_host/src/wasm_host/wit/since_v0_1_0.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/extension_host/src/wasm_host/wit/since_v0_8_0.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/extension_host/src/extension_host.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/extension_host/src/extension_settings.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/extension_host/src/extension_store_test.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/extension_host/src/headless_host.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/extension_host/src/wasm_host.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/extension_host/src/wasm_host/wit/since_v0_1_0.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/extension_host/src/wasm_host/wit/since_v0_8_0.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/extension_suggest/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Added | `crates/extension_suggest/LICENSE-APACHE` | Other upstream change; effect on Nain needs manual review |
-| Deleted | `crates/extension_suggest/LICENSE-GPL` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/extension_suggest/src/extension_suggest.rs` | Other upstream change; effect on Nain needs manual review |
+| Added | `crates/extension_suggest/LICENSE-APACHE` | Other upstream change; effect on Ned needs manual review |
+| Deleted | `crates/extension_suggest/LICENSE-GPL` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/extension_suggest/src/extension_suggest.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/extensions_ui/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/extensions_ui/src/components.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/extensions_ui/src/components/extension_card.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/extensions_ui/src/extension_suggestions.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/extensions_ui/src/extensions_ui.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/extensions_ui/src/components.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/extensions_ui/src/components/extension_card.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/extensions_ui/src/extension_suggestions.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/extensions_ui/src/extensions_ui.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/feature_flags_macros/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/feedback/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/feedback/src/feedback.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/feedback/src/feedback.rs` | Other upstream change; effect on Ned needs manual review |
 | Added | `crates/file_content/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Added | `crates/file_content/LICENSE-GPL` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/file_content/src/file_content.rs` | Other upstream change; effect on Nain needs manual review |
+| Added | `crates/file_content/LICENSE-GPL` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/file_content/src/file_content.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/file_finder/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/file_finder/src/file_finder.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/file_finder/src/file_finder_tests.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/file_icons/src/file_icons.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/file_finder/src/file_finder.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/file_finder/src/file_finder_tests.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/file_icons/src/file_icons.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/fs/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/fs/src/fake_git_repo.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/fs/src/fs.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/fs/src/fs_watcher.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/fs/src/fs_watcher/diagnostics.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/fs/tests/integration/fake_git_repo_tests.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/fs/tests/integration/fs_tests.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/fs/src/fake_git_repo.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/fs/src/fs.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/fs/src/fs_watcher.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/fs/src/fs_watcher/diagnostics.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/fs/tests/integration/fake_git_repo_tests.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/fs/tests/integration/fs_tests.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/fs_benchmarks/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/fs_benchmarks/src/main.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/fuzzy/src/paths.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/fuzzy/src/strings.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/fs_benchmarks/src/main.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/fuzzy/src/paths.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/fuzzy/src/strings.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/fuzzy_nucleo/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/fuzzy_nucleo/benches/match_benchmark.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/fuzzy_nucleo/src/fuzzy_nucleo.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/fuzzy_nucleo/src/paths.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/fuzzy_nucleo/src/strings.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/fuzzy_nucleo/benches/match_benchmark.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/fuzzy_nucleo/src/fuzzy_nucleo.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/fuzzy_nucleo/src/paths.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/fuzzy_nucleo/src/strings.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/git/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/git/src/blame.rs` | Other upstream change; effect on Nain needs manual review |
-| Deleted | `crates/git/src/checkpoint.gitignore` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git/src/git.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git/src/repository.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git/src/status.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_hosting_providers/src/providers.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_hosting_providers/src/providers/azure.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_hosting_providers/src/providers/forgejo.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/git_hosting_providers/src/providers/gerrit.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/git_hosting_providers/src/providers/gitiles.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_hosting_providers/src/settings.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/git/src/blame.rs` | Other upstream change; effect on Ned needs manual review |
+| Deleted | `crates/git/src/checkpoint.gitignore` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git/src/git.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git/src/repository.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git/src/status.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_hosting_providers/src/providers.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_hosting_providers/src/providers/azure.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_hosting_providers/src/providers/forgejo.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/git_hosting_providers/src/providers/gerrit.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/git_hosting_providers/src/providers/gitiles.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_hosting_providers/src/settings.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/git_ui/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/git_ui/src/blame_ui.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_ui/src/branch_diff.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_ui/src/branch_picker.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_ui/src/clone.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_ui/src/commit_context_menu.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_ui/src/commit_modal.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_ui/src/commit_tooltip.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_ui/src/commit_view.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_ui/src/conflict_view.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_ui/src/diff_multibuffer.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_ui/src/git_graph.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_ui/src/git_panel.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/git_ui/src/git_panel/branch_mode.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_ui/src/git_panel_settings.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_ui/src/git_picker.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/git_ui/src/git_timestamp.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_ui/src/git_ui.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_ui/src/multi_diff_view.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_ui/src/project_diff.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_ui/src/remote_output.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_ui/src/repository_selector.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_ui/src/stash_picker.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_ui/src/text_diff_view.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_ui_core/src/created_worktrees.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_ui_core/src/git_ui_core.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_ui_core/src/notifications.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/git_ui_core/src/worktree_labels.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_ui_core/src/worktree_picker.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_ui_core/src/worktree_service.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/git_ui/src/blame_ui.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_ui/src/branch_diff.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_ui/src/branch_picker.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_ui/src/clone.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_ui/src/commit_context_menu.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_ui/src/commit_modal.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_ui/src/commit_tooltip.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_ui/src/commit_view.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_ui/src/conflict_view.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_ui/src/diff_multibuffer.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_ui/src/git_graph.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_ui/src/git_panel.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/git_ui/src/git_panel/branch_mode.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_ui/src/git_panel_settings.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_ui/src/git_picker.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/git_ui/src/git_timestamp.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_ui/src/git_ui.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_ui/src/multi_diff_view.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_ui/src/project_diff.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_ui/src/remote_output.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_ui/src/repository_selector.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_ui/src/stash_picker.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_ui/src/text_diff_view.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_ui_core/src/created_worktrees.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_ui_core/src/git_ui_core.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_ui_core/src/notifications.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/git_ui_core/src/worktree_labels.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_ui_core/src/worktree_picker.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_ui_core/src/worktree_service.rs` | Other upstream change; effect on Ned needs manual review |
 | Added | `crates/github_releases/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Added | `crates/github_releases/LICENSE-APACHE` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/github_releases/src/github_releases.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/github_releases/src/releases.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/go_to_line/src/go_to_line.rs` | Other upstream change; effect on Nain needs manual review |
+| Added | `crates/github_releases/LICENSE-APACHE` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/github_releases/src/github_releases.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/github_releases/src/releases.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/go_to_line/src/go_to_line.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/google_ai/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/google_ai/src/completion.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/google_ai/src/google_ai.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/google_ai/src/completion.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/google_ai/src/google_ai.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/gpui/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Added | `crates/gpui/benches/focus_cleanup.rs` | Other upstream change; effect on Nain needs manual review |
+| Added | `crates/gpui/benches/focus_cleanup.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/gpui/build.rs` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/gpui/examples/README.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/examples/image/image.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/examples/image_gallery.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/examples/input.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui/examples/native_view.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui/examples/native_view_appkit_field.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/examples/painting.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/examples/paths_bench.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui/examples/svg_animation.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/examples/system_notifications.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/examples/testing.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui/examples/toggle_headless.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/examples/view_example/example_editor.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/examples/window_positioning.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/action.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/app.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/app/async_context.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/app/bench_context.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/app/context.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/app/entity_map.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/app/headless_app_context.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/app/test_app.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/app/test_context.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/app/visual_test_context.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui/src/bench.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/bounds_tree.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/colors.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/element.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/elements/anchored.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/elements/animation.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/elements/canvas.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/elements/container_query.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/elements/deferred.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/elements/div.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/elements/image_cache.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/elements/img.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/elements/list.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/elements/surface.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/elements/svg.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/elements/text.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/elements/uniform_list.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/executor.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/geometry.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/gestures.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/gpui.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui/src/hot_reload.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/input.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/interactive.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/key_dispatch.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/keymap.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/keymap/binding.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/keymap/context.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/path_builder.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui/src/path_winding.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/platform.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/platform/keystroke.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui/src/platform/platform_info.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/platform/test/display.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/platform/test/platform.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/platform/test/window.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/platform/visual_test.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/profiler.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/profiler/hang.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/profiler/hang/monitor.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/profiler/journal.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/queue.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/randomized_element_tree.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/scene.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/style.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/styled.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/subscription.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/svg_renderer.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/tab_stop.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/taffy.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/text_system.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/text_system/font_features.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/text_system/line.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/text_system/line_layout.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/text_system/line_wrapper.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/view.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/window.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui/src/window/native_view.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui/tests/eq_hash.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/gpui/examples/README.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/examples/image/image.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/examples/image_gallery.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/examples/input.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui/examples/native_view.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui/examples/native_view_appkit_field.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/examples/painting.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/examples/paths_bench.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui/examples/svg_animation.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/examples/system_notifications.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/examples/testing.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui/examples/toggle_headless.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/examples/view_example/example_editor.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/examples/window_positioning.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/action.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/app.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/app/async_context.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/app/bench_context.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/app/context.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/app/entity_map.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/app/headless_app_context.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/app/test_app.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/app/test_context.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/app/visual_test_context.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui/src/bench.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/bounds_tree.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/colors.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/element.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/elements/anchored.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/elements/animation.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/elements/canvas.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/elements/container_query.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/elements/deferred.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/elements/div.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/elements/image_cache.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/elements/img.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/elements/list.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/elements/surface.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/elements/svg.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/elements/text.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/elements/uniform_list.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/executor.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/geometry.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/gestures.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/gpui.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui/src/hot_reload.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/input.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/interactive.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/key_dispatch.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/keymap.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/keymap/binding.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/keymap/context.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/path_builder.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui/src/path_winding.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/platform.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/platform/keystroke.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui/src/platform/platform_info.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/platform/test/display.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/platform/test/platform.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/platform/test/window.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/platform/visual_test.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/profiler.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/profiler/hang.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/profiler/hang/monitor.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/profiler/journal.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/queue.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/randomized_element_tree.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/scene.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/style.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/styled.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/subscription.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/svg_renderer.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/tab_stop.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/taffy.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/text_system.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/text_system/font_features.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/text_system/line.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/text_system/line_layout.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/text_system/line_wrapper.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/view.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/window.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui/src/window/native_view.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui/tests/eq_hash.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/gpui_apple/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/gpui_apple/build.rs` | Dependencies, compilation, packaging or release behavior |
-| Added | `crates/gpui_apple/src/dispatcher.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui_apple/src/display_link.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_apple/src/gpui_apple.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui_apple/src/keychain.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_apple/src/metal_atlas.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_apple/src/metal_renderer.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui_apple/src/open_type.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui_apple/src/process_info.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_apple/src/shaders.metal` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui_apple/src/text_system.rs` | Other upstream change; effect on Nain needs manual review |
+| Added | `crates/gpui_apple/src/dispatcher.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui_apple/src/display_link.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_apple/src/gpui_apple.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui_apple/src/keychain.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_apple/src/metal_atlas.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_apple/src/metal_renderer.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui_apple/src/open_type.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui_apple/src/process_info.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_apple/src/shaders.metal` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui_apple/src/text_system.rs` | Other upstream change; effect on Ned needs manual review |
 | Added | `crates/gpui_ios/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Added | `crates/gpui_ios/LICENSE-APACHE` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui_ios/examples/ios.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui_ios/examples/ios/app/Info.plist` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui_ios/examples/ios/build-simulator.sh` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui_ios/src/gpui_ios.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui_ios/src/ios.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui_ios/src/ios/application.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui_ios/src/ios/display.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui_ios/src/ios/events.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui_ios/src/ios/platform.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui_ios/src/ios/text_input.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui_ios/src/ios/window.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui_ios/tests/text_input.rs` | Other upstream change; effect on Nain needs manual review |
+| Added | `crates/gpui_ios/LICENSE-APACHE` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui_ios/examples/ios.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui_ios/examples/ios/app/Info.plist` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui_ios/examples/ios/build-simulator.sh` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui_ios/src/gpui_ios.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui_ios/src/ios.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui_ios/src/ios/application.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui_ios/src/ios/display.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui_ios/src/ios/events.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui_ios/src/ios/platform.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui_ios/src/ios/text_input.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui_ios/src/ios/window.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui_ios/tests/text_input.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/gpui_linux/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/gpui_linux/src/gpui_linux.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_linux/src/linux.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_linux/src/linux/dispatcher.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui_linux/src/linux/display_connection.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_linux/src/linux/headless.rs` | Other upstream change; effect on Nain needs manual review |
-| Deleted | `crates/gpui_linux/src/linux/headless/client.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_linux/src/linux/headless/window.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_linux/src/linux/platform.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui_linux/src/linux/power.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_linux/src/linux/wayland/client.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_linux/src/linux/wayland/clipboard.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_linux/src/linux/wayland/display.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_linux/src/linux/wayland/serial.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_linux/src/linux/wayland/window.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_linux/src/linux/x11.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_linux/src/linux/x11/client.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_linux/src/linux/x11/clipboard.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_linux/src/linux/x11/display.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_linux/src/linux/x11/window.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_linux/src/linux/xdg_desktop_portal.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/gpui_linux/src/gpui_linux.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_linux/src/linux.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_linux/src/linux/dispatcher.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui_linux/src/linux/display_connection.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_linux/src/linux/headless.rs` | Other upstream change; effect on Ned needs manual review |
+| Deleted | `crates/gpui_linux/src/linux/headless/client.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_linux/src/linux/headless/window.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_linux/src/linux/platform.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui_linux/src/linux/power.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_linux/src/linux/wayland/client.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_linux/src/linux/wayland/clipboard.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_linux/src/linux/wayland/display.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_linux/src/linux/wayland/serial.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_linux/src/linux/wayland/window.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_linux/src/linux/x11.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_linux/src/linux/x11/client.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_linux/src/linux/x11/clipboard.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_linux/src/linux/x11/display.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_linux/src/linux/x11/window.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_linux/src/linux/xdg_desktop_portal.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/gpui_macos/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Deleted | `crates/gpui_macos/src/dispatcher.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_macos/src/display.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_macos/src/display_link.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_macos/src/events.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_macos/src/gpui_macos.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_macos/src/keyboard.rs` | Other upstream change; effect on Nain needs manual review |
-| Deleted | `crates/gpui_macos/src/open_type.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_macos/src/pasteboard.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_macos/src/platform.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_macos/src/system_notifications.rs` | Other upstream change; effect on Nain needs manual review |
-| Deleted | `crates/gpui_macos/src/text_system.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_macos/src/window.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui_macos/src/window/native_views.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_macos/src/window_appearance.rs` | Other upstream change; effect on Nain needs manual review |
+| Deleted | `crates/gpui_macos/src/dispatcher.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_macos/src/display.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_macos/src/display_link.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_macos/src/events.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_macos/src/gpui_macos.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_macos/src/keyboard.rs` | Other upstream change; effect on Ned needs manual review |
+| Deleted | `crates/gpui_macos/src/open_type.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_macos/src/pasteboard.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_macos/src/platform.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_macos/src/system_notifications.rs` | Other upstream change; effect on Ned needs manual review |
+| Deleted | `crates/gpui_macos/src/text_system.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_macos/src/window.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui_macos/src/window/native_views.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_macos/src/window_appearance.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/gpui_macros/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/gpui_macros/src/derive_inspector_reflection.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_macros/src/property_test.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/gpui_macros/src/derive_inspector_reflection.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_macros/src/property_test.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/gpui_platform/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Added | `crates/gpui_platform/benches/atlas_upload.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_platform/benches/inspector_render.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui_platform/benches/primitives.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_platform/benches/randomized_element_tree.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_platform/src/gpui_platform.rs` | Other upstream change; effect on Nain needs manual review |
+| Added | `crates/gpui_platform/benches/atlas_upload.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_platform/benches/inspector_render.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui_platform/benches/primitives.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_platform/benches/randomized_element_tree.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_platform/src/gpui_platform.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/gpui_shared_string/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/gpui_shared_string/gpui_shared_string.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/gpui_shared_string/gpui_shared_string.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/gpui_tokio/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/gpui_util/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/gpui_util/src/lib.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/gpui_util/src/lib.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/gpui_web/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/gpui_web/examples/hello_web/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Added | `crates/gpui_web/examples/hello_web/http_client_test.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_web/examples/hello_web/index.html` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_web/examples/hello_web/test_canvas_fallback.mjs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui_web/examples/hello_web/test_http_client.mjs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_web/examples/hello_web/test_queue.mjs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_web/src/dispatcher.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_web/src/display.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_web/src/events.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_web/src/http_client.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_web/src/platform.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_web/src/viewport.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_web/src/window.rs` | Other upstream change; effect on Nain needs manual review |
+| Added | `crates/gpui_web/examples/hello_web/http_client_test.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_web/examples/hello_web/index.html` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_web/examples/hello_web/test_canvas_fallback.mjs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui_web/examples/hello_web/test_http_client.mjs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_web/examples/hello_web/test_queue.mjs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_web/src/dispatcher.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_web/src/display.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_web/src/events.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_web/src/http_client.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_web/src/platform.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_web/src/viewport.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_web/src/window.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/gpui_wgpu/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/gpui_wgpu/src/cosmic_text_system.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_wgpu/src/shaders.wgsl` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_wgpu/src/shaders_storage.wgsl` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_wgpu/src/shaders_subpixel.wgsl` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_wgpu/src/shaders_webgl.wgsl` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_wgpu/src/wgpu_atlas.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_wgpu/src/wgpu_context.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_wgpu/src/wgpu_renderer.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/gpui_wgpu/src/cosmic_text_system.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_wgpu/src/shaders.wgsl` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_wgpu/src/shaders_storage.wgsl` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_wgpu/src/shaders_subpixel.wgsl` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_wgpu/src/shaders_webgl.wgsl` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_wgpu/src/wgpu_atlas.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_wgpu/src/wgpu_context.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_wgpu/src/wgpu_renderer.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/gpui_windows/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/gpui_windows/build.rs` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/gpui_windows/src/clipboard.rs` | Other upstream change; effect on Nain needs manual review |
-| Deleted | `crates/gpui_windows/src/color_text_raster.hlsl` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_windows/src/direct_manipulation.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_windows/src/direct_write.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_windows/src/directx_renderer.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_windows/src/display.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_windows/src/events.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_windows/src/platform.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_windows/src/shaders.hlsl` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_windows/src/vsync.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_windows/src/window.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/grammars/src/bash/config.toml` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/grammars/src/c/highlights.scm` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/grammars/src/cpp/highlights.scm` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/grammars/src/env/brackets.scm` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/grammars/src/env/config.toml` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/grammars/src/env/highlights.scm` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/grammars/src/env/injections.scm` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/grammars/src/env/overrides.scm` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/grammars/src/env/redactions.scm` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/grammars/src/go/highlights.scm` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/grammars/src/go/runnables.scm` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/grammars/src/javascript/injections.scm` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/grammars/src/rust/injections.scm` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/grammars/src/tsx/highlights.scm` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/grammars/src/tsx/injections.scm` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/grammars/src/typescript/highlights.scm` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/grammars/src/typescript/injections.scm` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/gpui_windows/src/clipboard.rs` | Other upstream change; effect on Ned needs manual review |
+| Deleted | `crates/gpui_windows/src/color_text_raster.hlsl` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_windows/src/direct_manipulation.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_windows/src/direct_write.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_windows/src/directx_renderer.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_windows/src/display.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_windows/src/events.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_windows/src/platform.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_windows/src/shaders.hlsl` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_windows/src/vsync.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_windows/src/window.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/grammars/src/bash/config.toml` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/grammars/src/c/highlights.scm` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/grammars/src/cpp/highlights.scm` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/grammars/src/env/brackets.scm` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/grammars/src/env/config.toml` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/grammars/src/env/highlights.scm` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/grammars/src/env/injections.scm` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/grammars/src/env/overrides.scm` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/grammars/src/env/redactions.scm` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/grammars/src/go/highlights.scm` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/grammars/src/go/runnables.scm` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/grammars/src/javascript/injections.scm` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/grammars/src/rust/injections.scm` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/grammars/src/tsx/highlights.scm` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/grammars/src/tsx/injections.scm` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/grammars/src/typescript/highlights.scm` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/grammars/src/typescript/injections.scm` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/hang_telemetry/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/hang_telemetry/src/hang_telemetry.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/hang_telemetry/src/hang_telemetry.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/html_to_markdown/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/html_to_markdown/src/html_element.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/html_to_markdown/src/html_element.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/http_client/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Deleted | `crates/http_client/src/github.rs` | Privacy, networking, background work or updates |
 | Deleted | `crates/http_client/src/github_download.rs` | Privacy, networking, background work or updates |
 | Modified | `crates/http_client/src/http_client.rs` | Privacy, networking, background work or updates |
 | Modified | `crates/http_client_tls/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/http_proxy/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/http_proxy/src/allowlist.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/http_proxy/src/pinned_host.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/http_proxy/src/proxy/connection.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/http_proxy/src/allowlist.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/http_proxy/src/pinned_host.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/http_proxy/src/proxy/connection.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/icons/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/icons/src/icons.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/image_viewer/src/image_info.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/image_viewer/src/image_viewer.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/icons/src/icons.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/image_viewer/src/image_info.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/image_viewer/src/image_viewer.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/input_latency_ui/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/input_latency_ui/src/input_latency_ui.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/input_latency_ui/src/input_latency_ui.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/inspector_ui/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/inspector_ui/src/div_inspector.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/inspector_ui/src/div_inspector.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/install_cli/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/json_schema_store/src/json_schema_store.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/keymap_editor/src/action_completion_provider.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/keymap_editor/src/keymap_editor.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/keymap_editor/src/ui_components/keystroke_input.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/json_schema_store/src/json_schema_store.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/keymap_editor/src/action_completion_provider.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/keymap_editor/src/keymap_editor.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/keymap_editor/src/ui_components/keystroke_input.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/language/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Deleted | `crates/language/build.rs` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/language/src/available_languages.rs` | Editing, files, LSP, completion or search behavior |
@@ -849,84 +849,84 @@ The branch contains a **resolved, unapproved** merge of PR #3. All 46 merge conf
 | Modified | `crates/livekit_client/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/livekit_client/src/livekit_client/playback.rs` | AI or collaboration surface; verify it stays unavailable |
 | Modified | `crates/livekit_client/src/record.rs` | AI or collaboration surface; verify it stays unavailable |
-| Modified | `crates/lmstudio/src/lmstudio.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/lmstudio/src/lmstudio.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/lsp/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/lsp/src/input_handler.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/lsp/src/lsp.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/lsp_command_selector/src/lsp_command_selector.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/lsp_locations/src/lsp_locations.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/lsp/src/input_handler.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/lsp/src/lsp.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/lsp_command_selector/src/lsp_command_selector.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/lsp_locations/src/lsp_locations.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/markdown/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/markdown/src/html/html_minifier.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/markdown/src/markdown.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/markdown/src/mermaid.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/markdown/src/parser.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/markdown/src/html/html_minifier.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/markdown/src/markdown.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/markdown/src/mermaid.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/markdown/src/parser.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/markdown_preview/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/markdown_preview/src/markdown_preview_view.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/menu/src/menu.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/markdown_preview/src/markdown_preview_view.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/menu/src/menu.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/mermaid_render/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/mermaid_render/src/mermaid_render.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/mermaid_render/src/postprocess/accent_colors.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/mermaid_render/src/postprocess/accent_colors/class_diagram.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/mermaid_render/src/postprocess/accent_colors/mindmap.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/mermaid_render/src/postprocess/inject_css.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/mermaid_render/src/render.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/mermaid_render/tests/check_invalid_attrs.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/migrator/src/migrations.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/migrator/src/migrations/m_2026_09_29/settings.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/migrator/src/migrator.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/mermaid_render/src/mermaid_render.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/mermaid_render/src/postprocess/accent_colors.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/mermaid_render/src/postprocess/accent_colors/class_diagram.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/mermaid_render/src/postprocess/accent_colors/mindmap.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/mermaid_render/src/postprocess/inject_css.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/mermaid_render/src/render.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/mermaid_render/tests/check_invalid_attrs.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/migrator/src/migrations.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/migrator/src/migrations/m_2026_09_29/settings.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/migrator/src/migrator.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/miniprofiler_ui/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/miniprofiler_ui/src/miniprofiler_ui.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/miniprofiler_ui/src/miniprofiler_ui.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/mistral/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/mistral/src/mistral.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/multi_buffer/src/anchor.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/multi_buffer/src/multi_buffer.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/multi_buffer/src/multi_buffer_tests.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/multi_buffer/src/path_key.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/mistral/src/mistral.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/multi_buffer/src/anchor.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/multi_buffer/src/multi_buffer.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/multi_buffer/src/multi_buffer_tests.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/multi_buffer/src/path_key.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/net/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/node_runtime/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/node_runtime/src/node_runtime.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/node_runtime/tests/system_node.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/notifications/src/notification_store.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/notifications/src/status_toast.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/node_runtime/src/node_runtime.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/node_runtime/tests/system_node.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/notifications/src/notification_store.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/notifications/src/status_toast.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/oauth_callback_server/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/ollama/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/ollama/src/ollama.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/ollama/src/ollama.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/onboarding/src/onboarding.rs` | Startup, UI, menus, window behavior or action registration |
 | Modified | `crates/onboarding/src/theme_preview.rs` | Startup, UI, menus, window behavior or action registration |
 | Modified | `crates/open_ai/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/open_ai/src/chat_completion_transport_tests.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/open_ai/src/completion.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/open_ai/src/open_ai.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/open_ai/src/responses.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/open_ai/src/chat_completion_transport_tests.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/open_ai/src/completion.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/open_ai/src/open_ai.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/open_ai/src/responses.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/open_path_prompt/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/open_path_prompt/src/file_finder_settings.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/open_path_prompt/src/open_path_prompt.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/open_path_prompt/src/open_path_prompt_tests.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/open_router/src/open_router.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/open_path_prompt/src/file_finder_settings.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/open_path_prompt/src/open_path_prompt.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/open_path_prompt/src/open_path_prompt_tests.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/open_router/src/open_router.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/openai_subscribed/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/openai_subscribed/src/openai_subscribed.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/openai_subscribed/src/openai_subscribed.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/opencode/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Added | `crates/opencode/src/catalog.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/opencode/src/completion.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/opencode/src/opencode.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/outline/src/outline.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/outline_panel/src/outline_panel.rs` | Other upstream change; effect on Nain needs manual review |
+| Added | `crates/opencode/src/catalog.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/opencode/src/completion.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/opencode/src/opencode.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/outline/src/outline.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/outline_panel/src/outline_panel.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/path/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/path/src/abs_path.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/path/src/path.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/path/src/path_component.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/path/src/rel_path.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/path/src/windows_prefix.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/paths/src/paths.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/picker/src/head.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/picker/src/picker.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/path/src/abs_path.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/path/src/path.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/path/src/path_component.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/path/src/rel_path.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/path/src/windows_prefix.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/paths/src/paths.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/picker/src/head.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/picker/src/picker.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/picker_preview/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/picker_preview/src/picker_preview.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/picker_preview/src/picker_preview.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/platform_title_bar/src/platform_title_bar.rs` | Startup, UI, menus, window behavior or action registration |
 | Modified | `crates/platform_title_bar/src/platforms/platform_linux.rs` | Startup, UI, menus, window behavior or action registration |
 | Modified | `crates/platform_title_bar/src/system_window_tabs.rs` | Startup, UI, menus, window behavior or action registration |
 | Added | `crates/platform_title_bar/src/title_bar_settings.rs` | Startup, UI, menus, window behavior or action registration |
-| Modified | `crates/prettier/src/prettier.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/prettier/src/prettier.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/project/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/project/src/agent_registry_store.rs` | AI or collaboration surface; verify it stays unavailable |
 | Modified | `crates/project/src/agent_server_store.rs` | AI or collaboration surface; verify it stays unavailable |
@@ -975,34 +975,34 @@ The branch contains a **resolved, unapproved** merge of PR #3. All 46 merge conf
 | Modified | `crates/project/tests/integration/trusted_worktrees.rs` | Editing, files, LSP, completion or search behavior |
 | Modified | `crates/project_benchmarks/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Added | `crates/project_bookmarks/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Added | `crates/project_bookmarks/LICENSE-GPL` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/project_bookmarks/src/project_bookmarks.rs` | Other upstream change; effect on Nain needs manual review |
+| Added | `crates/project_bookmarks/LICENSE-GPL` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/project_bookmarks/src/project_bookmarks.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/project_panel/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/project_panel/benches/sorting.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/project_panel/src/project_panel.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/project_panel/src/project_panel_tests.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/project_panel/src/undo.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/project_symbols/src/project_symbols.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/prompt_store/src/prompt_store.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/prompt_store/src/prompts.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/project_panel/benches/sorting.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/project_panel/src/project_panel.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/project_panel/src/project_panel_tests.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/project_panel/src/undo.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/project_symbols/src/project_symbols.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/prompt_store/src/prompt_store.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/prompt_store/src/prompts.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/proto/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/proto/proto/ai.proto` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/proto/proto/call.proto` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/proto/proto/git.proto` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/proto/proto/lsp.proto` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/proto/proto/worktree.proto` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/proto/proto/zed.proto` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/proto/src/error.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/proto/src/proto.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/proxy_handshake/src/proxy_handshake.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/proto/proto/ai.proto` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/proto/proto/call.proto` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/proto/proto/git.proto` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/proto/proto/lsp.proto` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/proto/proto/worktree.proto` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/proto/proto/zed.proto` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/proto/src/error.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/proto/src/proto.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/proxy_handshake/src/proxy_handshake.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/recent_projects/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/recent_projects/src/disconnected_overlay.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/recent_projects/src/recent_projects.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/recent_projects/src/remote_connections.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/recent_projects/src/remote_servers.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/recent_projects/src/remote_servers/filter.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/recent_projects/src/sidebar_recent_projects.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/recent_projects/src/wsl_picker.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/recent_projects/src/disconnected_overlay.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/recent_projects/src/recent_projects.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/recent_projects/src/remote_connections.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/recent_projects/src/remote_servers.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/recent_projects/src/remote_servers/filter.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/recent_projects/src/sidebar_recent_projects.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/recent_projects/src/wsl_picker.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/refineable/derive_refineable/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/remote/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Added | `crates/remote/src/command.rs` | Privacy, networking, background work or updates |
@@ -1041,55 +1041,55 @@ The branch contains a **resolved, unapproved** merge of PR #3. All 46 merge conf
 | Modified | `crates/repl/src/session.rs` | Notebook data, execution, kernels or completion |
 | Modified | `crates/reqwest_client/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/rope/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/rope/src/chunk.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/rope/src/rope.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/rope/src/chunk.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/rope/src/rope.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/rpc/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/rpc/src/conn.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/rpc/src/message_stream.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/rpc/src/peer.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/rpc/src/conn.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/rpc/src/message_stream.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/rpc/src/peer.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/sandbox/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/sandbox/README.md` | Other upstream change; effect on Nain needs manual review |
-| Deleted | `crates/sandbox/src/bwrap_test_helper.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/sandbox/src/linux_bubblewrap.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/sandbox/src/macos_seatbelt.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/sandbox/src/sandbox.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/sandbox/src/util.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/sandbox/src/util/canonical_path.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/sandbox/src/util/host_filesystem_location.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/sandbox/src/windows_psec.rs` | Other upstream change; effect on Nain needs manual review |
-| Deleted | `crates/sandbox/src/windows_wsl.rs` | Other upstream change; effect on Nain needs manual review |
-| Deleted | `crates/sandbox/src/wsl_sandbox_test_helper.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/sandbox/README.md` | Other upstream change; effect on Ned needs manual review |
+| Deleted | `crates/sandbox/src/bwrap_test_helper.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/sandbox/src/linux_bubblewrap.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/sandbox/src/macos_seatbelt.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/sandbox/src/sandbox.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/sandbox/src/util.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/sandbox/src/util/canonical_path.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/sandbox/src/util/host_filesystem_location.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/sandbox/src/windows_psec.rs` | Other upstream change; effect on Ned needs manual review |
+| Deleted | `crates/sandbox/src/windows_wsl.rs` | Other upstream change; effect on Ned needs manual review |
+| Deleted | `crates/sandbox/src/wsl_sandbox_test_helper.rs` | Other upstream change; effect on Ned needs manual review |
 | Added | `crates/sandbox_linux/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Added | `crates/sandbox_linux/DESIGN.md` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/sandbox_linux/LICENSE-GPL` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/sandbox_linux/examples/end_to_end.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/sandbox_linux/examples/run.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/sandbox_linux/src/broker.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/sandbox_linux/src/dns.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/sandbox_linux/src/helper.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/sandbox_linux/src/net.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/sandbox_linux/src/policy.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/sandbox_linux/src/process.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/sandbox_linux/src/protocol.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/sandbox_linux/src/resolve.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/sandbox_linux/src/sandbox_linux.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/sandbox_linux/src/seccomp.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/sandbox_linux/src/supervisor.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/sandbox_linux/src/sys.rs` | Other upstream change; effect on Nain needs manual review |
+| Added | `crates/sandbox_linux/DESIGN.md` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/sandbox_linux/LICENSE-GPL` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/sandbox_linux/examples/end_to_end.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/sandbox_linux/examples/run.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/sandbox_linux/src/broker.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/sandbox_linux/src/dns.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/sandbox_linux/src/helper.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/sandbox_linux/src/net.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/sandbox_linux/src/policy.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/sandbox_linux/src/process.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/sandbox_linux/src/protocol.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/sandbox_linux/src/resolve.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/sandbox_linux/src/sandbox_linux.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/sandbox_linux/src/seccomp.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/sandbox_linux/src/supervisor.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/sandbox_linux/src/sys.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/scheduler/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/scheduler/src/executor.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/scheduler/src/scheduler.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/scheduler/src/test_scheduler.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/scheduler/src/tests.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/scheduler/src/executor.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/scheduler/src/scheduler.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/scheduler/src/test_scheduler.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/scheduler/src/tests.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/schema_generator/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/search/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/search/src/buffer_search.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/search/src/project_search.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/search/src/search.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/search/src/search_bar.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/search/src/text_finder.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/search/src/text_finder/delegate.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/search/src/text_finder/render.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/search/src/buffer_search.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/search/src/project_search.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/search/src/search.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/search/src/search_bar.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/search/src/text_finder.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/search/src/text_finder/delegate.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/search/src/text_finder/render.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/settings/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Deleted | `crates/settings/src/editable_setting_control.rs` | Defaults, settings, shortcuts or feature availability |
 | Modified | `crates/settings/src/editorconfig_store.rs` | Defaults, settings, shortcuts or feature availability |
@@ -1119,171 +1119,171 @@ The branch contains a **resolved, unapproved** merge of PR #3. All 46 merge conf
 | Modified | `crates/settings_ui/src/components/font_picker.rs` | Defaults, settings, shortcuts or feature availability |
 | Modified | `crates/settings_ui/src/pages/audio_test_window.rs` | Defaults, settings, shortcuts or feature availability |
 | Modified | `crates/settings_ui/src/settings_ui.rs` | Defaults, settings, shortcuts or feature availability |
-| Modified | `crates/shell_command_parser/src/shell_command_parser.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/sidebar/src/sidebar.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/sidebar/src/sidebar_tests.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/sidebar/src/thread_switcher.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/snippet_provider/src/lib.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/snippet_provider/src/registry.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/snippets_ui/src/snippets_ui.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/shell_command_parser/src/shell_command_parser.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/sidebar/src/sidebar.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/sidebar/src/sidebar_tests.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/sidebar/src/thread_switcher.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/snippet_provider/src/lib.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/snippet_provider/src/registry.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/snippets_ui/src/snippets_ui.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/sqlez/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/sqlez/src/bindable.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/sqlez/src/connection.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/sqlez/src/migrations.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/sqlez/src/bindable.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/sqlez/src/connection.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/sqlez/src/migrations.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/sqlez_macros/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/sum_tree/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/sum_tree/src/sum_tree.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/sum_tree/src/sum_tree.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/svg_preview/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/svg_preview/src/svg_preview_view.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/tab_switcher/src/tab_switcher.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/tab_switcher/src/tab_switcher_tests.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/svg_preview/src/svg_preview_view.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/tab_switcher/src/tab_switcher.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/tab_switcher/src/tab_switcher_tests.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/tabular_data_preview/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/tabular_data_preview/src/renderer/preview_view.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/tabular_data_preview/src/renderer/render_table.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/tabular_data_preview/src/renderer/table_header.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/tabular_data_preview/src/settings.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/tabular_data_preview/src/table_data_engine.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/tabular_data_preview/src/table_view.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/tabular_data_preview/src/tabular_data_preview.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/tabular_data_preview/src/types/coordinates.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/tabular_data_preview/src/renderer/preview_view.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/tabular_data_preview/src/renderer/render_table.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/tabular_data_preview/src/renderer/table_header.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/tabular_data_preview/src/settings.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/tabular_data_preview/src/table_data_engine.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/tabular_data_preview/src/table_view.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/tabular_data_preview/src/tabular_data_preview.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/tabular_data_preview/src/types/coordinates.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/task/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Deleted | `crates/task/src/static_source.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/task/src/task.rs` | Other upstream change; effect on Nain needs manual review |
+| Deleted | `crates/task/src/static_source.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/task/src/task.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/tasks_ui/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/tasks_ui/src/modal.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/tasks_ui/src/tasks_ui.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/tasks_ui/src/modal.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/tasks_ui/src/tasks_ui.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/telemetry_events/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/telemetry_events/src/telemetry_events.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/terminal/src/alacritty.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/terminal/src/alacritty/hyperlinks.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/terminal/src/mappings/keys.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/terminal/src/mappings/mouse.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/terminal/src/terminal.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/telemetry_events/src/telemetry_events.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/terminal/src/alacritty.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/terminal/src/alacritty/hyperlinks.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/terminal/src/mappings/keys.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/terminal/src/mappings/mouse.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/terminal/src/terminal.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/terminal_view/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/terminal_view/src/persistence.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/terminal_view/src/terminal_element.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/terminal_view/src/terminal_panel.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/terminal_view/src/terminal_view.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/terminal_view/src/persistence.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/terminal_view/src/terminal_element.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/terminal_view/src/terminal_panel.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/terminal_view/src/terminal_view.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/text/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/text/src/anchor.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/text/src/network.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/text/src/selection.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/text/src/tests.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/text/src/text.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/text/src/anchor.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/text/src/network.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/text/src/selection.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/text/src/tests.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/text/src/text.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/theme/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/theme/src/default_colors.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/theme/src/icon_theme.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/theme/src/registry.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/theme/src/scale.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/theme/src/styles/colors.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/theme_extension/src/theme_extension.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/theme/src/default_colors.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/theme/src/icon_theme.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/theme/src/registry.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/theme/src/scale.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/theme/src/styles/colors.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/theme_extension/src/theme_extension.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/theme_importer/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/theme_importer/src/main.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/theme_importer/src/main.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/theme_settings/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/theme_settings/src/settings.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/theme_settings/src/theme_settings.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/theme_settings/src/settings.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/theme_settings/src/theme_settings.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/time_format/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/title_bar/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/title_bar/src/application_menu.rs` | Startup, UI, menus, window behavior or action registration |
 | Modified | `crates/title_bar/src/collab.rs` | Startup, UI, menus, window behavior or action registration |
 | Modified | `crates/title_bar/src/title_bar.rs` | Startup, UI, menus, window behavior or action registration |
 | Deleted | `crates/title_bar/src/title_bar_settings.rs` | Startup, UI, menus, window behavior or action registration |
-| Modified | `crates/toolchain_selector/src/toolchain_selector.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/toolchain_selector/src/toolchain_selector.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/ui/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/ui/src/components.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/ai.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/ai/ai_setting_item.rs` | Other upstream change; effect on Nain needs manual review |
-| Deleted | `crates/ui/src/components/ai/skills_illustration.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/ai/thread_item.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/banner.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/button/button.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/button/button_like.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/button/button_link.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/button/copy_button.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/button/icon_button.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/button/split_button.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/button/toggle_button.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/callout.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/chip.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/ui/src/components/choice_card.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/ui/src/components.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/ai.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/ai/ai_setting_item.rs` | Other upstream change; effect on Ned needs manual review |
+| Deleted | `crates/ui/src/components/ai/skills_illustration.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/ai/thread_item.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/banner.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/button/button.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/button/button_like.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/button/button_link.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/button/copy_button.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/button/icon_button.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/button/split_button.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/button/toggle_button.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/callout.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/chip.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/ui/src/components/choice_card.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/ui/src/components/collab/collab_notification.rs` | AI or collaboration surface; verify it stays unavailable |
-| Modified | `crates/ui/src/components/context_menu.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/ui/src/components/context_menu/preview.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/data_table/tests.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/diff_stat.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/dropdown_menu.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/icon.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/image.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/indent_guides.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/keybinding.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/label/label.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/label/loading_label.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/label/spinner_label.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/list/list_bullet_item.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/modal.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/notification/announcement_toast.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/popover_menu.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/project_empty_state.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/redistributable_columns.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/right_click_menu.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/scrollbar.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/sticky_items.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/tooltip.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/tree_view_item.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/styles/animation.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/traits/animation_ext.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/traits/toggleable.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/traits/transformable.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/utils.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/utils/format_distance.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/ui/src/utils/retained_focus.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/utils/with_rem_size.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui_input/src/input_field.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/ui/src/components/context_menu.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/ui/src/components/context_menu/preview.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/data_table/tests.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/diff_stat.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/dropdown_menu.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/icon.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/image.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/indent_guides.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/keybinding.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/label/label.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/label/loading_label.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/label/spinner_label.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/list/list_bullet_item.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/modal.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/notification/announcement_toast.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/popover_menu.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/project_empty_state.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/redistributable_columns.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/right_click_menu.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/scrollbar.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/sticky_items.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/tooltip.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/tree_view_item.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/styles/animation.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/traits/animation_ext.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/traits/toggleable.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/traits/transformable.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/utils.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/utils/format_distance.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/ui/src/utils/retained_focus.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/utils/with_rem_size.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui_input/src/input_field.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/ui_macros/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/util/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/util/src/fs.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/util/src/libc_type.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/util/src/markdown.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/util/src/path_list.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/util/src/paths.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/util/src/process.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/util/src/shell.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/util/src/shell_builder.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/util/src/shell_env.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/util/src/util.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/util/src/fs.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/util/src/libc_type.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/util/src/markdown.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/util/src/path_list.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/util/src/paths.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/util/src/process.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/util/src/shell.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/util/src/shell_builder.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/util/src/shell_env.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/util/src/util.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/util_macros/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/util_macros/src/util_macros.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/util_macros/src/util_macros.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/vim/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/vim/src/command.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/vim/src/digraph.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/vim/src/helix.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/vim/src/helix/paste.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/vim/src/helix/surround.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/vim/src/motion.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/vim/src/normal.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/vim/src/normal/increment.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/vim/src/normal/paste.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/vim/src/normal/repeat.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/vim/src/normal/search.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/vim/src/object.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/vim/src/state.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/vim/src/surrounds.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/vim/src/test/neovim_backed_test_context.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/vim/src/test/neovim_connection.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/vim/src/test/vim_test_context.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/vim/src/vim.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/vim/src/visual.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/vim/test_data/test_replace_repetition_operators.json` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/vim/test_data/test_star_hash_under_cursor.json` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/vim/test_data/test_visual_block_end_of_document_wrapped_eof.json` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/vim/test_data/test_visual_star_hash.json` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/watch/src/watch.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/web_search/src/web_search.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/vim/src/command.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/vim/src/digraph.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/vim/src/helix.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/vim/src/helix/paste.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/vim/src/helix/surround.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/vim/src/motion.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/vim/src/normal.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/vim/src/normal/increment.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/vim/src/normal/paste.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/vim/src/normal/repeat.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/vim/src/normal/search.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/vim/src/object.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/vim/src/state.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/vim/src/surrounds.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/vim/src/test/neovim_backed_test_context.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/vim/src/test/neovim_connection.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/vim/src/test/vim_test_context.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/vim/src/vim.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/vim/src/visual.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/vim/test_data/test_replace_repetition_operators.json` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/vim/test_data/test_star_hash_under_cursor.json` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/vim/test_data/test_visual_block_end_of_document_wrapped_eof.json` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/vim/test_data/test_visual_star_hash.json` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/watch/src/watch.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/web_search/src/web_search.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/which_key/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/which_key/src/pending_bindings.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/which_key/src/pending_keystrokes_indicator.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/which_key/src/which_key.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/which_key/src/which_key_modal.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/which_key/src/pending_bindings.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/which_key/src/pending_keystrokes_indicator.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/which_key/src/which_key.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/which_key/src/which_key_modal.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/workspace/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/workspace/src/dock.rs` | Startup, UI, menus, window behavior or action registration |
 | Modified | `crates/workspace/src/focus_follows_mouse.rs` | Startup, UI, menus, window behavior or action registration |
@@ -1309,12 +1309,12 @@ The branch contains a **resolved, unapproved** merge of PR #3. All 46 merge conf
 | Modified | `crates/workspace/src/workspace_error.rs` | Startup, UI, menus, window behavior or action registration |
 | Modified | `crates/workspace/src/workspace_settings.rs` | Startup, UI, menus, window behavior or action registration |
 | Modified | `crates/worktree/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/worktree/src/worktree.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/worktree/tests/integration/worktree_tests.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/worktree/src/worktree.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/worktree/tests/integration/worktree_tests.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/worktree_benchmarks/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/x_ai/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/x_ai_subscribed/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/x_ai_subscribed/src/x_ai_subscribed.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/x_ai_subscribed/src/x_ai_subscribed.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/zed/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/zed/build.rs` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/zed/resources/snap/snapcraft.yaml.in` | Startup, UI, menus, window behavior or action registration |
@@ -1326,84 +1326,84 @@ The branch contains a **resolved, unapproved** merge of PR #3. All 46 merge conf
 | Modified | `crates/zed/src/zed/open_listener.rs` | Startup, UI, menus, window behavior or action registration |
 | Modified | `crates/zed/src/zed/quick_action_bar/repl_menu.rs` | Startup, UI, menus, window behavior or action registration |
 | Modified | `crates/zed/src/zed/windows_only_instance.rs` | Startup, UI, menus, window behavior or action registration |
-| Modified | `crates/zed_actions/src/lib.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/zed_credentials_provider/src/zed_credentials_provider.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/zed_actions/src/lib.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/zed_credentials_provider/src/zed_credentials_provider.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/zeta_prompt/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/zeta_prompt/src/hashed_regions.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/zeta_prompt/src/multi_region.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/zeta_prompt/src/udiff.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/zeta_prompt/src/zeta_prompt.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/zeta_prompt/src/hashed_regions.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/zeta_prompt/src/multi_region.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/zeta_prompt/src/udiff.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/zeta_prompt/src/zeta_prompt.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/zlog/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/zlog/src/filter.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/zlog/src/zlog.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/zlog/src/filter.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/zlog/src/zlog.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/ztracing/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/ztracing_macro/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `docs/.prettierignore` | Other upstream change; effect on Nain needs manual review |
-| Deleted | `docs/.rules` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/AGENTS.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/README.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/book.toml` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/SUMMARY.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/account/plans-and-pricing.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/account/zed-hosted-models.md` | Other upstream change; effect on Nain needs manual review |
+| Modified | `docs/.prettierignore` | Other upstream change; effect on Ned needs manual review |
+| Deleted | `docs/.rules` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/AGENTS.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/README.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/book.toml` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/SUMMARY.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/account/plans-and-pricing.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/account/zed-hosted-models.md` | Other upstream change; effect on Ned needs manual review |
 | Modified | `docs/src/ai/agent-panel.md` | AI or collaboration surface; verify it stays unavailable |
 | Modified | `docs/src/ai/agent-settings.md` | AI or collaboration surface; verify it stays unavailable |
 | Modified | `docs/src/ai/edit-prediction.md` | AI or collaboration surface; verify it stays unavailable |
 | Modified | `docs/src/ai/external-agents.md` | AI or collaboration surface; verify it stays unavailable |
 | Modified | `docs/src/ai/parallel-agents.md` | AI or collaboration surface; verify it stays unavailable |
-| Modified | `docs/src/ai/sandboxing.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/ai/skills.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/ai/tool-permissions.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/ai/tools.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/ai/use-a-gateway.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/ai/use-an-existing-subscription.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/completions.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/configuring-languages.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/debugger.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/development/macos.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/development/release-notes.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/extensions/developing-extensions.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/extensions/languages.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/extensions/publishing/prerequisites.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/finding-navigating.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/git.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/helix.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/installation.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/key-bindings.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/languages.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/languages/css.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/languages/emmet.md` | Other upstream change; effect on Nain needs manual review |
-| Added | `docs/src/languages/env.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/languages/gleam.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/languages/html.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/languages/javascript.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/languages/python.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/languages/rego.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/languages/roc.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/languages/sh.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/languages/typescript.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/linux.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/macos.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/project-panel.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/reference/all-settings.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/reference/cli.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/remote-development.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/repl.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/tab-switcher.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/vim.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/visual-customization.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/windows-and-projects.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/worktree-trust.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/theme/analytics.js` | Other upstream change; effect on Nain needs manual review |
-| Deleted | `docs/theme/c15t@2.0.0-rc.3.js` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/theme/plugins.js` | Other upstream change; effect on Nain needs manual review |
-| Modified | `extensions/README.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `flake.lock` | Other upstream change; effect on Nain needs manual review |
-| Modified | `legal/terms.md` | Other upstream change; effect on Nain needs manual review |
-| Added | `legal/zed-product-terms.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `nix/build.nix` | Other upstream change; effect on Nain needs manual review |
-| Modified | `nix/dev/flake.lock` | Other upstream change; effect on Nain needs manual review |
-| Modified | `nix/dev/flake.nix` | Other upstream change; effect on Nain needs manual review |
+| Modified | `docs/src/ai/sandboxing.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/ai/skills.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/ai/tool-permissions.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/ai/tools.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/ai/use-a-gateway.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/ai/use-an-existing-subscription.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/completions.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/configuring-languages.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/debugger.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/development/macos.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/development/release-notes.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/extensions/developing-extensions.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/extensions/languages.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/extensions/publishing/prerequisites.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/finding-navigating.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/git.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/helix.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/installation.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/key-bindings.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/languages.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/languages/css.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/languages/emmet.md` | Other upstream change; effect on Ned needs manual review |
+| Added | `docs/src/languages/env.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/languages/gleam.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/languages/html.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/languages/javascript.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/languages/python.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/languages/rego.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/languages/roc.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/languages/sh.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/languages/typescript.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/linux.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/macos.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/project-panel.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/reference/all-settings.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/reference/cli.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/remote-development.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/repl.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/tab-switcher.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/vim.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/visual-customization.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/windows-and-projects.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/worktree-trust.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/theme/analytics.js` | Other upstream change; effect on Ned needs manual review |
+| Deleted | `docs/theme/c15t@2.0.0-rc.3.js` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/theme/plugins.js` | Other upstream change; effect on Ned needs manual review |
+| Modified | `extensions/README.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `flake.lock` | Other upstream change; effect on Ned needs manual review |
+| Modified | `legal/terms.md` | Other upstream change; effect on Ned needs manual review |
+| Added | `legal/zed-product-terms.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `nix/build.nix` | Other upstream change; effect on Ned needs manual review |
+| Modified | `nix/dev/flake.lock` | Other upstream change; effect on Ned needs manual review |
+| Modified | `nix/dev/flake.nix` | Other upstream change; effect on Ned needs manual review |
 | Deleted | `nix/livekit-libwebrtc/0001-shared-libraries.patch` | AI or collaboration surface; verify it stays unavailable |
 | Deleted | `nix/livekit-libwebrtc/README.md` | AI or collaboration surface; verify it stays unavailable |
 | Deleted | `nix/livekit-libwebrtc/chromium-129-rust.patch` | AI or collaboration surface; verify it stays unavailable |
@@ -1412,12 +1412,12 @@ The branch contains a **resolved, unapproved** merge of PR #3. All 46 merge conf
 | Deleted | `nix/livekit-libwebrtc/package.nix` | AI or collaboration surface; verify it stays unavailable |
 | Deleted | `nix/livekit-libwebrtc/sources.json` | AI or collaboration surface; verify it stays unavailable |
 | Deleted | `nix/livekit-libwebrtc/update.sh` | AI or collaboration surface; verify it stays unavailable |
-| Modified | `nix/modules/devshells.nix` | Other upstream change; effect on Nain needs manual review |
-| Modified | `nix/modules/packages.nix` | Other upstream change; effect on Nain needs manual review |
-| Added | `nix/tests/sandboxing/README.md` | Other upstream change; effect on Nain needs manual review |
-| Deleted | `nix/tests/sandboxing/bwrap_smoke_test.sh` | Other upstream change; effect on Nain needs manual review |
-| Modified | `nix/tests/sandboxing/default.nix` | Other upstream change; effect on Nain needs manual review |
-| Modified | `nix/tests/sandboxing/helper.nix` | Other upstream change; effect on Nain needs manual review |
+| Modified | `nix/modules/devshells.nix` | Other upstream change; effect on Ned needs manual review |
+| Modified | `nix/modules/packages.nix` | Other upstream change; effect on Ned needs manual review |
+| Added | `nix/tests/sandboxing/README.md` | Other upstream change; effect on Ned needs manual review |
+| Deleted | `nix/tests/sandboxing/bwrap_smoke_test.sh` | Other upstream change; effect on Ned needs manual review |
+| Modified | `nix/tests/sandboxing/default.nix` | Other upstream change; effect on Ned needs manual review |
+| Modified | `nix/tests/sandboxing/helper.nix` | Other upstream change; effect on Ned needs manual review |
 | Modified | `rust-toolchain.toml` | Dependencies, compilation, packaging or release behavior |
 | Deleted | `script/analyze_highlights.py` | Dependencies, compilation, packaging or release behavior |
 | Added | `script/bench-agent-model-search` | Dependencies, compilation, packaging or release behavior |
@@ -1452,35 +1452,35 @@ The branch contains a **resolved, unapproved** merge of PR #3. All 46 merge conf
 | Deleted | `script/triage_watcher.jl` | Dependencies, compilation, packaging or release behavior |
 | Modified | `script/update_top_ranking_issues/uv.lock` | Dependencies, compilation, packaging or release behavior |
 | Modified | `tooling/compliance/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `tooling/compliance/src/git.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `tooling/compliance/src/github.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `tooling/compliance/src/git.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `tooling/compliance/src/github.rs` | Other upstream change; effect on Ned needs manual review |
 | Added | `tooling/crates_io_client/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Added | `tooling/crates_io_client/LICENSE-APACHE` | Other upstream change; effect on Nain needs manual review |
-| Added | `tooling/crates_io_client/src/crates_io_client.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `tooling/crates_io_client/src/real_crates_io_client.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `tooling/crates_io_client/src/simulated_crates_io_client.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `tooling/crates_io_client/src/tests.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `tooling/crates_io_client/src/types.rs` | Other upstream change; effect on Nain needs manual review |
+| Added | `tooling/crates_io_client/LICENSE-APACHE` | Other upstream change; effect on Ned needs manual review |
+| Added | `tooling/crates_io_client/src/crates_io_client.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `tooling/crates_io_client/src/real_crates_io_client.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `tooling/crates_io_client/src/simulated_crates_io_client.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `tooling/crates_io_client/src/tests.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `tooling/crates_io_client/src/types.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `tooling/perf/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `tooling/xtask/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `tooling/xtask/src/main.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `tooling/xtask/src/tasks.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `tooling/xtask/src/tasks/gpui.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `tooling/xtask/src/tasks/gpui/publish_plan.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `tooling/xtask/src/tasks/gpui/registry.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `tooling/xtask/src/tasks/package_conformity.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `tooling/xtask/src/tasks/sandbox_tests.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `tooling/xtask/src/tasks/workflows/after_release.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `tooling/xtask/src/main.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `tooling/xtask/src/tasks.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `tooling/xtask/src/tasks/gpui.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `tooling/xtask/src/tasks/gpui/publish_plan.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `tooling/xtask/src/tasks/gpui/registry.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `tooling/xtask/src/tasks/package_conformity.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `tooling/xtask/src/tasks/sandbox_tests.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `tooling/xtask/src/tasks/workflows/after_release.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `tooling/xtask/src/tasks/workflows/deploy_collab.rs` | AI or collaboration surface; verify it stays unavailable |
-| Modified | `tooling/xtask/src/tasks/workflows/release.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `tooling/xtask/src/tasks/workflows/release_nightly.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `tooling/xtask/src/tasks/workflows/run_bundling.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `tooling/xtask/src/tasks/workflows/run_tests.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `tooling/xtask/src/tasks/workflows/runners.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `tooling/xtask/src/tasks/workflows/steps.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `tooling/xtask/src/tasks/workflows/vars.rs` | Other upstream change; effect on Nain needs manual review |
-| Deleted | `tooling/xtask/src/tasks/wsl_sandbox_tests.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `tooling/xtask/src/workspace.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `tooling/xtask/src/tasks/workflows/release.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `tooling/xtask/src/tasks/workflows/release_nightly.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `tooling/xtask/src/tasks/workflows/run_bundling.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `tooling/xtask/src/tasks/workflows/run_tests.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `tooling/xtask/src/tasks/workflows/runners.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `tooling/xtask/src/tasks/workflows/steps.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `tooling/xtask/src/tasks/workflows/vars.rs` | Other upstream change; effect on Ned needs manual review |
+| Deleted | `tooling/xtask/src/tasks/wsl_sandbox_tests.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `tooling/xtask/src/workspace.rs` | Other upstream change; effect on Ned needs manual review |
 
 ## All incoming upstream changes and potential behavior impact
 
@@ -1489,10 +1489,10 @@ The branch contains a **resolved, unapproved** merge of PR #3. All 46 merge conf
 | Modified | `.agents/skills/gpui-bench/SKILL.md` | AI or collaboration surface; verify it stays unavailable |
 | Modified | `.cargo/bundle-config.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `.cargo/config.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `.config/typos.toml` | Other upstream change; effect on Nain needs manual review |
-| Deleted | `.factory/prompts/crash/fix.md` | Other upstream change; effect on Nain needs manual review |
-| Deleted | `.factory/prompts/crash/investigate.md` | Other upstream change; effect on Nain needs manual review |
-| Deleted | `.factory/prompts/crash/link-issues.md` | Other upstream change; effect on Nain needs manual review |
+| Modified | `.config/typos.toml` | Other upstream change; effect on Ned needs manual review |
+| Deleted | `.factory/prompts/crash/fix.md` | Other upstream change; effect on Ned needs manual review |
+| Deleted | `.factory/prompts/crash/investigate.md` | Other upstream change; effect on Ned needs manual review |
+| Deleted | `.factory/prompts/crash/link-issues.md` | Other upstream change; effect on Ned needs manual review |
 | Modified | `.github/actionlint.yml` | GitHub automation, permissions, checks or publication |
 | Deleted | `.github/actions/check_style/action.yml` | GitHub automation, permissions, checks or publication |
 | Deleted | `.github/actions/run_tests/action.yml` | GitHub automation, permissions, checks or publication |
@@ -1516,16 +1516,16 @@ The branch contains a **resolved, unapproved** merge of PR #3. All 46 merge conf
 | Modified | `.github/workflows/triage_queue_board.yml` | GitHub automation, permissions, checks or publication |
 | Added | `.github/workflows/welcome_first_contribution.yml` | GitHub automation, permissions, checks or publication |
 | Modified | `.github/workflows/wezel.yml` | GitHub automation, permissions, checks or publication |
-| Modified | `.gitignore` | Other upstream change; effect on Nain needs manual review |
-| Deleted | `.rules` | Other upstream change; effect on Nain needs manual review |
-| Modified | `.wezel/experiments/binary-size/experiment.toml` | Other upstream change; effect on Nain needs manual review |
-| Type changed | `AGENTS.md` | Other upstream change; effect on Nain needs manual review |
-| Deleted | `CLAUDE.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `CONTRIBUTING.md` | Other upstream change; effect on Nain needs manual review |
+| Modified | `.gitignore` | Other upstream change; effect on Ned needs manual review |
+| Deleted | `.rules` | Other upstream change; effect on Ned needs manual review |
+| Modified | `.wezel/experiments/binary-size/experiment.toml` | Other upstream change; effect on Ned needs manual review |
+| Type changed | `AGENTS.md` | Other upstream change; effect on Ned needs manual review |
+| Deleted | `CLAUDE.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `CONTRIBUTING.md` | Other upstream change; effect on Ned needs manual review |
 | Modified | `Cargo.lock` | Dependencies, compilation, packaging or release behavior |
 | Modified | `Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `Dockerfile-collab` | AI or collaboration surface; verify it stays unavailable |
-| Deleted | `GEMINI.md` | Other upstream change; effect on Nain needs manual review |
+| Deleted | `GEMINI.md` | Other upstream change; effect on Ned needs manual review |
 | Deleted | `assets/icons/attach.svg` | Application assets, themes or branding |
 | Deleted | `assets/icons/book_copy.svg` | Application assets, themes or branding |
 | Deleted | `assets/icons/database_zap.svg` | Application assets, themes or branding |
@@ -1544,27 +1544,27 @@ The branch contains a **resolved, unapproved** merge of PR #3. All 46 merge conf
 | Modified | `assets/keymaps/macos/jetbrains.json` | Defaults, settings, shortcuts or feature availability |
 | Modified | `assets/keymaps/vim.json` | Defaults, settings, shortcuts or feature availability |
 | Modified | `assets/settings/default.json` | Defaults, settings, shortcuts or feature availability |
-| Modified | `corgi.toml` | Other upstream change; effect on Nain needs manual review |
+| Modified | `corgi.toml` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/acp_thread/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/acp_thread/src/acp_thread.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/acp_thread/src/auth_methods.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/acp_thread/src/commands.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/acp_thread/src/compaction.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/acp_thread/src/config_options.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/acp_thread/src/connection.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/acp_thread/src/content.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/acp_thread/src/diff.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/acp_thread/src/diff/patch.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/acp_thread/src/elicitation.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/acp_thread/src/mention.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/acp_thread/src/notices.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/acp_thread/src/prompt_capabilities.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/acp_thread/src/acp_thread.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/acp_thread/src/auth_methods.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/acp_thread/src/commands.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/acp_thread/src/compaction.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/acp_thread/src/config_options.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/acp_thread/src/connection.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/acp_thread/src/content.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/acp_thread/src/diff.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/acp_thread/src/diff/patch.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/acp_thread/src/elicitation.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/acp_thread/src/mention.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/acp_thread/src/notices.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/acp_thread/src/prompt_capabilities.rs` | Other upstream change; effect on Ned needs manual review |
 | Added | `crates/acp_thread/src/subagents.rs` | AI or collaboration surface; verify it stays unavailable |
-| Added | `crates/acp_thread/src/submission.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/acp_thread/src/terminal.rs` | Other upstream change; effect on Nain needs manual review |
+| Added | `crates/acp_thread/src/submission.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/acp_thread/src/terminal.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/acp_tools/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/acp_tools/src/acp_tools.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/action_log/src/action_log.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/acp_tools/src/acp_tools.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/action_log/src/action_log.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/agent/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/agent/src/agent.rs` | AI or collaboration surface; verify it stays unavailable |
 | Modified | `crates/agent/src/db.rs` | AI or collaboration surface; verify it stays unavailable |
@@ -1677,38 +1677,38 @@ The branch contains a **resolved, unapproved** merge of PR #3. All 46 merge conf
 | Added | `crates/agent_ui_benchmarks/README.md` | AI or collaboration surface; verify it stays unavailable |
 | Added | `crates/agent_ui_benchmarks/benches/model_search.rs` | AI or collaboration surface; verify it stays unavailable |
 | Modified | `crates/ai_onboarding/src/edit_prediction_onboarding_content.rs` | AI or collaboration surface; verify it stays unavailable |
-| Modified | `crates/ai_onboarding/src/plan_definitions.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/ai_onboarding/src/plan_definitions.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/anthropic/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/anthropic/src/anthropic.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/anthropic/src/completion.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/anthropic/src/anthropic.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/anthropic/src/completion.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/askpass/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/askpass/src/askpass.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/askpass/src/askpass.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/audio/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/audio/src/audio.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/audio/src/audio_pipeline.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/audio/src/audio_pipeline/rodio_ext.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/audio/src/audio.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/audio/src/audio_pipeline.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/audio/src/audio_pipeline/rodio_ext.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/auto_update_helper/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/auto_update_helper/build.rs` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/bedrock/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/bedrock/src/bedrock.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/bedrock/src/models.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/bedrock/src/bedrock.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/bedrock/src/models.rs` | Other upstream change; effect on Ned needs manual review |
 | Added | `crates/bench_metrics/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Added | `crates/bench_metrics/LICENSE-APACHE` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/bench_metrics/src/bench_metrics.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/benchmarks/benches/display_map.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/benchmarks/benches/edit_file_tool.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/benchmarks/benches/editor_render.rs` | Other upstream change; effect on Nain needs manual review |
+| Added | `crates/bench_metrics/LICENSE-APACHE` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/bench_metrics/src/bench_metrics.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/benchmarks/benches/display_map.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/benchmarks/benches/edit_file_tool.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/benchmarks/benches/editor_render.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/breadcrumbs/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/buffer_diff/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/buffer_diff/src/buffer_diff.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/call/src/call_impl/room.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/call_hierarchy/src/call_hierarchy.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/channel/src/channel_buffer.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/channel/src/channel_store.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/buffer_diff/src/buffer_diff.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/call/src/call_impl/room.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/call_hierarchy/src/call_hierarchy.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/channel/src/channel_buffer.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/channel/src/channel_store.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/cli/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/cli/build.rs` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/cli/src/cli.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/cli/src/main.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/cli/src/cli.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/cli/src/main.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/client/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/client/src/client.rs` | Privacy, networking, background work or updates |
 | Modified | `crates/client/src/llm_token.rs` | Privacy, networking, background work or updates |
@@ -1716,15 +1716,15 @@ The branch contains a **resolved, unapproved** merge of PR #3. All 46 merge conf
 | Modified | `crates/client/src/user.rs` | Privacy, networking, background work or updates |
 | Modified | `crates/client/src/zed_urls.rs` | Privacy, networking, background work or updates |
 | Modified | `crates/clock/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/clock/src/system_clock.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/clock/src/system_clock.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/cloud_api_client/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/cloud_api_client/src/websocket/native.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/cloud_api_types/src/cloud_api_types.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/cloud_api_types/src/websocket_protocol.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/cloud_api_client/src/websocket/native.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/cloud_api_types/src/cloud_api_types.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/cloud_api_types/src/websocket_protocol.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/cloud_llm_client/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/cloud_llm_client/src/cloud_llm_client.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/cloud_llm_client/src/cloud_llm_client.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/codestral/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/codestral/src/codestral.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/codestral/src/codestral.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/collab/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/collab/src/api/events.rs` | AI or collaboration surface; verify it stays unavailable |
 | Modified | `crates/collab/src/api/extensions.rs` | AI or collaboration surface; verify it stays unavailable |
@@ -1751,15 +1751,15 @@ The branch contains a **resolved, unapproved** merge of PR #3. All 46 merge conf
 | Modified | `crates/collab_ui/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/collab_ui/src/collab_panel.rs` | AI or collaboration surface; verify it stays unavailable |
 | Modified | `crates/collab_ui/src/collab_panel/channel_modal.rs` | AI or collaboration surface; verify it stays unavailable |
-| Modified | `crates/command_palette/src/command_palette.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/component/src/component.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/component/src/component_layout.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/command_palette/src/command_palette.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/component/src/component.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/component/src/component_layout.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/context_server/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/context_server/src/client.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/context_server/src/context_server.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/context_server/src/listener.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/context_server/src/transport/stdio_transport.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/context_server/src/types.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/context_server/src/client.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/context_server/src/context_server.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/context_server/src/listener.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/context_server/src/transport/stdio_transport.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/context_server/src/types.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/copilot/src/copilot.rs` | AI or collaboration surface; verify it stays unavailable |
 | Modified | `crates/copilot/src/copilot_edit_prediction_delegate.rs` | AI or collaboration surface; verify it stays unavailable |
 | Modified | `crates/copilot_chat/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
@@ -1767,40 +1767,40 @@ The branch contains a **resolved, unapproved** merge of PR #3. All 46 merge conf
 | Modified | `crates/copilot_chat/src/model.rs` | AI or collaboration surface; verify it stays unavailable |
 | Modified | `crates/crashes/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/credentials_provider/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/credentials_provider/src/credentials_provider.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/credentials_provider/src/test_support.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/credentials_provider/src/credentials_provider.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/credentials_provider/src/test_support.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/dap/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/dap/src/adapters.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/dap/src/dap.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/dap/src/debugger_settings.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/dap/src/transport.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/dap/src/adapters.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/dap/src/dap.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/dap/src/debugger_settings.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/dap/src/transport.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/dap_adapters/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/dap_adapters/src/codelldb.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/dap_adapters/src/go.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/dap_adapters/src/javascript.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/dap_adapters/src/python.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/dap_adapters/src/codelldb.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/dap_adapters/src/go.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/dap_adapters/src/javascript.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/dap_adapters/src/python.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/db/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/debugger_ui/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/debugger_ui/src/debugger_panel.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/debugger_ui/src/dropdown_menus.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/debugger_ui/src/new_process_modal.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/debugger_ui/src/session/running.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/debugger_ui/src/session/running/memory_view.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/debugger_ui/src/session/running/stack_frame_list.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/debugger_ui/src/session/running/variable_list.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/debugger_ui/src/tests.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/debugger_ui/src/tests/debugger_panel.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/debugger_ui/src/tests/hover_values.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/debugger_ui/src/tests/inline_values.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/debugger_ui/src/debugger_panel.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/debugger_ui/src/dropdown_menus.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/debugger_ui/src/new_process_modal.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/debugger_ui/src/session/running.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/debugger_ui/src/session/running/memory_view.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/debugger_ui/src/session/running/stack_frame_list.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/debugger_ui/src/session/running/variable_list.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/debugger_ui/src/tests.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/debugger_ui/src/tests/debugger_panel.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/debugger_ui/src/tests/hover_values.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/debugger_ui/src/tests/inline_values.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/deepseek/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/dev_container/src/devcontainer_api.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/dev_container/src/devcontainer_manifest.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/dev_container/src/lib.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/dev_container/src/oci.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/diagnostics/src/diagnostics.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/dev_container/src/devcontainer_api.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/dev_container/src/devcontainer_manifest.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/dev_container/src/lib.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/dev_container/src/oci.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/diagnostics/src/diagnostics.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/docs_preprocessor/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/docs_preprocessor/src/ai_discovery.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/docs_preprocessor/src/main.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/docs_preprocessor/src/ai_discovery.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/docs_preprocessor/src/main.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/edit_prediction/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/edit_prediction/benches/kept_rate.rs` | AI or collaboration surface; verify it stays unavailable |
 | Modified | `crates/edit_prediction/benches/ts_error_count.rs` | AI or collaboration surface; verify it stays unavailable |
@@ -1894,366 +1894,366 @@ The branch contains a **resolved, unapproved** merge of PR #3. All 46 merge conf
 | Modified | `crates/editor/src/test/editor_lsp_test_context.rs` | Editing, files, LSP, completion or search behavior |
 | Modified | `crates/editor/src/test/editor_test_context.rs` | Editing, files, LSP, completion or search behavior |
 | Modified | `crates/editor_benchmarks/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/editor_benchmarks/src/main.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/editor_benchmarks/src/main.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/etw_tracing/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/etw_tracing/etw_tracing.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/eval_cli/Dockerfile` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/eval_cli/src/main.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/eval_cli/zed_eval/source.py` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/etw_tracing/etw_tracing.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/eval_cli/Dockerfile` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/eval_cli/src/main.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/eval_cli/zed_eval/source.py` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/explorer_command_injector/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/extension/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/extension/src/capabilities/download_file_capability.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/extension/src/capabilities/process_exec_capability.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/extension/src/extension.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/extension/src/extension_builder.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/extension/src/extension_host_proxy.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/extension/src/extension_manifest.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/extension/src/extension_resources.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/extension/src/capabilities/download_file_capability.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/extension/src/capabilities/process_exec_capability.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/extension/src/extension.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/extension/src/extension_builder.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/extension/src/extension_host_proxy.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/extension/src/extension_manifest.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/extension/src/extension_resources.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/extension_api/build.rs` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/extension_api/wit/since_v0.8.0/extension.wit` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/extension_api/wit/since_v0.8.0/extension.wit` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/extension_cli/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/extension_cli/src/main.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/extension_cli/src/main.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/extension_host/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/extension_host/src/extension_host.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/extension_host/src/extension_settings.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/extension_host/src/extension_store_test.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/extension_host/src/headless_host.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/extension_host/src/wasm_host.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/extension_host/src/wasm_host/wit/since_v0_1_0.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/extension_host/src/wasm_host/wit/since_v0_8_0.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/extension_host/src/extension_host.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/extension_host/src/extension_settings.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/extension_host/src/extension_store_test.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/extension_host/src/headless_host.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/extension_host/src/wasm_host.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/extension_host/src/wasm_host/wit/since_v0_1_0.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/extension_host/src/wasm_host/wit/since_v0_8_0.rs` | Other upstream change; effect on Ned needs manual review |
 | Added | `crates/extension_suggest/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Added | `crates/extension_suggest/LICENSE-APACHE` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/extension_suggest/src/extension_suggest.rs` | Other upstream change; effect on Nain needs manual review |
+| Added | `crates/extension_suggest/LICENSE-APACHE` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/extension_suggest/src/extension_suggest.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/extensions_ui/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/extensions_ui/src/components.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/extensions_ui/src/components/extension_card.rs` | Other upstream change; effect on Nain needs manual review |
-| Deleted | `crates/extensions_ui/src/extension_suggest.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/extensions_ui/src/extension_suggestions.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/extensions_ui/src/extensions_ui.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/extensions_ui/src/components.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/extensions_ui/src/components/extension_card.rs` | Other upstream change; effect on Ned needs manual review |
+| Deleted | `crates/extensions_ui/src/extension_suggest.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/extensions_ui/src/extension_suggestions.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/extensions_ui/src/extensions_ui.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/feature_flags_macros/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/feedback/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/feedback/src/feedback.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/feedback/src/feedback.rs` | Other upstream change; effect on Ned needs manual review |
 | Added | `crates/file_content/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Added | `crates/file_content/LICENSE-GPL` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/file_content/src/file_content.rs` | Other upstream change; effect on Nain needs manual review |
+| Added | `crates/file_content/LICENSE-GPL` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/file_content/src/file_content.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/file_finder/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/file_finder/src/file_finder.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/file_finder/src/file_finder_tests.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/file_icons/src/file_icons.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/file_finder/src/file_finder.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/file_finder/src/file_finder_tests.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/file_icons/src/file_icons.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/fs/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/fs/src/fake_git_repo.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/fs/src/fs.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/fs/src/fs_watcher.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/fs/src/fs_watcher/diagnostics.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/fs/tests/integration/fake_git_repo_tests.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/fs/tests/integration/fs_tests.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/fs/src/fake_git_repo.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/fs/src/fs.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/fs/src/fs_watcher.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/fs/src/fs_watcher/diagnostics.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/fs/tests/integration/fake_git_repo_tests.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/fs/tests/integration/fs_tests.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/fs_benchmarks/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/fs_benchmarks/src/main.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/fuzzy/src/paths.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/fuzzy/src/strings.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/fs_benchmarks/src/main.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/fuzzy/src/paths.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/fuzzy/src/strings.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/fuzzy_nucleo/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/fuzzy_nucleo/benches/match_benchmark.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/fuzzy_nucleo/src/fuzzy_nucleo.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/fuzzy_nucleo/src/paths.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/fuzzy_nucleo/src/strings.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/fuzzy_nucleo/benches/match_benchmark.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/fuzzy_nucleo/src/fuzzy_nucleo.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/fuzzy_nucleo/src/paths.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/fuzzy_nucleo/src/strings.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/git/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/git/src/blame.rs` | Other upstream change; effect on Nain needs manual review |
-| Deleted | `crates/git/src/checkpoint.gitignore` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git/src/git.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git/src/repository.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git/src/status.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_hosting_providers/src/providers.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_hosting_providers/src/providers/azure.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_hosting_providers/src/providers/forgejo.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/git_hosting_providers/src/providers/gerrit.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/git_hosting_providers/src/providers/gitiles.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_hosting_providers/src/settings.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/git/src/blame.rs` | Other upstream change; effect on Ned needs manual review |
+| Deleted | `crates/git/src/checkpoint.gitignore` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git/src/git.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git/src/repository.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git/src/status.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_hosting_providers/src/providers.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_hosting_providers/src/providers/azure.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_hosting_providers/src/providers/forgejo.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/git_hosting_providers/src/providers/gerrit.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/git_hosting_providers/src/providers/gitiles.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_hosting_providers/src/settings.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/git_ui/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/git_ui/src/blame_ui.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_ui/src/branch_diff.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_ui/src/branch_picker.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_ui/src/clone.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_ui/src/commit_context_menu.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_ui/src/commit_modal.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_ui/src/commit_tooltip.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_ui/src/commit_view.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_ui/src/conflict_view.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_ui/src/diff_multibuffer.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_ui/src/git_graph.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_ui/src/git_panel.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/git_ui/src/git_panel/branch_mode.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_ui/src/git_panel_settings.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_ui/src/git_picker.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/git_ui/src/git_timestamp.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_ui/src/git_ui.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_ui/src/multi_diff_view.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_ui/src/project_diff.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_ui/src/remote_output.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_ui/src/repository_selector.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_ui/src/stash_picker.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_ui/src/text_diff_view.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_ui_core/src/created_worktrees.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_ui_core/src/git_ui_core.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_ui_core/src/notifications.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/git_ui_core/src/worktree_labels.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_ui_core/src/worktree_picker.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/git_ui_core/src/worktree_service.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/git_ui/src/blame_ui.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_ui/src/branch_diff.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_ui/src/branch_picker.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_ui/src/clone.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_ui/src/commit_context_menu.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_ui/src/commit_modal.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_ui/src/commit_tooltip.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_ui/src/commit_view.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_ui/src/conflict_view.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_ui/src/diff_multibuffer.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_ui/src/git_graph.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_ui/src/git_panel.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/git_ui/src/git_panel/branch_mode.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_ui/src/git_panel_settings.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_ui/src/git_picker.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/git_ui/src/git_timestamp.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_ui/src/git_ui.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_ui/src/multi_diff_view.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_ui/src/project_diff.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_ui/src/remote_output.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_ui/src/repository_selector.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_ui/src/stash_picker.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_ui/src/text_diff_view.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_ui_core/src/created_worktrees.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_ui_core/src/git_ui_core.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_ui_core/src/notifications.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/git_ui_core/src/worktree_labels.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_ui_core/src/worktree_picker.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/git_ui_core/src/worktree_service.rs` | Other upstream change; effect on Ned needs manual review |
 | Added | `crates/github_releases/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Added | `crates/github_releases/LICENSE-APACHE` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/github_releases/src/github_releases.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/github_releases/src/releases.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/go_to_line/src/go_to_line.rs` | Other upstream change; effect on Nain needs manual review |
+| Added | `crates/github_releases/LICENSE-APACHE` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/github_releases/src/github_releases.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/github_releases/src/releases.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/go_to_line/src/go_to_line.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/google_ai/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/google_ai/src/completion.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/google_ai/src/google_ai.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/google_ai/src/completion.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/google_ai/src/google_ai.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/gpui/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Added | `crates/gpui/benches/focus_cleanup.rs` | Other upstream change; effect on Nain needs manual review |
+| Added | `crates/gpui/benches/focus_cleanup.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/gpui/build.rs` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/gpui/examples/README.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/examples/image/image.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/examples/image_gallery.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/examples/input.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui/examples/native_view.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui/examples/native_view_appkit_field.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/examples/painting.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/examples/paths_bench.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui/examples/svg_animation.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/examples/system_notifications.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/examples/testing.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui/examples/toggle_headless.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/examples/view_example/example_editor.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/examples/window_positioning.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/action.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/app.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/app/async_context.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/app/bench_context.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/app/context.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/app/entity_map.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/app/headless_app_context.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/app/test_app.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/app/test_context.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/app/visual_test_context.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui/src/bench.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/bounds_tree.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/colors.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/element.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/elements/anchored.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/elements/animation.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/elements/canvas.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/elements/container_query.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/elements/deferred.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/elements/div.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/elements/image_cache.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/elements/img.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/elements/list.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/elements/surface.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/elements/svg.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/elements/text.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/elements/uniform_list.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/executor.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/geometry.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/gestures.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/gpui.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui/src/hot_reload.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/input.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/interactive.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/key_dispatch.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/keymap.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/keymap/binding.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/keymap/context.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/path_builder.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui/src/path_winding.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/platform.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/platform/keystroke.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui/src/platform/platform_info.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/platform/test/display.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/platform/test/platform.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/platform/test/window.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/platform/visual_test.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/profiler.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/profiler/hang.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui/src/profiler/hang/monitor.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/profiler/journal.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/queue.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui/src/randomized_element_tree.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/scene.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui/src/seeds.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/style.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/styled.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/subscription.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/svg_renderer.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/tab_stop.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/taffy.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/test.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/text_system.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/text_system/font_features.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/text_system/line.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/text_system/line_layout.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/text_system/line_wrapper.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/view.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/window.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui/src/window/a11y.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui/src/window/native_view.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui/tests/eq_hash.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/gpui/examples/README.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/examples/image/image.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/examples/image_gallery.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/examples/input.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui/examples/native_view.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui/examples/native_view_appkit_field.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/examples/painting.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/examples/paths_bench.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui/examples/svg_animation.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/examples/system_notifications.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/examples/testing.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui/examples/toggle_headless.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/examples/view_example/example_editor.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/examples/window_positioning.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/action.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/app.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/app/async_context.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/app/bench_context.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/app/context.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/app/entity_map.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/app/headless_app_context.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/app/test_app.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/app/test_context.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/app/visual_test_context.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui/src/bench.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/bounds_tree.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/colors.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/element.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/elements/anchored.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/elements/animation.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/elements/canvas.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/elements/container_query.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/elements/deferred.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/elements/div.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/elements/image_cache.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/elements/img.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/elements/list.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/elements/surface.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/elements/svg.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/elements/text.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/elements/uniform_list.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/executor.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/geometry.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/gestures.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/gpui.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui/src/hot_reload.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/input.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/interactive.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/key_dispatch.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/keymap.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/keymap/binding.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/keymap/context.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/path_builder.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui/src/path_winding.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/platform.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/platform/keystroke.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui/src/platform/platform_info.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/platform/test/display.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/platform/test/platform.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/platform/test/window.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/platform/visual_test.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/profiler.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/profiler/hang.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui/src/profiler/hang/monitor.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/profiler/journal.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/queue.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui/src/randomized_element_tree.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/scene.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui/src/seeds.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/style.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/styled.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/subscription.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/svg_renderer.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/tab_stop.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/taffy.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/test.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/text_system.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/text_system/font_features.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/text_system/line.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/text_system/line_layout.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/text_system/line_wrapper.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/view.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/window.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui/src/window/a11y.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui/src/window/native_view.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui/tests/eq_hash.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/gpui_apple/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/gpui_apple/build.rs` | Dependencies, compilation, packaging or release behavior |
-| Added | `crates/gpui_apple/src/dispatcher.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui_apple/src/display_link.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_apple/src/gpui_apple.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui_apple/src/keychain.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_apple/src/metal_atlas.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_apple/src/metal_renderer.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui_apple/src/open_type.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui_apple/src/process_info.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_apple/src/shaders.metal` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui_apple/src/text_system.rs` | Other upstream change; effect on Nain needs manual review |
+| Added | `crates/gpui_apple/src/dispatcher.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui_apple/src/display_link.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_apple/src/gpui_apple.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui_apple/src/keychain.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_apple/src/metal_atlas.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_apple/src/metal_renderer.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui_apple/src/open_type.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui_apple/src/process_info.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_apple/src/shaders.metal` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui_apple/src/text_system.rs` | Other upstream change; effect on Ned needs manual review |
 | Added | `crates/gpui_ios/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Added | `crates/gpui_ios/LICENSE-APACHE` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui_ios/examples/ios.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui_ios/examples/ios/app/Info.plist` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui_ios/examples/ios/build-simulator.sh` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui_ios/src/gpui_ios.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui_ios/src/ios.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui_ios/src/ios/application.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui_ios/src/ios/display.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui_ios/src/ios/events.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui_ios/src/ios/platform.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui_ios/src/ios/text_input.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui_ios/src/ios/window.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui_ios/tests/text_input.rs` | Other upstream change; effect on Nain needs manual review |
+| Added | `crates/gpui_ios/LICENSE-APACHE` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui_ios/examples/ios.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui_ios/examples/ios/app/Info.plist` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui_ios/examples/ios/build-simulator.sh` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui_ios/src/gpui_ios.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui_ios/src/ios.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui_ios/src/ios/application.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui_ios/src/ios/display.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui_ios/src/ios/events.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui_ios/src/ios/platform.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui_ios/src/ios/text_input.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui_ios/src/ios/window.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui_ios/tests/text_input.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/gpui_linux/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/gpui_linux/src/gpui_linux.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_linux/src/linux.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_linux/src/linux/dispatcher.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui_linux/src/linux/display_connection.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_linux/src/linux/headless.rs` | Other upstream change; effect on Nain needs manual review |
-| Deleted | `crates/gpui_linux/src/linux/headless/client.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_linux/src/linux/headless/window.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_linux/src/linux/platform.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui_linux/src/linux/power.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_linux/src/linux/wayland/client.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_linux/src/linux/wayland/clipboard.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_linux/src/linux/wayland/display.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_linux/src/linux/wayland/serial.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_linux/src/linux/wayland/window.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_linux/src/linux/x11.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_linux/src/linux/x11/client.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_linux/src/linux/x11/clipboard.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_linux/src/linux/x11/display.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_linux/src/linux/x11/window.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_linux/src/linux/xdg_desktop_portal.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/gpui_linux/src/gpui_linux.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_linux/src/linux.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_linux/src/linux/dispatcher.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui_linux/src/linux/display_connection.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_linux/src/linux/headless.rs` | Other upstream change; effect on Ned needs manual review |
+| Deleted | `crates/gpui_linux/src/linux/headless/client.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_linux/src/linux/headless/window.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_linux/src/linux/platform.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui_linux/src/linux/power.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_linux/src/linux/wayland/client.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_linux/src/linux/wayland/clipboard.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_linux/src/linux/wayland/display.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_linux/src/linux/wayland/serial.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_linux/src/linux/wayland/window.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_linux/src/linux/x11.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_linux/src/linux/x11/client.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_linux/src/linux/x11/clipboard.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_linux/src/linux/x11/display.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_linux/src/linux/x11/window.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_linux/src/linux/xdg_desktop_portal.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/gpui_macos/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Deleted | `crates/gpui_macos/src/dispatcher.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_macos/src/display.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_macos/src/display_link.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_macos/src/events.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_macos/src/gpui_macos.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_macos/src/keyboard.rs` | Other upstream change; effect on Nain needs manual review |
-| Deleted | `crates/gpui_macos/src/open_type.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_macos/src/pasteboard.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_macos/src/platform.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_macos/src/system_notifications.rs` | Other upstream change; effect on Nain needs manual review |
-| Deleted | `crates/gpui_macos/src/text_system.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_macos/src/window.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui_macos/src/window/native_views.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_macos/src/window_appearance.rs` | Other upstream change; effect on Nain needs manual review |
+| Deleted | `crates/gpui_macos/src/dispatcher.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_macos/src/display.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_macos/src/display_link.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_macos/src/events.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_macos/src/gpui_macos.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_macos/src/keyboard.rs` | Other upstream change; effect on Ned needs manual review |
+| Deleted | `crates/gpui_macos/src/open_type.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_macos/src/pasteboard.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_macos/src/platform.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_macos/src/system_notifications.rs` | Other upstream change; effect on Ned needs manual review |
+| Deleted | `crates/gpui_macos/src/text_system.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_macos/src/window.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui_macos/src/window/native_views.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_macos/src/window_appearance.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/gpui_macros/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/gpui_macros/src/bench.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_macros/src/derive_inspector_reflection.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_macros/src/gpui_macros.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_macros/src/property_test.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/gpui_macros/src/bench.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_macros/src/derive_inspector_reflection.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_macros/src/gpui_macros.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_macros/src/property_test.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/gpui_platform/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Added | `crates/gpui_platform/benches/atlas_upload.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_platform/benches/inspector_render.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui_platform/benches/primitives.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui_platform/benches/randomized_element_tree.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_platform/src/gpui_platform.rs` | Other upstream change; effect on Nain needs manual review |
+| Added | `crates/gpui_platform/benches/atlas_upload.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_platform/benches/inspector_render.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui_platform/benches/primitives.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui_platform/benches/randomized_element_tree.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_platform/src/gpui_platform.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/gpui_shared_string/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/gpui_shared_string/gpui_shared_string.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/gpui_shared_string/gpui_shared_string.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/gpui_tokio/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/gpui_util/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/gpui_util/src/lib.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/gpui_util/src/lib.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/gpui_web/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/gpui_web/examples/hello_web/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Added | `crates/gpui_web/examples/hello_web/http_client_test.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_web/examples/hello_web/index.html` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_web/examples/hello_web/test_canvas_fallback.mjs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/gpui_web/examples/hello_web/test_http_client.mjs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_web/examples/hello_web/test_queue.mjs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_web/src/dispatcher.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_web/src/display.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_web/src/events.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_web/src/http_client.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_web/src/platform.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_web/src/viewport.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_web/src/window.rs` | Other upstream change; effect on Nain needs manual review |
+| Added | `crates/gpui_web/examples/hello_web/http_client_test.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_web/examples/hello_web/index.html` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_web/examples/hello_web/test_canvas_fallback.mjs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/gpui_web/examples/hello_web/test_http_client.mjs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_web/examples/hello_web/test_queue.mjs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_web/src/dispatcher.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_web/src/display.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_web/src/events.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_web/src/http_client.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_web/src/platform.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_web/src/viewport.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_web/src/window.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/gpui_wgpu/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/gpui_wgpu/src/cosmic_text_system.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_wgpu/src/gpui_wgpu.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_wgpu/src/shaders.wgsl` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_wgpu/src/shaders_storage.wgsl` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_wgpu/src/shaders_subpixel.wgsl` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_wgpu/src/shaders_webgl.wgsl` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_wgpu/src/wgpu_atlas.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_wgpu/src/wgpu_context.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_wgpu/src/wgpu_renderer.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/gpui_wgpu/src/cosmic_text_system.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_wgpu/src/gpui_wgpu.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_wgpu/src/shaders.wgsl` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_wgpu/src/shaders_storage.wgsl` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_wgpu/src/shaders_subpixel.wgsl` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_wgpu/src/shaders_webgl.wgsl` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_wgpu/src/wgpu_atlas.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_wgpu/src/wgpu_context.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_wgpu/src/wgpu_renderer.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/gpui_windows/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/gpui_windows/build.rs` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/gpui_windows/src/clipboard.rs` | Other upstream change; effect on Nain needs manual review |
-| Deleted | `crates/gpui_windows/src/color_text_raster.hlsl` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_windows/src/direct_manipulation.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_windows/src/direct_write.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_windows/src/directx_renderer.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_windows/src/display.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_windows/src/events.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_windows/src/platform.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_windows/src/shaders.hlsl` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_windows/src/vsync.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/gpui_windows/src/window.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/grammars/src/bash/config.toml` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/grammars/src/c/highlights.scm` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/grammars/src/cpp/highlights.scm` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/grammars/src/env/brackets.scm` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/grammars/src/env/config.toml` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/grammars/src/env/highlights.scm` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/grammars/src/env/injections.scm` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/grammars/src/env/overrides.scm` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/grammars/src/env/redactions.scm` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/grammars/src/go/highlights.scm` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/grammars/src/go/runnables.scm` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/grammars/src/javascript/injections.scm` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/grammars/src/rust/injections.scm` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/grammars/src/tsx/highlights.scm` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/grammars/src/tsx/injections.scm` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/grammars/src/typescript/highlights.scm` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/grammars/src/typescript/injections.scm` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/gpui_windows/src/clipboard.rs` | Other upstream change; effect on Ned needs manual review |
+| Deleted | `crates/gpui_windows/src/color_text_raster.hlsl` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_windows/src/direct_manipulation.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_windows/src/direct_write.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_windows/src/directx_renderer.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_windows/src/display.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_windows/src/events.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_windows/src/platform.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_windows/src/shaders.hlsl` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_windows/src/vsync.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/gpui_windows/src/window.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/grammars/src/bash/config.toml` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/grammars/src/c/highlights.scm` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/grammars/src/cpp/highlights.scm` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/grammars/src/env/brackets.scm` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/grammars/src/env/config.toml` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/grammars/src/env/highlights.scm` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/grammars/src/env/injections.scm` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/grammars/src/env/overrides.scm` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/grammars/src/env/redactions.scm` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/grammars/src/go/highlights.scm` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/grammars/src/go/runnables.scm` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/grammars/src/javascript/injections.scm` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/grammars/src/rust/injections.scm` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/grammars/src/tsx/highlights.scm` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/grammars/src/tsx/injections.scm` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/grammars/src/typescript/highlights.scm` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/grammars/src/typescript/injections.scm` | Other upstream change; effect on Ned needs manual review |
 | Added | `crates/hang_telemetry/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Added | `crates/hang_telemetry/LICENSE-GPL` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/hang_telemetry/src/hang_telemetry.rs` | Other upstream change; effect on Nain needs manual review |
+| Added | `crates/hang_telemetry/LICENSE-GPL` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/hang_telemetry/src/hang_telemetry.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/html_to_markdown/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/html_to_markdown/src/html_element.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/html_to_markdown/src/html_element.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/http_client/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Deleted | `crates/http_client/src/github.rs` | Privacy, networking, background work or updates |
 | Deleted | `crates/http_client/src/github_download.rs` | Privacy, networking, background work or updates |
 | Modified | `crates/http_client/src/http_client.rs` | Privacy, networking, background work or updates |
 | Modified | `crates/http_client_tls/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/http_proxy/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/http_proxy/src/allowlist.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/http_proxy/src/pinned_host.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/http_proxy/src/proxy/connection.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/http_proxy/src/allowlist.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/http_proxy/src/pinned_host.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/http_proxy/src/proxy/connection.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/icons/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/icons/src/icons.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/image_viewer/src/image_info.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/image_viewer/src/image_viewer.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/icons/src/icons.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/image_viewer/src/image_info.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/image_viewer/src/image_viewer.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/input_latency_ui/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/input_latency_ui/src/input_latency_ui.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/input_latency_ui/src/input_latency_ui.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/inspector_ui/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/inspector_ui/src/div_inspector.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/inspector_ui/src/div_inspector.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/install_cli/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/json_schema_store/src/json_schema_store.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/keymap_editor/src/action_completion_provider.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/keymap_editor/src/keymap_editor.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/keymap_editor/src/ui_components/keystroke_input.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/json_schema_store/src/json_schema_store.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/keymap_editor/src/action_completion_provider.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/keymap_editor/src/keymap_editor.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/keymap_editor/src/ui_components/keystroke_input.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/language/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/language/benches/highlight_map.rs` | Editing, files, LSP, completion or search behavior |
 | Deleted | `crates/language/build.rs` | Dependencies, compilation, packaging or release behavior |
@@ -2339,85 +2339,85 @@ The branch contains a **resolved, unapproved** merge of PR #3. All 46 merge conf
 | Modified | `crates/livekit_client/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/livekit_client/src/livekit_client/playback.rs` | AI or collaboration surface; verify it stays unavailable |
 | Modified | `crates/livekit_client/src/record.rs` | AI or collaboration surface; verify it stays unavailable |
-| Modified | `crates/lmstudio/src/lmstudio.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/lmstudio/src/lmstudio.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/lsp/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/lsp/src/input_handler.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/lsp/src/lsp.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/lsp_command_selector/src/lsp_command_selector.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/lsp_locations/src/lsp_locations.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/lsp/src/input_handler.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/lsp/src/lsp.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/lsp_command_selector/src/lsp_command_selector.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/lsp_locations/src/lsp_locations.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/markdown/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/markdown/src/html/html_minifier.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/markdown/src/markdown.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/markdown/src/mermaid.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/markdown/src/parser.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/markdown/src/html/html_minifier.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/markdown/src/markdown.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/markdown/src/mermaid.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/markdown/src/parser.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/markdown_preview/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/markdown_preview/src/markdown_preview_view.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/menu/src/menu.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/markdown_preview/src/markdown_preview_view.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/menu/src/menu.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/mermaid_render/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/mermaid_render/src/mermaid_render.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/mermaid_render/src/postprocess/accent_colors.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/mermaid_render/src/postprocess/accent_colors/class_diagram.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/mermaid_render/src/postprocess/accent_colors/mindmap.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/mermaid_render/src/postprocess/inject_css.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/mermaid_render/src/render.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/mermaid_render/tests/check_invalid_attrs.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/migrator/src/migrations.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/migrator/src/migrations/m_2026_09_29/settings.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/migrator/src/migrator.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/mermaid_render/src/mermaid_render.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/mermaid_render/src/postprocess/accent_colors.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/mermaid_render/src/postprocess/accent_colors/class_diagram.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/mermaid_render/src/postprocess/accent_colors/mindmap.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/mermaid_render/src/postprocess/inject_css.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/mermaid_render/src/render.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/mermaid_render/tests/check_invalid_attrs.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/migrator/src/migrations.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/migrator/src/migrations/m_2026_09_29/settings.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/migrator/src/migrator.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/miniprofiler_ui/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/miniprofiler_ui/src/miniprofiler_ui.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/miniprofiler_ui/src/miniprofiler_ui.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/mistral/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/mistral/src/mistral.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/multi_buffer/src/anchor.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/multi_buffer/src/multi_buffer.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/multi_buffer/src/multi_buffer_tests.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/multi_buffer/src/path_key.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/mistral/src/mistral.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/multi_buffer/src/anchor.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/multi_buffer/src/multi_buffer.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/multi_buffer/src/multi_buffer_tests.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/multi_buffer/src/path_key.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/net/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/node_runtime/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/node_runtime/src/node_runtime.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/node_runtime/tests/system_node.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/node_runtime/src/node_runtime.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/node_runtime/tests/system_node.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/notifications/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/notifications/src/notification_store.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/notifications/src/status_toast.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/notifications/src/notification_store.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/notifications/src/status_toast.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/oauth_callback_server/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/ollama/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/ollama/src/ollama.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/ollama/src/ollama.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/onboarding/src/onboarding.rs` | Startup, UI, menus, window behavior or action registration |
 | Modified | `crates/onboarding/src/theme_preview.rs` | Startup, UI, menus, window behavior or action registration |
 | Modified | `crates/open_ai/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/open_ai/src/chat_completion_transport_tests.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/open_ai/src/completion.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/open_ai/src/open_ai.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/open_ai/src/responses.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/open_ai/src/chat_completion_transport_tests.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/open_ai/src/completion.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/open_ai/src/open_ai.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/open_ai/src/responses.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/open_path_prompt/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/open_path_prompt/src/file_finder_settings.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/open_path_prompt/src/open_path_prompt.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/open_path_prompt/src/open_path_prompt_tests.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/open_router/src/open_router.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/open_path_prompt/src/file_finder_settings.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/open_path_prompt/src/open_path_prompt.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/open_path_prompt/src/open_path_prompt_tests.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/open_router/src/open_router.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/openai_subscribed/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/openai_subscribed/src/openai_subscribed.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/openai_subscribed/src/openai_subscribed.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/opencode/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Added | `crates/opencode/src/catalog.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/opencode/src/completion.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/opencode/src/opencode.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/outline/src/outline.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/outline_panel/src/outline_panel.rs` | Other upstream change; effect on Nain needs manual review |
+| Added | `crates/opencode/src/catalog.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/opencode/src/completion.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/opencode/src/opencode.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/outline/src/outline.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/outline_panel/src/outline_panel.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/path/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/path/src/abs_path.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/path/src/path.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/path/src/path_component.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/path/src/rel_path.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/path/src/windows_prefix.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/paths/src/paths.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/picker/src/head.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/picker/src/picker.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/path/src/abs_path.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/path/src/path.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/path/src/path_component.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/path/src/rel_path.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/path/src/windows_prefix.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/paths/src/paths.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/picker/src/head.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/picker/src/picker.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/picker_preview/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/picker_preview/src/picker_preview.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/picker_preview/src/picker_preview.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/platform_title_bar/src/platform_title_bar.rs` | Startup, UI, menus, window behavior or action registration |
 | Modified | `crates/platform_title_bar/src/platforms/platform_linux.rs` | Startup, UI, menus, window behavior or action registration |
 | Modified | `crates/platform_title_bar/src/system_window_tabs.rs` | Startup, UI, menus, window behavior or action registration |
 | Added | `crates/platform_title_bar/src/title_bar_settings.rs` | Startup, UI, menus, window behavior or action registration |
-| Modified | `crates/prettier/src/prettier.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/prettier/src/prettier.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/project/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/project/src/agent_registry_store.rs` | AI or collaboration surface; verify it stays unavailable |
 | Modified | `crates/project/src/agent_server_store.rs` | AI or collaboration surface; verify it stays unavailable |
@@ -2467,35 +2467,35 @@ The branch contains a **resolved, unapproved** merge of PR #3. All 46 merge conf
 | Modified | `crates/project/tests/integration/trusted_worktrees.rs` | Editing, files, LSP, completion or search behavior |
 | Modified | `crates/project_benchmarks/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Added | `crates/project_bookmarks/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Added | `crates/project_bookmarks/LICENSE-GPL` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/project_bookmarks/src/project_bookmarks.rs` | Other upstream change; effect on Nain needs manual review |
+| Added | `crates/project_bookmarks/LICENSE-GPL` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/project_bookmarks/src/project_bookmarks.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/project_panel/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/project_panel/benches/sorting.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/project_panel/src/project_panel.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/project_panel/src/project_panel_tests.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/project_panel/src/undo.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/project_symbols/src/project_symbols.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/prompt_store/src/prompt_store.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/prompt_store/src/prompts.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/project_panel/benches/sorting.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/project_panel/src/project_panel.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/project_panel/src/project_panel_tests.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/project_panel/src/undo.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/project_symbols/src/project_symbols.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/prompt_store/src/prompt_store.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/prompt_store/src/prompts.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/proto/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/proto/proto/ai.proto` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/proto/proto/call.proto` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/proto/proto/git.proto` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/proto/proto/lsp.proto` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/proto/proto/task.proto` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/proto/proto/worktree.proto` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/proto/proto/zed.proto` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/proto/src/error.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/proto/src/proto.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/proxy_handshake/src/proxy_handshake.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/proto/proto/ai.proto` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/proto/proto/call.proto` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/proto/proto/git.proto` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/proto/proto/lsp.proto` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/proto/proto/task.proto` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/proto/proto/worktree.proto` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/proto/proto/zed.proto` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/proto/src/error.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/proto/src/proto.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/proxy_handshake/src/proxy_handshake.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/recent_projects/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/recent_projects/src/disconnected_overlay.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/recent_projects/src/recent_projects.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/recent_projects/src/remote_connections.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/recent_projects/src/remote_servers.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/recent_projects/src/remote_servers/filter.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/recent_projects/src/sidebar_recent_projects.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/recent_projects/src/wsl_picker.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/recent_projects/src/disconnected_overlay.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/recent_projects/src/recent_projects.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/recent_projects/src/remote_connections.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/recent_projects/src/remote_servers.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/recent_projects/src/remote_servers/filter.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/recent_projects/src/sidebar_recent_projects.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/recent_projects/src/wsl_picker.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/refineable/derive_refineable/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/remote/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Added | `crates/remote/src/command.rs` | Privacy, networking, background work or updates |
@@ -2535,56 +2535,56 @@ The branch contains a **resolved, unapproved** merge of PR #3. All 46 merge conf
 | Modified | `crates/repl/src/session.rs` | Notebook data, execution, kernels or completion |
 | Modified | `crates/reqwest_client/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/rope/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/rope/benches/rope_benchmark.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/rope/src/chunk.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/rope/src/rope.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/rope/benches/rope_benchmark.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/rope/src/chunk.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/rope/src/rope.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/rpc/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/rpc/src/conn.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/rpc/src/message_stream.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/rpc/src/peer.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/rpc/src/conn.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/rpc/src/message_stream.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/rpc/src/peer.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/sandbox/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/sandbox/README.md` | Other upstream change; effect on Nain needs manual review |
-| Deleted | `crates/sandbox/src/bwrap_test_helper.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/sandbox/src/linux_bubblewrap.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/sandbox/src/macos_seatbelt.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/sandbox/src/sandbox.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/sandbox/src/util.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/sandbox/src/util/canonical_path.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/sandbox/src/util/host_filesystem_location.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/sandbox/src/windows_psec.rs` | Other upstream change; effect on Nain needs manual review |
-| Deleted | `crates/sandbox/src/windows_wsl.rs` | Other upstream change; effect on Nain needs manual review |
-| Deleted | `crates/sandbox/src/wsl_sandbox_test_helper.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/sandbox/README.md` | Other upstream change; effect on Ned needs manual review |
+| Deleted | `crates/sandbox/src/bwrap_test_helper.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/sandbox/src/linux_bubblewrap.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/sandbox/src/macos_seatbelt.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/sandbox/src/sandbox.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/sandbox/src/util.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/sandbox/src/util/canonical_path.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/sandbox/src/util/host_filesystem_location.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/sandbox/src/windows_psec.rs` | Other upstream change; effect on Ned needs manual review |
+| Deleted | `crates/sandbox/src/windows_wsl.rs` | Other upstream change; effect on Ned needs manual review |
+| Deleted | `crates/sandbox/src/wsl_sandbox_test_helper.rs` | Other upstream change; effect on Ned needs manual review |
 | Added | `crates/sandbox_linux/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Added | `crates/sandbox_linux/DESIGN.md` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/sandbox_linux/LICENSE-GPL` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/sandbox_linux/examples/end_to_end.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/sandbox_linux/examples/run.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/sandbox_linux/src/broker.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/sandbox_linux/src/dns.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/sandbox_linux/src/helper.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/sandbox_linux/src/net.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/sandbox_linux/src/policy.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/sandbox_linux/src/process.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/sandbox_linux/src/protocol.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/sandbox_linux/src/resolve.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/sandbox_linux/src/sandbox_linux.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/sandbox_linux/src/seccomp.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/sandbox_linux/src/supervisor.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/sandbox_linux/src/sys.rs` | Other upstream change; effect on Nain needs manual review |
+| Added | `crates/sandbox_linux/DESIGN.md` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/sandbox_linux/LICENSE-GPL` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/sandbox_linux/examples/end_to_end.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/sandbox_linux/examples/run.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/sandbox_linux/src/broker.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/sandbox_linux/src/dns.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/sandbox_linux/src/helper.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/sandbox_linux/src/net.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/sandbox_linux/src/policy.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/sandbox_linux/src/process.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/sandbox_linux/src/protocol.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/sandbox_linux/src/resolve.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/sandbox_linux/src/sandbox_linux.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/sandbox_linux/src/seccomp.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/sandbox_linux/src/supervisor.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/sandbox_linux/src/sys.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/scheduler/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/scheduler/src/executor.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/scheduler/src/scheduler.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/scheduler/src/test_scheduler.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/scheduler/src/tests.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/scheduler/src/executor.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/scheduler/src/scheduler.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/scheduler/src/test_scheduler.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/scheduler/src/tests.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/schema_generator/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/search/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/search/src/buffer_search.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/search/src/project_search.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/search/src/search.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/search/src/search_bar.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/search/src/text_finder.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/search/src/text_finder/delegate.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/search/src/text_finder/render.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/search/src/buffer_search.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/search/src/project_search.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/search/src/search.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/search/src/search_bar.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/search/src/text_finder.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/search/src/text_finder/delegate.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/search/src/text_finder/render.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/settings/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Deleted | `crates/settings/src/editable_setting_control.rs` | Defaults, settings, shortcuts or feature availability |
 | Modified | `crates/settings/src/editorconfig_store.rs` | Defaults, settings, shortcuts or feature availability |
@@ -2622,180 +2622,180 @@ The branch contains a **resolved, unapproved** merge of PR #3. All 46 merge conf
 | Modified | `crates/settings_ui/src/pages/skill_creator.rs` | Defaults, settings, shortcuts or feature availability |
 | Modified | `crates/settings_ui/src/pages/skills_setup.rs` | Defaults, settings, shortcuts or feature availability |
 | Modified | `crates/settings_ui/src/settings_ui.rs` | Defaults, settings, shortcuts or feature availability |
-| Modified | `crates/shell_command_parser/src/shell_command_parser.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/sidebar/src/sidebar.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/sidebar/src/sidebar_tests.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/sidebar/src/thread_switcher.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/snippet_provider/src/lib.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/snippet_provider/src/registry.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/snippets_ui/src/snippets_ui.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/shell_command_parser/src/shell_command_parser.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/sidebar/src/sidebar.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/sidebar/src/sidebar_tests.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/sidebar/src/thread_switcher.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/snippet_provider/src/lib.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/snippet_provider/src/registry.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/snippets_ui/src/snippets_ui.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/sqlez/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/sqlez/src/bindable.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/sqlez/src/connection.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/sqlez/src/migrations.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/sqlez/src/bindable.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/sqlez/src/connection.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/sqlez/src/migrations.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/sqlez_macros/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/streaming_diff/benches/streaming_diff.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/streaming_diff/benches/streaming_diff.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/sum_tree/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/sum_tree/src/sum_tree.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/sum_tree/src/sum_tree.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/svg_preview/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/svg_preview/src/svg_preview_view.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/tab_switcher/src/tab_switcher.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/tab_switcher/src/tab_switcher_tests.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/svg_preview/src/svg_preview_view.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/tab_switcher/src/tab_switcher.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/tab_switcher/src/tab_switcher_tests.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/tabular_data_preview/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/tabular_data_preview/src/parser.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/tabular_data_preview/src/renderer/performance_metrics_overlay.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/tabular_data_preview/src/renderer/preview_view.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/tabular_data_preview/src/renderer/render_table.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/tabular_data_preview/src/renderer/row_identifiers.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/tabular_data_preview/src/renderer/settings.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/tabular_data_preview/src/renderer/table_cell.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/tabular_data_preview/src/renderer/table_header.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/tabular_data_preview/src/settings.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/tabular_data_preview/src/table_data_engine.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/tabular_data_preview/src/table_view.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/tabular_data_preview/src/tabular_data_preview.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/tabular_data_preview/src/types/coordinates.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/tabular_data_preview/src/types/table_cell.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/tabular_data_preview/src/parser.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/tabular_data_preview/src/renderer/performance_metrics_overlay.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/tabular_data_preview/src/renderer/preview_view.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/tabular_data_preview/src/renderer/render_table.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/tabular_data_preview/src/renderer/row_identifiers.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/tabular_data_preview/src/renderer/settings.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/tabular_data_preview/src/renderer/table_cell.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/tabular_data_preview/src/renderer/table_header.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/tabular_data_preview/src/settings.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/tabular_data_preview/src/table_data_engine.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/tabular_data_preview/src/table_view.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/tabular_data_preview/src/tabular_data_preview.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/tabular_data_preview/src/types/coordinates.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/tabular_data_preview/src/types/table_cell.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/task/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Deleted | `crates/task/src/static_source.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/task/src/task.rs` | Other upstream change; effect on Nain needs manual review |
+| Deleted | `crates/task/src/static_source.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/task/src/task.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/tasks_ui/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/tasks_ui/src/modal.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/tasks_ui/src/tasks_ui.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/tasks_ui/src/modal.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/tasks_ui/src/tasks_ui.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/telemetry_events/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/telemetry_events/src/telemetry_events.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/terminal/src/alacritty.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/terminal/src/alacritty/hyperlinks.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/terminal/src/mappings/keys.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/terminal/src/mappings/mouse.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/terminal/src/terminal.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/telemetry_events/src/telemetry_events.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/terminal/src/alacritty.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/terminal/src/alacritty/hyperlinks.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/terminal/src/mappings/keys.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/terminal/src/mappings/mouse.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/terminal/src/terminal.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/terminal_view/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/terminal_view/src/persistence.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/terminal_view/src/terminal_element.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/terminal_view/src/terminal_panel.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/terminal_view/src/terminal_view.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/terminal_view/src/persistence.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/terminal_view/src/terminal_element.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/terminal_view/src/terminal_panel.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/terminal_view/src/terminal_view.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/text/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/text/src/anchor.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/text/src/network.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/text/src/selection.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/text/src/tests.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/text/src/text.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/text/src/anchor.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/text/src/network.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/text/src/selection.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/text/src/tests.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/text/src/text.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/theme/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/theme/src/default_colors.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/theme/src/icon_theme.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/theme/src/registry.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/theme/src/scale.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/theme/src/styles/colors.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/theme/src/theme.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/theme_extension/src/theme_extension.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/theme/src/default_colors.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/theme/src/icon_theme.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/theme/src/registry.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/theme/src/scale.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/theme/src/styles/colors.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/theme/src/theme.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/theme_extension/src/theme_extension.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/theme_importer/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/theme_importer/src/main.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/theme_importer/src/main.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/theme_settings/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/theme_settings/src/settings.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/theme_settings/src/theme_settings.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/theme_settings/src/settings.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/theme_settings/src/theme_settings.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/time_format/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/title_bar/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/title_bar/src/application_menu.rs` | Startup, UI, menus, window behavior or action registration |
 | Modified | `crates/title_bar/src/collab.rs` | Startup, UI, menus, window behavior or action registration |
 | Modified | `crates/title_bar/src/title_bar.rs` | Startup, UI, menus, window behavior or action registration |
 | Deleted | `crates/title_bar/src/title_bar_settings.rs` | Startup, UI, menus, window behavior or action registration |
-| Modified | `crates/toolchain_selector/src/toolchain_selector.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/toolchain_selector/src/toolchain_selector.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/ui/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/ui/src/components.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/ai/ai_setting_item.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/ai/thread_item.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/banner.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/button/button.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/button/button_like.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/button/button_link.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/button/copy_button.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/button/icon_button.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/button/split_button.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/button/toggle_button.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/callout.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/chip.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/ui/src/components/choice_card.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/ui/src/components.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/ai/ai_setting_item.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/ai/thread_item.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/banner.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/button/button.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/button/button_like.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/button/button_link.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/button/copy_button.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/button/icon_button.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/button/split_button.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/button/toggle_button.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/callout.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/chip.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/ui/src/components/choice_card.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/ui/src/components/collab/collab_notification.rs` | AI or collaboration surface; verify it stays unavailable |
-| Modified | `crates/ui/src/components/context_menu.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/ui/src/components/context_menu/preview.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/data_table.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/data_table/tests.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/diff_stat.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/dropdown_menu.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/icon.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/image.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/indent_guides.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/keybinding.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/label/label.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/label/loading_label.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/label/spinner_label.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/list/list_bullet_item.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/modal.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/notification/announcement_toast.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/popover_menu.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/project_empty_state.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/redistributable_columns.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/right_click_menu.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/scrollbar.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/sticky_items.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/tooltip.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/components/tree_view_item.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/styles/animation.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/traits/animation_ext.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/traits/toggleable.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/traits/transformable.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/utils.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/utils/format_distance.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/ui/src/utils/retained_focus.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui/src/utils/with_rem_size.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/ui_input/src/input_field.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/ui/src/components/context_menu.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/ui/src/components/context_menu/preview.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/data_table.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/data_table/tests.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/diff_stat.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/dropdown_menu.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/icon.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/image.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/indent_guides.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/keybinding.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/label/label.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/label/loading_label.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/label/spinner_label.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/list/list_bullet_item.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/modal.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/notification/announcement_toast.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/popover_menu.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/project_empty_state.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/redistributable_columns.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/right_click_menu.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/scrollbar.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/sticky_items.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/tooltip.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/components/tree_view_item.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/styles/animation.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/traits/animation_ext.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/traits/toggleable.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/traits/transformable.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/utils.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/utils/format_distance.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/ui/src/utils/retained_focus.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui/src/utils/with_rem_size.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/ui_input/src/input_field.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/ui_macros/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/util/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/util/src/fs.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/util/src/libc_type.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/util/src/markdown.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/util/src/path_list.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/util/src/paths.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/util/src/process.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/util/src/shell.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/util/src/shell_builder.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/util/src/shell_env.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/util/src/util.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/util/src/fs.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/util/src/libc_type.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/util/src/markdown.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/util/src/path_list.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/util/src/paths.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/util/src/process.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/util/src/shell.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/util/src/shell_builder.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/util/src/shell_env.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/util/src/util.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/util_macros/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/util_macros/src/util_macros.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/util_macros/src/util_macros.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/vim/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/vim/src/command.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/vim/src/digraph.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/vim/src/helix.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/vim/src/helix/paste.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/vim/src/helix/surround.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/vim/src/motion.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/vim/src/normal.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/vim/src/normal/increment.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/vim/src/normal/paste.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/vim/src/normal/repeat.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/vim/src/normal/search.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/vim/src/object.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/vim/src/state.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/vim/src/surrounds.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/vim/src/test.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/vim/src/test/neovim_backed_test_context.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/vim/src/test/neovim_connection.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/vim/src/test/vim_test_context.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/vim/src/vim.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/vim/src/visual.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/vim/test_data/test_replace_repetition_operators.json` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/vim/test_data/test_star_hash_under_cursor.json` | Other upstream change; effect on Nain needs manual review |
-| Added | `crates/vim/test_data/test_visual_block_end_of_document_wrapped_eof.json` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/vim/test_data/test_visual_star_hash.json` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/watch/src/watch.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/web_search/src/web_search.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/vim/src/command.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/vim/src/digraph.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/vim/src/helix.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/vim/src/helix/paste.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/vim/src/helix/surround.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/vim/src/motion.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/vim/src/normal.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/vim/src/normal/increment.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/vim/src/normal/paste.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/vim/src/normal/repeat.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/vim/src/normal/search.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/vim/src/object.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/vim/src/state.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/vim/src/surrounds.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/vim/src/test.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/vim/src/test/neovim_backed_test_context.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/vim/src/test/neovim_connection.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/vim/src/test/vim_test_context.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/vim/src/vim.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/vim/src/visual.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/vim/test_data/test_replace_repetition_operators.json` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/vim/test_data/test_star_hash_under_cursor.json` | Other upstream change; effect on Ned needs manual review |
+| Added | `crates/vim/test_data/test_visual_block_end_of_document_wrapped_eof.json` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/vim/test_data/test_visual_star_hash.json` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/watch/src/watch.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/web_search/src/web_search.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/which_key/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/which_key/src/pending_bindings.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/which_key/src/pending_keystrokes_indicator.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/which_key/src/which_key.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/which_key/src/which_key_modal.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/windows_resources/src/windows_resources.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/which_key/src/pending_bindings.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/which_key/src/pending_keystrokes_indicator.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/which_key/src/which_key.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/which_key/src/which_key_modal.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/windows_resources/src/windows_resources.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/workspace/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/workspace/src/dock.rs` | Startup, UI, menus, window behavior or action registration |
 | Modified | `crates/workspace/src/focus_follows_mouse.rs` | Startup, UI, menus, window behavior or action registration |
@@ -2822,12 +2822,12 @@ The branch contains a **resolved, unapproved** merge of PR #3. All 46 merge conf
 | Modified | `crates/workspace/src/workspace_error.rs` | Startup, UI, menus, window behavior or action registration |
 | Modified | `crates/workspace/src/workspace_settings.rs` | Startup, UI, menus, window behavior or action registration |
 | Modified | `crates/worktree/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/worktree/src/worktree.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/worktree/tests/integration/worktree_tests.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/worktree/src/worktree.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/worktree/tests/integration/worktree_tests.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/worktree_benchmarks/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/x_ai/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/x_ai_subscribed/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/x_ai_subscribed/src/x_ai_subscribed.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/x_ai_subscribed/src/x_ai_subscribed.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/zed/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/zed/RELEASE_CHANNEL` | Startup, UI, menus, window behavior or action registration |
 | Modified | `crates/zed/build.rs` | Dependencies, compilation, packaging or release behavior |
@@ -2843,89 +2843,89 @@ The branch contains a **resolved, unapproved** merge of PR #3. All 46 merge conf
 | Modified | `crates/zed/src/zed/quick_action_bar/repl_menu.rs` | Startup, UI, menus, window behavior or action registration |
 | Modified | `crates/zed/src/zed/telemetry_log.rs` | Startup, UI, menus, window behavior or action registration |
 | Modified | `crates/zed/src/zed/windows_only_instance.rs` | Startup, UI, menus, window behavior or action registration |
-| Modified | `crates/zed_actions/src/lib.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/zed_credentials_provider/src/zed_credentials_provider.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/zed_actions/src/lib.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/zed_credentials_provider/src/zed_credentials_provider.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/zeta_prompt/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/zeta_prompt/src/hashed_regions.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/zeta_prompt/src/multi_region.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/zeta_prompt/src/udiff.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/zeta_prompt/src/zeta_prompt.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/zeta_prompt/src/hashed_regions.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/zeta_prompt/src/multi_region.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/zeta_prompt/src/udiff.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/zeta_prompt/src/zeta_prompt.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/zlog/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `crates/zlog/src/filter.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `crates/zlog/src/zlog.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `crates/zlog/src/filter.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `crates/zlog/src/zlog.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `crates/ztracing/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `crates/ztracing_macro/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `docs/.prettierignore` | Other upstream change; effect on Nain needs manual review |
-| Deleted | `docs/.rules` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/AGENTS.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/README.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/book.toml` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/SUMMARY.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/account/plans-and-pricing.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/account/zed-hosted-models.md` | Other upstream change; effect on Nain needs manual review |
+| Modified | `docs/.prettierignore` | Other upstream change; effect on Ned needs manual review |
+| Deleted | `docs/.rules` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/AGENTS.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/README.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/book.toml` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/SUMMARY.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/account/plans-and-pricing.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/account/zed-hosted-models.md` | Other upstream change; effect on Ned needs manual review |
 | Modified | `docs/src/ai/agent-panel.md` | AI or collaboration surface; verify it stays unavailable |
 | Modified | `docs/src/ai/agent-settings.md` | AI or collaboration surface; verify it stays unavailable |
 | Modified | `docs/src/ai/edit-prediction.md` | AI or collaboration surface; verify it stays unavailable |
 | Modified | `docs/src/ai/external-agents.md` | AI or collaboration surface; verify it stays unavailable |
 | Modified | `docs/src/ai/parallel-agents.md` | AI or collaboration surface; verify it stays unavailable |
-| Modified | `docs/src/ai/sandboxing.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/ai/skills.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/ai/tool-permissions.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/ai/tools.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/ai/use-a-gateway.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/ai/use-an-existing-subscription.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/completions.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/configuring-languages.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/debugger.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/development.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/development/macos.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/development/release-notes.md` | Other upstream change; effect on Nain needs manual review |
-| Added | `docs/src/development/ui-checklist.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/extensions/developing-extensions.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/extensions/languages.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/extensions/publishing/prerequisites.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/finding-navigating.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/git.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/helix.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/installation.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/key-bindings.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/languages.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/languages/css.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/languages/emmet.md` | Other upstream change; effect on Nain needs manual review |
-| Added | `docs/src/languages/env.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/languages/gleam.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/languages/html.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/languages/javascript.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/languages/json.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/languages/python.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/languages/rego.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/languages/roc.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/languages/sh.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/languages/typescript.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/linux.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/macos.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/outline-panel.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/project-panel.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/reference/all-settings.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/reference/cli.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/remote-development.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/repl.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/tab-switcher.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/vim.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/visual-customization.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/windows-and-projects.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/src/worktree-trust.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/theme/analytics.js` | Other upstream change; effect on Nain needs manual review |
-| Deleted | `docs/theme/c15t@2.0.0-rc.3.js` | Other upstream change; effect on Nain needs manual review |
-| Modified | `docs/theme/plugins.js` | Other upstream change; effect on Nain needs manual review |
-| Modified | `extensions/README.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `flake.lock` | Other upstream change; effect on Nain needs manual review |
-| Modified | `legal/privacy-policy.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `legal/terms.md` | Other upstream change; effect on Nain needs manual review |
-| Added | `legal/zed-product-terms.md` | Other upstream change; effect on Nain needs manual review |
-| Modified | `nix/build.nix` | Other upstream change; effect on Nain needs manual review |
-| Modified | `nix/dev/flake.lock` | Other upstream change; effect on Nain needs manual review |
-| Modified | `nix/dev/flake.nix` | Other upstream change; effect on Nain needs manual review |
+| Modified | `docs/src/ai/sandboxing.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/ai/skills.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/ai/tool-permissions.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/ai/tools.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/ai/use-a-gateway.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/ai/use-an-existing-subscription.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/completions.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/configuring-languages.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/debugger.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/development.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/development/macos.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/development/release-notes.md` | Other upstream change; effect on Ned needs manual review |
+| Added | `docs/src/development/ui-checklist.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/extensions/developing-extensions.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/extensions/languages.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/extensions/publishing/prerequisites.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/finding-navigating.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/git.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/helix.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/installation.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/key-bindings.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/languages.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/languages/css.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/languages/emmet.md` | Other upstream change; effect on Ned needs manual review |
+| Added | `docs/src/languages/env.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/languages/gleam.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/languages/html.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/languages/javascript.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/languages/json.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/languages/python.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/languages/rego.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/languages/roc.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/languages/sh.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/languages/typescript.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/linux.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/macos.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/outline-panel.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/project-panel.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/reference/all-settings.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/reference/cli.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/remote-development.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/repl.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/tab-switcher.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/vim.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/visual-customization.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/windows-and-projects.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/src/worktree-trust.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/theme/analytics.js` | Other upstream change; effect on Ned needs manual review |
+| Deleted | `docs/theme/c15t@2.0.0-rc.3.js` | Other upstream change; effect on Ned needs manual review |
+| Modified | `docs/theme/plugins.js` | Other upstream change; effect on Ned needs manual review |
+| Modified | `extensions/README.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `flake.lock` | Other upstream change; effect on Ned needs manual review |
+| Modified | `legal/privacy-policy.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `legal/terms.md` | Other upstream change; effect on Ned needs manual review |
+| Added | `legal/zed-product-terms.md` | Other upstream change; effect on Ned needs manual review |
+| Modified | `nix/build.nix` | Other upstream change; effect on Ned needs manual review |
+| Modified | `nix/dev/flake.lock` | Other upstream change; effect on Ned needs manual review |
+| Modified | `nix/dev/flake.nix` | Other upstream change; effect on Ned needs manual review |
 | Deleted | `nix/livekit-libwebrtc/0001-shared-libraries.patch` | AI or collaboration surface; verify it stays unavailable |
 | Deleted | `nix/livekit-libwebrtc/README.md` | AI or collaboration surface; verify it stays unavailable |
 | Deleted | `nix/livekit-libwebrtc/chromium-129-rust.patch` | AI or collaboration surface; verify it stays unavailable |
@@ -2934,12 +2934,12 @@ The branch contains a **resolved, unapproved** merge of PR #3. All 46 merge conf
 | Deleted | `nix/livekit-libwebrtc/package.nix` | AI or collaboration surface; verify it stays unavailable |
 | Deleted | `nix/livekit-libwebrtc/sources.json` | AI or collaboration surface; verify it stays unavailable |
 | Deleted | `nix/livekit-libwebrtc/update.sh` | AI or collaboration surface; verify it stays unavailable |
-| Modified | `nix/modules/devshells.nix` | Other upstream change; effect on Nain needs manual review |
-| Modified | `nix/modules/packages.nix` | Other upstream change; effect on Nain needs manual review |
-| Added | `nix/tests/sandboxing/README.md` | Other upstream change; effect on Nain needs manual review |
-| Deleted | `nix/tests/sandboxing/bwrap_smoke_test.sh` | Other upstream change; effect on Nain needs manual review |
-| Modified | `nix/tests/sandboxing/default.nix` | Other upstream change; effect on Nain needs manual review |
-| Modified | `nix/tests/sandboxing/helper.nix` | Other upstream change; effect on Nain needs manual review |
+| Modified | `nix/modules/devshells.nix` | Other upstream change; effect on Ned needs manual review |
+| Modified | `nix/modules/packages.nix` | Other upstream change; effect on Ned needs manual review |
+| Added | `nix/tests/sandboxing/README.md` | Other upstream change; effect on Ned needs manual review |
+| Deleted | `nix/tests/sandboxing/bwrap_smoke_test.sh` | Other upstream change; effect on Ned needs manual review |
+| Modified | `nix/tests/sandboxing/default.nix` | Other upstream change; effect on Ned needs manual review |
+| Modified | `nix/tests/sandboxing/helper.nix` | Other upstream change; effect on Ned needs manual review |
 | Modified | `rust-toolchain.toml` | Dependencies, compilation, packaging or release behavior |
 | Deleted | `script/analyze_highlights.py` | Dependencies, compilation, packaging or release behavior |
 | Added | `script/bench-agent-model-search` | Dependencies, compilation, packaging or release behavior |
@@ -2974,39 +2974,39 @@ The branch contains a **resolved, unapproved** merge of PR #3. All 46 merge conf
 | Deleted | `script/triage_watcher.jl` | Dependencies, compilation, packaging or release behavior |
 | Modified | `script/update_top_ranking_issues/uv.lock` | Dependencies, compilation, packaging or release behavior |
 | Modified | `tooling/compliance/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `tooling/compliance/src/git.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `tooling/compliance/src/github.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `tooling/compliance/src/git.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `tooling/compliance/src/github.rs` | Other upstream change; effect on Ned needs manual review |
 | Added | `tooling/crates_io_client/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Added | `tooling/crates_io_client/LICENSE-APACHE` | Other upstream change; effect on Nain needs manual review |
-| Added | `tooling/crates_io_client/src/crates_io_client.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `tooling/crates_io_client/src/real_crates_io_client.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `tooling/crates_io_client/src/simulated_crates_io_client.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `tooling/crates_io_client/src/tests.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `tooling/crates_io_client/src/types.rs` | Other upstream change; effect on Nain needs manual review |
+| Added | `tooling/crates_io_client/LICENSE-APACHE` | Other upstream change; effect on Ned needs manual review |
+| Added | `tooling/crates_io_client/src/crates_io_client.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `tooling/crates_io_client/src/real_crates_io_client.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `tooling/crates_io_client/src/simulated_crates_io_client.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `tooling/crates_io_client/src/tests.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `tooling/crates_io_client/src/types.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `tooling/perf/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
 | Modified | `tooling/xtask/Cargo.toml` | Dependencies, compilation, packaging or release behavior |
-| Modified | `tooling/xtask/src/main.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `tooling/xtask/src/tasks.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `tooling/xtask/src/tasks/gpui.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `tooling/xtask/src/tasks/gpui/publish_plan.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `tooling/xtask/src/tasks/gpui/registry.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `tooling/xtask/src/tasks/gpui/validation.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `tooling/xtask/src/tasks/gpui/validation/apache_licensed.rs` | Other upstream change; effect on Nain needs manual review |
-| Added | `tooling/xtask/src/tasks/gpui/validation/unique_publish_names.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `tooling/xtask/src/tasks/package_conformity.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `tooling/xtask/src/tasks/sandbox_tests.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `tooling/xtask/src/tasks/workflows/after_release.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `tooling/xtask/src/tasks/workflows/danger.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `tooling/xtask/src/main.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `tooling/xtask/src/tasks.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `tooling/xtask/src/tasks/gpui.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `tooling/xtask/src/tasks/gpui/publish_plan.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `tooling/xtask/src/tasks/gpui/registry.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `tooling/xtask/src/tasks/gpui/validation.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `tooling/xtask/src/tasks/gpui/validation/apache_licensed.rs` | Other upstream change; effect on Ned needs manual review |
+| Added | `tooling/xtask/src/tasks/gpui/validation/unique_publish_names.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `tooling/xtask/src/tasks/package_conformity.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `tooling/xtask/src/tasks/sandbox_tests.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `tooling/xtask/src/tasks/workflows/after_release.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `tooling/xtask/src/tasks/workflows/danger.rs` | Other upstream change; effect on Ned needs manual review |
 | Modified | `tooling/xtask/src/tasks/workflows/deploy_collab.rs` | AI or collaboration surface; verify it stays unavailable |
-| Modified | `tooling/xtask/src/tasks/workflows/release.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `tooling/xtask/src/tasks/workflows/release_nightly.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `tooling/xtask/src/tasks/workflows/run_bundling.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `tooling/xtask/src/tasks/workflows/run_tests.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `tooling/xtask/src/tasks/workflows/runners.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `tooling/xtask/src/tasks/workflows/steps.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `tooling/xtask/src/tasks/workflows/vars.rs` | Other upstream change; effect on Nain needs manual review |
-| Deleted | `tooling/xtask/src/tasks/wsl_sandbox_tests.rs` | Other upstream change; effect on Nain needs manual review |
-| Modified | `tooling/xtask/src/workspace.rs` | Other upstream change; effect on Nain needs manual review |
+| Modified | `tooling/xtask/src/tasks/workflows/release.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `tooling/xtask/src/tasks/workflows/release_nightly.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `tooling/xtask/src/tasks/workflows/run_bundling.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `tooling/xtask/src/tasks/workflows/run_tests.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `tooling/xtask/src/tasks/workflows/runners.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `tooling/xtask/src/tasks/workflows/steps.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `tooling/xtask/src/tasks/workflows/vars.rs` | Other upstream change; effect on Ned needs manual review |
+| Deleted | `tooling/xtask/src/tasks/wsl_sandbox_tests.rs` | Other upstream change; effect on Ned needs manual review |
+| Modified | `tooling/xtask/src/workspace.rs` | Other upstream change; effect on Ned needs manual review |
 
 ## AI, telemetry, startup and background-task candidates
 

@@ -26,8 +26,8 @@ To compare two applications on the same Mac:
 
 ```sh
 python3 script/benchmark-no-ai-mac.py \
-  --app '/Applications/Nain.app' \
-  --baseline '/path/to/previous/Nain.app' \
+  --app '/Applications/Ned.app' \
+  --baseline '/path/to/previous/Ned.app' \
   --repeat 3 --output benchmark.json
 ```
 
@@ -45,4 +45,4 @@ Before saving, explicit GC trims registered compiler blobs to a 4 GiB release bu
 
 The first run must populate the cache. Kache does not skip test execution or guarantee hits after compiler, dependency, feature, configuration or source changes. Check each job's Kache summary and `kache.json` in runtime-report artifacts for actual hit rates and saved compile time. `validation-reports-*` also contain `native-tests.json` with shared compile time and per-suite execution times. Compare a cold run with later warm runs before claiming a CI speedup.
 
-The first complete [Kache-enabled build](https://github.com/ar4ft/nainzed/actions/runs/37421470886) passed both architectures and published its development installers in 1h 35m 56s. Compiler snapshots were cold: each native test compile-and-run group took about 19–20 minutes, while optimized application packaging took about 75 minutes on Apple Silicon and 91 minutes on Intel. One validation job queued for a Mac runner. This is a single-run observation, not a controlled Kache benchmark; parallel jobs and consolidated test compilation reduced the critical path before warm compiler-cache reuse. Its ARM debug cache upload failed because the directory changed while being archived, and the initial 1.5 GiB release limit evicted the 1.8 GB editor output. The pipeline now stops the daemon before archiving and uses the larger profile budgets above. Warm-run measurements for those corrections are pending.
+The first complete [Kache-enabled build](https://github.com/ar4ft/ned/actions/runs/37421470886) passed both architectures and published its development installers in 1h 35m 56s. Compiler snapshots were cold: each native test compile-and-run group took about 19–20 minutes, while optimized application packaging took about 75 minutes on Apple Silicon and 91 minutes on Intel. One validation job queued for a Mac runner. This is a single-run observation, not a controlled Kache benchmark; parallel jobs and consolidated test compilation reduced the critical path before warm compiler-cache reuse. Its ARM debug cache upload failed because the directory changed while being archived, and the initial 1.5 GiB release limit evicted the 1.8 GB editor output. The pipeline now stops the daemon before archiving and uses the larger profile budgets above. Warm-run measurements for those corrections are pending.

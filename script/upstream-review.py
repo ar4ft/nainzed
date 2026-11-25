@@ -7,7 +7,7 @@ from pathlib import Path
 import re
 import subprocess
 
-FORK = 'ar4ft/nainzed'
+FORK = 'ar4ft/ned'
 CONTEXT = 'upstream/manual-review'
 WORKFLOW = '.github/workflows/no-ai-upstream-review.yml'
 
